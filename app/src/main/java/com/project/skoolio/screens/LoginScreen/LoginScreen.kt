@@ -1,6 +1,5 @@
 package com.project.skoolio.screens.LoginScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +36,7 @@ import com.project.skoolio.components.EmailTextField
 import com.project.skoolio.components.ForgotPasswordText
 import com.project.skoolio.components.PasswordTextField
 import com.project.skoolio.components.SubmitButton
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -67,7 +67,7 @@ fun LoginScreen(
             UserLoginForm(false, loginViewModel){email,pwd->
             }
             ForgotPasswordText()
-            NewAccountText()
+            NewAccountText(navController)
         }
     }
 
@@ -115,7 +115,7 @@ fun UserLoginForm(loading: Boolean,
             onClick = {
                 onDone(email.value.trim(), password.value.trim())
                 keyBoardController?.hide()
-                loginViewModel.hitBackend()
+                loginViewModel.hitBackend(context)
 //                if(showState.value && loginViewModel.message.value.isNotEmpty()){
 //                    Toast.makeText(context, loginViewModel.message.value, Toast.LENGTH_SHORT).show()
 //                    showState.value = false
@@ -141,7 +141,7 @@ fun AppLogoText() {
     )
 }
 @Composable
-fun NewAccountText() {
+fun NewAccountText(navController: NavHostController) {
     Row(
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
     ) {
@@ -150,7 +150,7 @@ fun NewAccountText() {
             text = "Sign up",
             Modifier
                 .clickable {
-                    //TODO:Takes to Account Creation Setup
+                    navController.navigate(AppScreens.SelectAccountTypeScreen.name)
                 }
                 .padding(4.dp),
             color = Color.Cyan,
