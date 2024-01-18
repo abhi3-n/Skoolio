@@ -116,10 +116,10 @@ fun UserLoginForm(loading: Boolean,
                 onDone(email.value.trim(), password.value.trim())
                 keyBoardController?.hide()
                 loginViewModel.hitBackend()
-                if(showState.value && loginViewModel.message.value.isNotEmpty()){
-                    Toast.makeText(context, loginViewModel.message.value, Toast.LENGTH_SHORT).show()
-                    showState.value = false
-                }
+//                if(showState.value && loginViewModel.message.value.isNotEmpty()){
+//                    Toast.makeText(context, loginViewModel.message.value, Toast.LENGTH_SHORT).show()
+//                    showState.value = false
+//                }
             }
         )
     }

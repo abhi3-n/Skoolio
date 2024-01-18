@@ -5,6 +5,6 @@ import javax.inject.Singleton
 
 @Singleton
 interface Backend {
-    @GET("login")
+    @GET("users")
     suspend fun hitBackend():String
 }
