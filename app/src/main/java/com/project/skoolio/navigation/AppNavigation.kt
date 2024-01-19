@@ -7,8 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.RegistrationFormScreen
-import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.SelectAccountTypeScreen
+import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 

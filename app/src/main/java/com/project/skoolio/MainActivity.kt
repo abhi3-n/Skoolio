@@ -38,9 +38,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SkoolioApp(){
     val viewModelProvider:ViewModelProvider = viewModel()
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
+//    Column(
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        ) {
         AppNavigation(viewModelProvider)
-    }
+//    }
 }

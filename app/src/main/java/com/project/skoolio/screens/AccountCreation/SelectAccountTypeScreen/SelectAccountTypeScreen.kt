@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,7 +63,7 @@ fun SelectAccountTypeScreen(
         }
         Text(text = "Select Account Type")
         Spacer(modifier = Modifier.height(20.dp))
-        DropDownMenu(expanded, selectedAccountType, accountTypeList)
+        DropDownMenu(expanded = expanded, selectedValue =  selectedAccountType, dataList =  accountTypeList)
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {
             navController.navigate(AppScreens.RegistrationFormScreen.name+"/${selectedAccountType.value}")

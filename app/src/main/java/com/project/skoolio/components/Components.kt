@@ -3,20 +3,25 @@ package com.project.skoolio.components
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -30,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -37,9 +43,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CustomTextField(modifier: Modifier = Modifier,
                    valueState: MutableState<String>,
-                   enabled: Boolean = true,
-                   keyboardType: KeyboardType = KeyboardType.Text,
-                   label:String,
+                    label:String,
+                    enabled: Boolean = true,
+                    keyboardType: KeyboardType = KeyboardType.Text,
                    imeAction: ImeAction = ImeAction.Next,
                    keyboardActions: KeyboardActions = KeyboardActions.Default
                    ) {
@@ -129,11 +135,13 @@ fun ForgotPasswordText() {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun DropDownMenu(
+    modifier: Modifier = Modifier,
     expanded: MutableState<Boolean>,
     selectedValue: MutableState<String>,
     dataList: List<String>
 ) {
-    ExposedDropdownMenuBox(expanded = expanded.value, onExpandedChange = {
+    ExposedDropdownMenuBox(modifier = modifier
+        ,expanded = expanded.value, onExpandedChange = {
         expanded.value = it
     }) {
         OutlinedTextField(value = selectedValue.value,
@@ -163,4 +171,14 @@ fun DropDownMenu(
 @Composable
 fun ShowToast(context: Context, message: String) {
     Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+fun CalenderRow(text: String) {
+    Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(text = text)
+        IconButton(onClick = { /*TODO:Open Calendar Panel*/ }) {
+            Icon(imageVector = Icons.Default.DateRange, contentDescription = text)
+        }
+    }
 }
