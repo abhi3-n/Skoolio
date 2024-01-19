@@ -11,9 +11,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -110,6 +115,43 @@ fun ForgotPasswordText() {
         },
         style = TextStyle(textDecoration = TextDecoration.Underline)
     )
+}
+
+
+
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun DropDownMenu(
+    expanded: MutableState<Boolean>,
+    selectedValue: MutableState<String>,
+    dataList: List<String>
+) {
+    ExposedDropdownMenuBox(expanded = expanded.value, onExpandedChange = {
+        expanded.value = it
+    }) {
+        TextField(value = selectedValue.value,
+            modifier = Modifier.menuAnchor(),
+            onValueChange = {},
+            readOnly = true,
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) })
+        ExposedDropdownMenu(expanded = expanded.value,
+            onDismissRequest = { expanded.value = false }) {
+            dataList.forEach { item ->
+                DropdownMenuItem(text = {
+                    Text(text = item, color = Color.Black)
+                }, onClick = {
+                    dataList.forEach{
+                        if(item == it){
+                            selectedValue.value = item
+                        }
+                    }
+                    expanded.value = false
+                })
+            }
+        }
+    }
 }
 
 
