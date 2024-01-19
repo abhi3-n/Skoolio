@@ -27,15 +27,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.project.skoolio.components.EmailTextField
 import com.project.skoolio.components.ForgotPasswordText
 import com.project.skoolio.components.PasswordTextField
 import com.project.skoolio.components.SubmitButton
+import com.project.skoolio.components.textField
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.LoginViewModel
@@ -98,9 +99,10 @@ fun UserLoginForm(loading: Boolean,
     Column(modifier,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Login", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        EmailTextField(emailState = email,
+        textField(valueState = email,
             enabled = !loading,
-            )
+            keyboardType = KeyboardType.Email,
+            label = "Email")
         PasswordTextField(passwordState = password,
             enabled = !loading,
             passwordVisibility = passwordVisibility,

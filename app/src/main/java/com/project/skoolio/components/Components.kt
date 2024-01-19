@@ -18,7 +18,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -34,23 +33,28 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun EmailTextField(modifier: Modifier = Modifier,
-                   emailState: MutableState<String>,
-                   enabled: Boolean) {
+fun textField(modifier: Modifier = Modifier,
+                   valueState: MutableState<String>,
+                   enabled: Boolean = true,
+                   keyboardType: KeyboardType = KeyboardType.Text,
+                   label:String,
+                   imeAction: ImeAction = ImeAction.Next,
+                   keyboardActions: KeyboardActions = KeyboardActions.Default
+                   ) {
     OutlinedTextField(
-        value = emailState.value,
+        value = valueState.value,
         onValueChange = {
-            emailState.value = it
+            valueState.value = it
         },
         enabled = enabled,
         singleLine = true,
-        label = { Text(text = "Email") },
+        label = { Text(text = label) },
         textStyle = TextStyle(fontSize = 18.sp,color = Color.Black),
         modifier = modifier
             .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             .fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions.Default
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+        keyboardActions = keyboardActions
     )
 }
 
@@ -130,7 +134,7 @@ fun DropDownMenu(
     ExposedDropdownMenuBox(expanded = expanded.value, onExpandedChange = {
         expanded.value = it
     }) {
-        TextField(value = selectedValue.value,
+        OutlinedTextField(value = selectedValue.value,
             modifier = Modifier.menuAnchor(),
             onValueChange = {},
             readOnly = true,

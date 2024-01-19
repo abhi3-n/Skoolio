@@ -4,7 +4,7 @@ enum class AppScreens{
     SplashScreen,
     LoginScreen,
     SelectAccountTypeScreen,
-    CreateAccountScreen,
+    RegistrationFormScreen,
     HomeScreen,
 
 }
