@@ -1,5 +1,7 @@
 package com.project.skoolio.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +35,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun textField(modifier: Modifier = Modifier,
+fun CustomTextField(modifier: Modifier = Modifier,
                    valueState: MutableState<String>,
                    enabled: Boolean = true,
                    keyboardType: KeyboardType = KeyboardType.Text,
@@ -158,4 +160,7 @@ fun DropDownMenu(
     }
 }
 
-
+@Composable
+fun ShowToast(context: Context, message: String) {
+    Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+}

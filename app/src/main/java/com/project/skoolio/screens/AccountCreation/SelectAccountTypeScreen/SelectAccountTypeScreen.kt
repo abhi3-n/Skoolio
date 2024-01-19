@@ -1,4 +1,4 @@
-package com.project.skoolio.screens.SelectAccountTypeScreen
+package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
 import com.project.skoolio.components.DropDownMenu
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.viewModels.ViewModelProvider
 
 //@Preview
@@ -63,7 +64,7 @@ fun SelectAccountTypeScreen(
         DropDownMenu(expanded, selectedAccountType, accountTypeList)
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {
-            //TODO: Navigate to next screen
+            navController.navigate(AppScreens.RegistrationFormScreen.name+"/${selectedAccountType.value}")
         },
             enabled = if(selectedAccountType.value.isNotEmpty()) true else false
         ) {

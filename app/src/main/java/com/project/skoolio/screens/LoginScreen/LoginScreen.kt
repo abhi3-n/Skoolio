@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.components.ForgotPasswordText
 import com.project.skoolio.components.PasswordTextField
 import com.project.skoolio.components.SubmitButton
-import com.project.skoolio.components.textField
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.LoginViewModel
@@ -74,8 +74,6 @@ fun LoginScreen(
 
 }
 
-
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserLoginForm(loading: Boolean,
@@ -99,7 +97,7 @@ fun UserLoginForm(loading: Boolean,
     Column(modifier,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Login", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        textField(valueState = email,
+        CustomTextField(valueState = email,
             enabled = !loading,
             keyboardType = KeyboardType.Email,
             label = "Email")
@@ -118,10 +116,6 @@ fun UserLoginForm(loading: Boolean,
                 onDone(email.value.trim(), password.value.trim())
                 keyBoardController?.hide()
                 loginViewModel.hitBackend(context)
-//                if(showState.value && loginViewModel.message.value.isNotEmpty()){
-//                    Toast.makeText(context, loginViewModel.message.value, Toast.LENGTH_SHORT).show()
-//                    showState.value = false
-//                }
             }
         )
     }
