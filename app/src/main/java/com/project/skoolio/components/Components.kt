@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -141,10 +142,11 @@ fun ForgotPasswordText() {
 @OptIn(ExperimentalMaterial3Api::class)
 fun DropDownMenu(
     modifier: Modifier = Modifier,
-    expanded: MutableState<Boolean>,
     selectedValue: MutableState<String>,
     dataList: List<String>
 ) {
+    val expanded = rememberSaveable { mutableStateOf(false)}
+
     ExposedDropdownMenuBox(modifier = modifier
         ,expanded = expanded.value, onExpandedChange = {
         expanded.value = it
@@ -180,7 +182,7 @@ fun ShowToast(context: Context, message: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DOB(dobState: DatePickerState, current: Context) {
+fun DOB(dobState: DatePickerState) {
     val openDialog = rememberSaveable {
         mutableStateOf(false)
     }
@@ -243,4 +245,18 @@ fun NameFields(
 @Composable
 fun FormTitle(formTitle: String) {
     Text(text = formTitle, style = MaterialTheme.typography.titleLarge)
+}
+
+
+
+@Composable
+fun TextDropDownMenuRow(
+    text: String,
+    dataList: List<String>,
+    valueSelected: MutableState<String>
+) {
+    Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(text = text)
+        DropDownMenu(modifier = Modifier.width(150.dp), selectedValue = valueSelected, dataList = dataList)
+    }
 }
