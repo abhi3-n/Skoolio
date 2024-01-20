@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,16 +16,22 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -35,9 +40,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.skoolio.utils.convertEpochToDateString
 
 
 @Composable
@@ -173,12 +178,69 @@ fun ShowToast(context: Context, message: String) {
     Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalenderRow(text: String) {
+fun DOB(dobState: DatePickerState, current: Context) {
+    val openDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = text)
-        IconButton(onClick = { /*TODO:Open Calendar Panel*/ }) {
-            Icon(imageVector = Icons.Default.DateRange, contentDescription = text)
+        Text(text = "DOB")
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+            if(!dobState.selectedDateMillis.toString().isNullOrEmpty()){
+                convertEpochToDateString(dobState.selectedDateMillis)?.let { Text(text = it) }
+            }
+            IconButton(onClick = { openDialog.value = true }) {
+                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date of Birth")
+            }
         }
     }
+    DatePickerCustom(dobState = dobState, openDialog = openDialog)
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerCustom(
+    dobState: DatePickerState,
+    openDialog: MutableState<Boolean>) {
+    if(openDialog.value){
+        DatePickerDialog(onDismissRequest = { openDialog.value = false },
+            confirmButton = { Button(onClick = {
+                openDialog.value = false
+            }) {
+                Text(text = "Select")
+            } },
+            dismissButton = { Button(onClick = {openDialog.value = false}) {
+                Text(text = "Cancel")
+            }}) {
+            DatePicker(state = dobState)
+        }
+    }
+}
+
+
+@Composable
+fun NameFields(
+    firstName: MutableState<String>,
+    middleName: MutableState<String>,
+    lastName: MutableState<String>
+) {
+    CustomTextField(
+        valueState = firstName,
+        label = "First Name*"
+    )
+    CustomTextField(
+        valueState = middleName,
+        label = "Middle Name"
+    )
+    CustomTextField(
+        valueState = lastName,
+        label = "Last Name*"
+    )
+}
+
+@Composable
+fun FormTitle(formTitle: String) {
+    Text(text = formTitle, style = MaterialTheme.typography.titleLarge)
 }
