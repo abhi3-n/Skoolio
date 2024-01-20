@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
+import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.components.DOB
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.NameFields
@@ -74,18 +75,33 @@ fun ShowStudentRegistrationForm() {
     val studentMiddleName = rememberSaveable {mutableStateOf("")}
     val studentLastName = rememberSaveable {mutableStateOf("")}
     val dobState = rememberDatePickerState()
+    val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionClass = rememberSaveable { mutableStateOf("")}
+
+    val fatherName = rememberSaveable {mutableStateOf("")}
+    val fatherQualification = rememberSaveable {mutableStateOf("")}
+    val fatherOccupation = rememberSaveable {mutableStateOf("")}
+    val fatherContact = rememberSaveable {mutableStateOf("")}
+
+    val motherName = rememberSaveable {mutableStateOf("")}
+    val motherQualification = rememberSaveable {mutableStateOf("")}
+    val motherOccupation = rememberSaveable {mutableStateOf("")}
+    val motherContact = rememberSaveable {mutableStateOf("")}
+
 
     FormTitle("Student Registration Form")
     BasicDetails("Student",
         studentFirstName,
         studentMiddleName,
         studentLastName,
+        gender,
         dobState,
         nationalitySelected,
         admissionClass
     )
+    FamilyDetails("Father", fatherName, fatherQualification, fatherOccupation, fatherContact)
+    FamilyDetails("Mother", motherName, motherQualification, motherOccupation, motherContact)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,16 +111,71 @@ fun ShowTeacherRegistrationForm() {
     val teacherMiddleName = rememberSaveable {mutableStateOf("")}
     val teacherLastName = rememberSaveable {mutableStateOf("")}
     val dobState = rememberDatePickerState()
+    val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
 
+    val fatherName = rememberSaveable {mutableStateOf("")}
+    val fatherQualification = rememberSaveable {mutableStateOf("")}
+    val fatherOccupation = rememberSaveable {mutableStateOf("")}
+    val fatherContact = rememberSaveable {mutableStateOf("")}
+
+    val motherName = rememberSaveable {mutableStateOf("")}
+    val motherQualification = rememberSaveable {mutableStateOf("")}
+    val motherOccupation = rememberSaveable {mutableStateOf("")}
+    val motherContact = rememberSaveable {mutableStateOf("")}
+
+
     FormTitle("Teacher Registration Form")
-    BasicDetails("Teacher",
+    BasicDetails(
+        "Teacher",
         teacherFirstName,
         teacherMiddleName,
         teacherLastName,
+        gender,
         dobState,
         nationalitySelected
     )
+    FamilyDetails("Father",fatherName, fatherQualification, fatherOccupation, fatherContact)
+    FamilyDetails("Mother", motherName, motherQualification, motherOccupation, motherContact)
+}
+
+
+@Composable
+fun FamilyDetails(
+    member: String,
+    name: MutableState<String>,
+    qualification: MutableState<String>,
+    occupation: MutableState<String>,
+    contact: MutableState<String>
+) {
+    Surface(
+        modifier = Modifier.padding(4.dp),
+        border = BorderStroke(width = 2.dp, color = Color.LightGray)
+    ) {
+        Column(
+            modifier = Modifier.padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            FormTitle("$member Details", style = MaterialTheme.typography.titleSmall)
+            CustomTextField(
+                valueState = name,
+                label = "Name*"
+            )
+            CustomTextField(
+                valueState = qualification,
+                label = "Qualification"
+            )
+            CustomTextField(
+                valueState = occupation,
+                label = "Occupation"
+            )
+            CustomTextField(
+                valueState = contact,
+                label = "Contact Number"
+            )
+        }
+    }
 }
 
 
@@ -115,6 +186,7 @@ fun BasicDetails(
     firstName: MutableState<String>,
     middleName: MutableState<String>,
     lastName: MutableState<String>,
+    gender: MutableState<String>,
     dobState: DatePickerState,
     nationalitySelected: MutableState<String>,
     admissionClass: MutableState<String> = mutableStateOf("")
@@ -128,9 +200,12 @@ fun BasicDetails(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            FormTitle("$userType Details", style = MaterialTheme.typography.titleSmall)
+            FormTitle("Basic Details", style = MaterialTheme.typography.titleSmall)
             NameFields(firstName, middleName, lastName)
             DOB(dobState)
+            TextDropDownMenuRow(text = "Gender",
+                dataList = listOf("Male", "Female"),
+                valueSelected = gender)
             TextDropDownMenuRow(
                 "Nationality:",
                 dataList = listOf("Indian", "Other"),
