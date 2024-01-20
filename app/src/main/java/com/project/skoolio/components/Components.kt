@@ -187,10 +187,10 @@ fun DOB(dobState: DatePickerState) {
         mutableStateOf(false)
     }
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = "DOB")
+        Text(text = "DOB", modifier = Modifier.padding(top = 13.dp, start = 8.dp))
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             if(!dobState.selectedDateMillis.toString().isNullOrEmpty()){
-                convertEpochToDateString(dobState.selectedDateMillis)?.let { Text(text = it) }
+                convertEpochToDateString(dobState.selectedDateMillis)?.let { Text(text = it, modifier = Modifier.padding(top = 13.dp)) }
             }
             IconButton(onClick = { openDialog.value = true }) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date of Birth")
@@ -243,8 +243,9 @@ fun NameFields(
 }
 
 @Composable
-fun FormTitle(formTitle: String) {
-    Text(text = formTitle, style = MaterialTheme.typography.titleLarge)
+fun FormTitle(formTitle: String,
+              style: TextStyle = MaterialTheme.typography.titleLarge) {
+    Text(text = formTitle, style = style)
 }
 
 
@@ -256,7 +257,7 @@ fun TextDropDownMenuRow(
     valueSelected: MutableState<String>
 ) {
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = text)
-        DropDownMenu(modifier = Modifier.width(150.dp), selectedValue = valueSelected, dataList = dataList)
+        Text(text = text, modifier = Modifier.padding(top = 13.dp, start = 8.dp))
+        DropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList)
     }
 }

@@ -1,19 +1,27 @@
 package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
 import com.project.skoolio.components.DOB
@@ -22,6 +30,12 @@ import com.project.skoolio.components.NameFields
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.viewModels.ViewModelProvider
+//
+//@Preview
+//@Composable
+//fun register(){
+//    RegistrationFormScreen()
+//}
 
 @Composable
 fun RegistrationFormScreen(
@@ -61,20 +75,76 @@ fun ShowStudentRegistrationForm() {
     val studentLastName = rememberSaveable {mutableStateOf("")}
     val dobState = rememberDatePickerState()
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
-
+    val admissionClass = rememberSaveable { mutableStateOf("")}
 
     FormTitle("Student Registration Form")
-    NameFields(studentFirstName, studentMiddleName, studentLastName)
-    DOB(dobState)
-    TextDropDownMenuRow("Nationality:",dataList =  listOf("Indian", "Other"),valueSelected = nationalitySelected)
+    BasicDetails("Student",
+        studentFirstName,
+        studentMiddleName,
+        studentLastName,
+        dobState,
+        nationalitySelected,
+        admissionClass
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ShowTeacherRegistrationForm() {
+    val teacherFirstName = rememberSaveable {mutableStateOf("")}
+    val teacherMiddleName = rememberSaveable {mutableStateOf("")}
+    val teacherLastName = rememberSaveable {mutableStateOf("")}
+    val dobState = rememberDatePickerState()
+    val nationalitySelected = rememberSaveable { mutableStateOf("")}
+
+    FormTitle("Teacher Registration Form")
+    BasicDetails("Teacher",
+        teacherFirstName,
+        teacherMiddleName,
+        teacherLastName,
+        dobState,
+        nationalitySelected
+    )
 }
 
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowTeacherRegistrationForm() {
-    ShowToast(LocalContext.current,"Teacher Registration Form")
-    FormTitle("Teacher Registration Form")
+fun BasicDetails(
+    userType: String,
+    firstName: MutableState<String>,
+    middleName: MutableState<String>,
+    lastName: MutableState<String>,
+    dobState: DatePickerState,
+    nationalitySelected: MutableState<String>,
+    admissionClass: MutableState<String> = mutableStateOf("")
+) {
+    Surface(
+        modifier = Modifier.padding(4.dp),
+        border = BorderStroke(width = 2.dp, color = Color.LightGray)
+    ) {
+        Column(
+            modifier = Modifier.padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            FormTitle("$userType Details", style = MaterialTheme.typography.titleSmall)
+            NameFields(firstName, middleName, lastName)
+            DOB(dobState)
+            TextDropDownMenuRow(
+                "Nationality:",
+                dataList = listOf("Indian", "Other"),
+                valueSelected = nationalitySelected
+            )
+            if(userType == "Student"){
+                TextDropDownMenuRow(
+                    text = "Admission Class:",
+                    dataList = listOf("Pre-Nursery", "Nursery"),
+                    valueSelected = admissionClass
+                )
+            }
+        }
+    }
 }
 
 @Composable
