@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.skoolio.utils.convertEpochToDateString
+import com.project.skoolio.utils.statesList
 
 
 @Composable
@@ -260,4 +261,17 @@ fun TextDropDownMenuRow(
         Text(text = text, modifier = Modifier.padding(top = 13.dp, start = 8.dp))
         DropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList)
     }
+}
+
+
+
+@Composable
+fun AddressComposable(
+    resAddress: MutableState<String>,
+    resCity: MutableState<String>,
+    resState: MutableState<String>
+) {
+    CustomTextField(valueState = resAddress, label = "Residential Address*")
+    CustomTextField(valueState = resCity, label = "City*")
+    TextDropDownMenuRow(text = "State*", dataList = statesList.list, valueSelected = resState)
 }
