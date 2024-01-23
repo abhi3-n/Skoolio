@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -45,6 +43,7 @@ import com.project.skoolio.components.NameFields
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.utils.StudentRules
+import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 //
@@ -60,6 +59,7 @@ fun RegistrationFormScreen(
     viewModelProvider: ViewModelProvider,
     userType: String?
 ) {
+    val registrationScreenViewModel:RegistrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,7 +68,7 @@ fun RegistrationFormScreen(
         if(userType == "Student"){
             Image(painter = painterResource(id = R.drawable.students),
                 contentDescription = "Student")
-            ShowStudentRegistrationForm()
+            ShowStudentRegistrationForm(registrationScreenViewModel)
         }
         else if(userType == "Teacher"){
             Image(painter = painterResource(id = R.drawable.teacher),
@@ -86,7 +86,7 @@ fun RegistrationFormScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowStudentRegistrationForm() {
+fun ShowStudentRegistrationForm(registrationScreenViewModel: RegistrationScreenViewModel) {
     //Some states to be used. TODO: Use some sort of class here
     //Basic Details
     val studentFirstName = rememberSaveable {mutableStateOf("")}
@@ -141,7 +141,7 @@ fun ShowStudentRegistrationForm() {
         resAddress, resCity, resState,
         MOT)
     RulesDialog(StudentRules.rulesList, rulesAccepted)
-    NextButton()
+    NextButton(registrationScreenViewModel)
 }
 
 @Composable
@@ -211,10 +211,10 @@ fun OtherStudentDetails(
 }
 
 @Composable
-fun NextButton() {
+fun NextButton(registrationScreenViewModel: RegistrationScreenViewModel) {
     Row(horizontalArrangement = Arrangement.Center){
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "Submit")
+        Button(onClick = { registrationScreenViewModel.sendOTP() }) {
+            Text(text = "Next")
         }
     }
 }
@@ -378,5 +378,4 @@ fun BasicDetails(
 fun ShowAdminRegistrationForm() {
     ShowToast(LocalContext.current,"Admin Registration Form")
     FormTitle("Admin Registration Form")
-
 }

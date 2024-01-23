@@ -19,8 +19,7 @@ class LoginViewModel @Inject constructor(private val backendRepository: BackendR
         Log.d("LoginViewModel", "hitbackend")
         viewModelScope.launch {
             _message.value =  backendRepository.hitBackend().message
-                    Toast.makeText(context, _message.value, Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, _message.value, Toast.LENGTH_SHORT).show()
         }
     }
 }
