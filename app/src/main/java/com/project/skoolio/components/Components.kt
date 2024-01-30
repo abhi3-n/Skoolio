@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,8 +44,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.project.skoolio.model.EmailOtpRequest
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.convertEpochToDateString
 import com.project.skoolio.utils.statesList
+import com.project.skoolio.viewModels.RegistrationScreenViewModel
 
 
 @Composable
@@ -274,4 +279,43 @@ fun AddressComposable(
     CustomTextField(valueState = resAddress, label = "Residential Address*")
     CustomTextField(valueState = resCity, label = "City*")
     TextDropDownMenuRow(text = "State*", dataList = statesList.list, valueSelected = resState)
+}
+
+
+@Composable
+fun NextButton(
+    registrationScreenViewModel: RegistrationScreenViewModel,
+    email: MutableState<String>,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    Row(horizontalArrangement = Arrangement.Center){
+        Button(onClick = {
+            if(validDetails(email)) {
+                registrationScreenViewModel.receiveOTP(EmailOtpRequest(email.value))
+//                if(
+//                    !registrationScreenViewModel.otpResponse.value.loading!!
+////                     registrationScreenViewModel.otpResponse.value.data.otp.isNotEmpty()
+//                ){
+                //TODO:introduce otp sent check
+                    navController.navigate(AppScreens.OtpValidationScreen.name)
+//                }
+            }
+            else {
+                Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        ) {
+            Text(text = "Next")
+        }
+    }
+}
+
+fun validDetails(email: MutableState<String>): Boolean {
+
+    return if(email.value.isNotEmpty())
+        true
+    else
+        false
+    //TODO: this function needs to be modified for better checking
 }

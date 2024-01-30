@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +39,7 @@ import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.components.DOB
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.NameFields
+import com.project.skoolio.components.NextButton
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.utils.StudentRules
@@ -68,7 +68,7 @@ fun RegistrationFormScreen(
         if(userType == "Student"){
             Image(painter = painterResource(id = R.drawable.students),
                 contentDescription = "Student")
-            ShowStudentRegistrationForm(registrationScreenViewModel)
+            ShowStudentRegistrationForm(registrationScreenViewModel, navController)
         }
         else if(userType == "Teacher"){
             Image(painter = painterResource(id = R.drawable.teacher),
@@ -86,7 +86,10 @@ fun RegistrationFormScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowStudentRegistrationForm(registrationScreenViewModel: RegistrationScreenViewModel) {
+fun ShowStudentRegistrationForm(
+    registrationScreenViewModel: RegistrationScreenViewModel,
+    navController: NavHostController
+) {
     //Some states to be used. TODO: Use some sort of class here
     //Basic Details
     val studentFirstName = rememberSaveable {mutableStateOf("")}
@@ -141,7 +144,7 @@ fun ShowStudentRegistrationForm(registrationScreenViewModel: RegistrationScreenV
         resAddress, resCity, resState,
         MOT)
     RulesDialog(StudentRules.rulesList, rulesAccepted)
-    NextButton(registrationScreenViewModel)
+    NextButton(registrationScreenViewModel, email, navController)
 }
 
 @Composable
@@ -210,14 +213,7 @@ fun OtherStudentDetails(
     }
 }
 
-@Composable
-fun NextButton(registrationScreenViewModel: RegistrationScreenViewModel) {
-    Row(horizontalArrangement = Arrangement.Center){
-        Button(onClick = { registrationScreenViewModel.sendOTP() }) {
-            Text(text = "Next")
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.RegistrationFormScreen
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.SelectAccountTypeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
+import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -32,6 +33,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
             navBack.arguments?.getString("userType").let { userType ->
                 RegistrationFormScreen(navController,viewModelProvider,userType)
             }
+        }
+        composable(AppScreens.OtpValidationScreen.name){
+            OtpValidationScreen(navController, viewModelProvider)
         }
     }
 }
