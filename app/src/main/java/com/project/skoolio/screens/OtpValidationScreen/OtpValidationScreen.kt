@@ -15,13 +15,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.CustomTextField
+import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable
 fun OtpValidationScreen(navController: NavHostController,
                         viewModelProvider: ViewModelProvider) {
-    val registrationScreenViewModel:RegistrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
+    val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
     val userOtp = rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
     Column(
@@ -33,7 +34,7 @@ fun OtpValidationScreen(navController: NavHostController,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done)
         TextButton(onClick = {
-            if(userOtp.value != registrationScreenViewModel.otpResponse.value.data.otp){
+            if(userOtp.value != otpValidationViewModel.otpResponse.value.data.otp){
                 Toast.makeText(context, "Otp does not match.",Toast.LENGTH_SHORT).show()
             }
             else{

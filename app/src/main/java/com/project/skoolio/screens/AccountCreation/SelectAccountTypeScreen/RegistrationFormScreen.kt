@@ -43,7 +43,6 @@ import com.project.skoolio.components.NextButton
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.utils.StudentRules
-import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 //
@@ -59,7 +58,6 @@ fun RegistrationFormScreen(
     viewModelProvider: ViewModelProvider,
     userType: String?
 ) {
-    val registrationScreenViewModel:RegistrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,7 +66,7 @@ fun RegistrationFormScreen(
         if(userType == "Student"){
             Image(painter = painterResource(id = R.drawable.students),
                 contentDescription = "Student")
-            ShowStudentRegistrationForm(registrationScreenViewModel, navController)
+            ShowStudentRegistrationForm(viewModelProvider, navController)
         }
         else if(userType == "Teacher"){
             Image(painter = painterResource(id = R.drawable.teacher),
@@ -87,7 +85,7 @@ fun RegistrationFormScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShowStudentRegistrationForm(
-    registrationScreenViewModel: RegistrationScreenViewModel,
+    viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
     //Some states to be used. TODO: Use some sort of class here
@@ -144,7 +142,7 @@ fun ShowStudentRegistrationForm(
         resAddress, resCity, resState,
         MOT)
     RulesDialog(StudentRules.rulesList, rulesAccepted)
-    NextButton(registrationScreenViewModel, email, navController)
+    NextButton(viewModelProvider, email, navController)
 }
 
 @Composable

@@ -2,9 +2,11 @@ package com.project.skoolio.di
 
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.BackendRepository
+import com.project.skoolio.repositories.OtpValidationRepository
 import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.utils.Constants
 import com.project.skoolio.viewModels.LoginViewModel
+import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import dagger.Module
 import dagger.Provides
@@ -33,6 +35,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRegistrationScreenRepository(backend: Backend) = RegistrationScreenRepository(backend)
+    @Provides
+    @Singleton
+    fun provideOtpValidationRepository(backend: Backend) = OtpValidationRepository(backend)
 
 
     @Provides
@@ -41,5 +46,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRegistrationScreenViewModel(registrationScreenRepository: RegistrationScreenRepository) = RegistrationScreenViewModel(registrationScreenRepository)
-
+    @Provides
+    @Singleton
+    fun provideOtpValidationViewModel(otpValidationRepository: OtpValidationRepository) = OtpValidationViewModel(otpValidationRepository)
 }

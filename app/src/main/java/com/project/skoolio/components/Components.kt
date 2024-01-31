@@ -49,7 +49,8 @@ import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.convertEpochToDateString
 import com.project.skoolio.utils.statesList
-import com.project.skoolio.viewModels.RegistrationScreenViewModel
+import com.project.skoolio.viewModels.OtpValidationViewModel
+import com.project.skoolio.viewModels.ViewModelProvider
 
 
 @Composable
@@ -284,15 +285,16 @@ fun AddressComposable(
 
 @Composable
 fun NextButton(
-    registrationScreenViewModel: RegistrationScreenViewModel,
+    viewModelProvider: ViewModelProvider,
     email: MutableState<String>,
     navController: NavHostController
 ) {
     val context = LocalContext.current
+    val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
     Row(horizontalArrangement = Arrangement.Center){
         Button(onClick = {
             if(validDetails(email)) {
-                registrationScreenViewModel.receiveOTP(EmailOtpRequest(email.value))
+                otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value))
 //                if(
 //                    !registrationScreenViewModel.otpResponse.value.loading!!
 ////                     registrationScreenViewModel.otpResponse.value.data.otp.isNotEmpty()
