@@ -6,5 +6,6 @@ enum class AppScreens{
     SelectAccountTypeScreen,
     RegistrationFormScreen,
     OtpValidationScreen,
+    SetPasswordScreen,
     HomeScreen,
 }

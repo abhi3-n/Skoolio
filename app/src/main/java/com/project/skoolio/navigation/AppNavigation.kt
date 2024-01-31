@@ -10,6 +10,7 @@ import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.Regis
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.SelectAccountTypeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
+import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -36,6 +37,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.OtpValidationScreen.name){
             OtpValidationScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.SetPasswordScreen.name){
+            SetPasswordScreen(navController,viewModelProvider)
         }
     }
 }

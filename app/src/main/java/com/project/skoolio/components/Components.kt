@@ -295,13 +295,8 @@ fun NextButton(
         Button(onClick = {
             if(validDetails(email)) {
                 otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value))
-//                if(
-//                    !registrationScreenViewModel.otpResponse.value.loading!!
-////                     registrationScreenViewModel.otpResponse.value.data.otp.isNotEmpty()
-//                ){
-                //TODO:introduce otp sent check
-                    navController.navigate(AppScreens.OtpValidationScreen.name)
-//                }
+                Toast.makeText(context, "OTP Sent on mail", Toast.LENGTH_SHORT).show()
+                navController.navigate(AppScreens.OtpValidationScreen.name)
             }
             else {
                 Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
@@ -310,6 +305,16 @@ fun NextButton(
         ) {
             Text(text = "Next")
         }
+    }
+//    if(!otpValidationViewModel.otpResponse.value.loading!! &&
+//        otpValidationViewModel.otpResponse.value.data.otp.isNotEmpty()){
+//    //TODO:introduce otp sent check
+//
+//    }
+
+    if(otpValidationViewModel.getIsOtpValidated()){
+        otpValidationViewModel.resetOtpValidated()
+        navController.navigate(AppScreens.SetPasswordScreen.name)
     }
 }
 
@@ -320,4 +325,26 @@ fun validDetails(email: MutableState<String>): Boolean {
     else
         false
     //TODO: this function needs to be modified for better checking
+}
+
+
+
+@Composable
+fun TextCustomTextField(
+    text:String,
+    valueState: MutableState<String>,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction,
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    CustomTextField(
+        valueState = valueState,
+        label = "",
+        keyboardType = keyboardType,
+        imeAction = imeAction
+    )
 }

@@ -3,7 +3,6 @@ package com.project.skoolio.screens.OtpValidationScreen
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -14,9 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
-import com.project.skoolio.components.CustomTextField
+import com.project.skoolio.components.TextCustomTextField
 import com.project.skoolio.viewModels.OtpValidationViewModel
-import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable
@@ -25,24 +23,28 @@ fun OtpValidationScreen(navController: NavHostController,
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
     val userOtp = rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top) {
-        Text(text = "Enter Otp", style = MaterialTheme.typography.titleMedium)
-        CustomTextField(valueState = userOtp,
-            label = "",
+        TextCustomTextField(
+            text = "Enter OTP",
+            valueState = userOtp,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done)
         TextButton(onClick = {
-            if(userOtp.value != otpValidationViewModel.otpResponse.value.data.otp){
-                Toast.makeText(context, "Otp does not match.",Toast.LENGTH_SHORT).show()
+            if(!otpValidationViewModel.validateOtp(userOtp.value)){
+                Toast.makeText(context, "Invalid OTP.",Toast.LENGTH_SHORT).show()
             }
             else{
-                Toast.makeText(context, "Otp matches.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Otp Validation Successful.",Toast.LENGTH_SHORT).show()
+                otpValidationViewModel.clearStoredOtp()
                 //TODO: navigate to set password screen
+                navController.popBackStack()
             }
         }) {
             Text(text = "Validate OTP")
         }
     }
 }
+

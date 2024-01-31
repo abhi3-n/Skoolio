@@ -6,5 +6,5 @@ data class EmailOtpRequest(
 
 
 data class EmailOtpResponse(
-    val otp: String
+    var otp: String
 )

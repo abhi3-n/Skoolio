@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
-import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.OtpValidationRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +19,7 @@ class OtpValidationViewModel @Inject constructor(private  val  otpValidationRepo
             DataOrException(EmailOtpResponse(""), false, null)
         )
     val otpResponse: State<DataOrException<EmailOtpResponse, Boolean, Exception>> = _otpResponse
+    private val _isOtpValidated = mutableStateOf(false)
     fun receiveOTP(emailOtpRequest: EmailOtpRequest):Unit{
         viewModelScope.launch {
             _otpResponse.value.loading = true
@@ -31,5 +31,26 @@ class OtpValidationViewModel @Inject constructor(private  val  otpValidationRepo
             }
         }
 
+    }
+
+    fun validateOtp(otp:String):Boolean{
+         if(otp == _otpResponse.value.data.otp){
+             _isOtpValidated.value = true
+         }
+        else{
+            _isOtpValidated.value = false
+         }
+        return _isOtpValidated.value
+    }
+
+    fun clearStoredOtp() {
+        _otpResponse.value.data.otp = ""
+    }
+
+    fun getIsOtpValidated(): Boolean {
+        return _isOtpValidated.value
+    }
+    fun resetOtpValidated():Unit{
+        _isOtpValidated.value = false
     }
 }
