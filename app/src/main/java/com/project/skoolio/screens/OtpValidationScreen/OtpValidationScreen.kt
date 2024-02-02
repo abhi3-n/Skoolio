@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
+import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.TextCustomTextField
 import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -32,7 +33,7 @@ fun OtpValidationScreen(navController: NavHostController,
             valueState = userOtp,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done)
-        TextButton(onClick = {
+        CustomButton(onClick = {
             if(!otpValidationViewModel.validateOtp(userOtp.value)){
                 Toast.makeText(context, "Invalid OTP.",Toast.LENGTH_SHORT).show()
             }

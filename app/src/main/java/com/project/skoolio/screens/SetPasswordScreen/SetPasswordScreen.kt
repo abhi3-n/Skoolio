@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.TextCustomTextField
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -34,7 +35,7 @@ fun SetPasswordScreen(navController: NavHostController, viewModelProvider: ViewM
         TextCustomTextField(text = "Confirm Password",
             valueState = confirmPassword,
             imeAction = ImeAction.Done)
-        TextButton(onClick = {
+        CustomButton(onClick = {
             if(password.value != confirmPassword.value){
                 Toast.makeText(context, "Entries don't match.", Toast.LENGTH_SHORT).show()
             }

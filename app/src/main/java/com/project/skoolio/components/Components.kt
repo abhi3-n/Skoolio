@@ -291,26 +291,30 @@ fun NextButton(
 ) {
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
+
+    val onOtpSuccess:(Context,NavHostController)->Unit = { context: Context, navHostController: NavHostController ->
+        Toast.makeText(context, "OTP Sent on mail", Toast.LENGTH_SHORT).show()
+        navController.navigate(AppScreens.OtpValidationScreen.name)
+    }
+    val onOtpFailure:(Context)->Unit = {context ->
+        Toast.makeText(context, "Some error has occured.", Toast.LENGTH_SHORT).show()
+    }
     Row(horizontalArrangement = Arrangement.Center){
-        Button(onClick = {
+        CustomButton(onClick = {
             if(validDetails(email)) {
-                otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value))
-                Toast.makeText(context, "OTP Sent on mail", Toast.LENGTH_SHORT).show()
-                navController.navigate(AppScreens.OtpValidationScreen.name)
+                otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value),
+                    context,
+                    navController,
+                    onOtpSuccess,
+                    onOtpFailure)
             }
             else {
                 Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
             }
-        }
-        ) {
+        }) {
             Text(text = "Next")
         }
     }
-//    if(!otpValidationViewModel.otpResponse.value.loading!! &&
-//        otpValidationViewModel.otpResponse.value.data.otp.isNotEmpty()){
-//    //TODO:introduce otp sent check
-//
-//    }
 
     if(otpValidationViewModel.getIsOtpValidated()){
         otpValidationViewModel.resetOtpValidated()
@@ -347,4 +351,20 @@ fun TextCustomTextField(
         keyboardType = keyboardType,
         imeAction = imeAction
     )
+}
+
+@Composable
+fun CustomButton(
+    modifier: Modifier = Modifier,
+    onClick:()->Unit,
+    enabled:Boolean = true,
+    content:@Composable ()->Unit
+) {
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        enabled = enabled
+    ) {
+        content.invoke()
+    }
 }

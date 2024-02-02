@@ -24,4 +24,8 @@ class OtpValidationRepository @Inject constructor(private val backend: Backend) 
         Log.d("", "Otp response received successfully in repository.")
         return dataOrException
     }
+
+    fun resetException() {
+        dataOrException.exception = null
+    }
 }
