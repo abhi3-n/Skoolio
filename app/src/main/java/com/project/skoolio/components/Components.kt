@@ -147,7 +147,7 @@ fun ForgotPasswordText() {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun DropDownMenu(
+fun CustomDropDownMenu(
     modifier: Modifier = Modifier,
     selectedValue: MutableState<String>,
     dataList: List<String>
@@ -158,6 +158,7 @@ fun DropDownMenu(
         ,expanded = expanded.value, onExpandedChange = {
         expanded.value = it
     }) {
+        //TODO:DropDownMenu should close when clicked on textfield
         OutlinedTextField(value = selectedValue.value,
             modifier = Modifier.menuAnchor(),
             onValueChange = {},
@@ -220,7 +221,10 @@ fun DatePickerCustom(
             }) {
                 Text(text = "Select")
             } },
-            dismissButton = { Button(onClick = {openDialog.value = false}) {
+            dismissButton = { Button(onClick = {
+                openDialog.value = false
+                //TODO:when dismiss button is pressed, the date should be cleared.
+            }) {
                 Text(text = "Cancel")
             }}) {
             DatePicker(state = dobState)
@@ -265,7 +269,7 @@ fun TextDropDownMenuRow(
 ) {
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = text, modifier = Modifier.padding(top = 13.dp, start = 8.dp))
-        DropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList)
+        CustomDropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList)
     }
 }
 
@@ -299,20 +303,28 @@ fun NextButton(
     val onOtpFailure:(Context)->Unit = {context ->
         Toast.makeText(context, "Some error has occured.", Toast.LENGTH_SHORT).show()
     }
+    val loading = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.Center){
         CustomButton(onClick = {
             if(validDetails(email)) {
+                loading.value = true
                 otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value),
                     context,
                     navController,
                     onOtpSuccess,
-                    onOtpFailure)
+                    onOtpFailure,
+                    loading)
             }
             else {
                 Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
             }
         }) {
-            Text(text = "Next")
+            if(loading.value){
+                CircularProgressIndicatorCustom()
+            }
+            else{
+                Text(text = "Next")
+            }
         }
     }
 
@@ -320,6 +332,15 @@ fun NextButton(
         otpValidationViewModel.resetOtpValidated()
         navController.navigate(AppScreens.SetPasswordScreen.name)
     }
+}
+
+@Composable
+fun CircularProgressIndicatorCustom() {
+    CircularProgressIndicator(
+        modifier = Modifier.size(20.dp),
+        color = Color.White,
+        strokeWidth = 2.dp
+    )
 }
 
 fun validDetails(email: MutableState<String>): Boolean {

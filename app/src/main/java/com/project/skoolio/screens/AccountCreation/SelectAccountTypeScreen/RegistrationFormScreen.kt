@@ -93,10 +93,13 @@ fun ShowStudentRegistrationForm(
     val studentFirstName = rememberSaveable {mutableStateOf("")}
     val studentMiddleName = rememberSaveable {mutableStateOf("")}
     val studentLastName = rememberSaveable {mutableStateOf("")}
-    val dobState = rememberDatePickerState()
+    var dobState = rememberDatePickerState()
     val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
+    val admissionSchool = rememberSaveable { mutableStateOf("")}
     val admissionClass = rememberSaveable { mutableStateOf("")}
+    val admissionSection = rememberSaveable { mutableStateOf("")}
+
 
     //Father Details
     val fatherName = rememberSaveable {mutableStateOf("")}
@@ -133,7 +136,9 @@ fun ShowStudentRegistrationForm(
         gender,
         dobState,
         nationalitySelected,
-        admissionClass
+        admissionSchool,
+        admissionClass,
+        admissionSection
     )
     FamilyDetails("Father", fatherName, fatherQualification, fatherOccupation)
     FamilyDetails("Mother", motherName, motherQualification, motherOccupation)
@@ -240,7 +245,9 @@ fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
             text = {
                 Column(verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start,
-                    modifier = Modifier.height(300.dp).verticalScroll(rememberScrollState())) {
+                    modifier = Modifier
+                        .height(300.dp)
+                        .verticalScroll(rememberScrollState())) {
                     rulesList.forEachIndexed { index, rule ->
                         Text(text = "${index+1}.) $rule")
                     }
@@ -264,7 +271,7 @@ fun ContactDetails(
     val isChecked = rememberSaveable { mutableStateOf(false)}
     CustomTextField(valueState = primaryContact, label = "Contact Number*")
     CustomTextField(valueState = primaryContactName, label = "Contact Name*")
-    TextDropDownMenuRow(text = "Relation", dataList = listOf("Father", "Mother", "Other"), valueSelected = primaryContactRelation)
+    TextDropDownMenuRow(text = "Relation*", dataList = listOf("Father", "Mother", "Other"), valueSelected = primaryContactRelation)
     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.padding(4.dp)) {
         Checkbox(checked = isChecked.value, onCheckedChange ={
             isChecked.value = it
@@ -273,9 +280,9 @@ fun ContactDetails(
             isChecked.value = !isChecked.value
         })
     }
-    CustomTextField(valueState = alternativeContact, label = "Alternative Contact Number")
-    CustomTextField(valueState = alternativeContactName, label = "Alternative Contact Name")
-    TextDropDownMenuRow(text = "Relation", dataList = listOf("Father", "Mother", "Other"), valueSelected = alternativeContactRelation)
+    CustomTextField(valueState = alternativeContact, label = "Alternative Contact Number*")
+    CustomTextField(valueState = alternativeContactName, label = "Alternative Contact Name*")
+    TextDropDownMenuRow(text = "Relation*", dataList = listOf("Father", "Mother", "Other"), valueSelected = alternativeContactRelation)
 
     if(isChecked.value){
         alternativeContact.value = primaryContact.value
@@ -311,15 +318,16 @@ fun ShowTeacherRegistrationForm() {
 
 
     FormTitle("Teacher Registration Form")
-    BasicDetails(
-        "Teacher",
-        teacherFirstName,
-        teacherMiddleName,
-        teacherLastName,
-        gender,
-        dobState,
-        nationalitySelected
-    )
+//    BasicDetails(
+//        "Teacher",
+//        teacherFirstName,
+//        teacherMiddleName,
+//        teacherLastName,
+//        gender,
+//        dobState,
+//        nationalitySelected,
+//        admissionClass1 = admissionClass
+//    )
 //    FamilyDetails("Father",fatherName, fatherQualification, fatherOccupation, fatherContact)
 //    FamilyDetails("Mother", motherName, motherQualification, motherOccupation, motherContact)
 }
@@ -335,7 +343,9 @@ fun BasicDetails(
     gender: MutableState<String>,
     dobState: DatePickerState,
     nationalitySelected: MutableState<String>,
-    admissionClass: MutableState<String> = mutableStateOf("")
+    admissionSchool: MutableState<String>,
+    admissionClass: MutableState<String>,
+    admissionSection: MutableState<String>
 ) {
     Surface(
         modifier = Modifier.padding(4.dp),
@@ -358,6 +368,11 @@ fun BasicDetails(
                 valueSelected = nationalitySelected
             )
             if(userType == "Student"){
+//                TextDropDownMenuRow(text = "School:",
+//                    dataList = SchoolList.listOfSchools,
+//                    valueSelected = admissionSchool)
+                admissionSchool.value = "Innocent Heart Playway School" //Currently assuming for single school only
+                admissionSection.value = "-"
                 TextDropDownMenuRow(
                     text = "Admission Class:",
                     dataList = listOf("Pre-Nursery", "Nursery"),

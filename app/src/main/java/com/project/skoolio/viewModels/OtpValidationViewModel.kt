@@ -27,12 +27,14 @@ class OtpValidationViewModel @Inject constructor(private  val  otpValidationRepo
         context: Context,
         navController: NavHostController,
         onOtpSuccess: (Context, NavHostController) -> Unit,
-        onOtpFailure: (Context) -> Unit
+        onOtpFailure: (Context) -> Unit,
+        loading: MutableState<Boolean>
     ):Unit{
         viewModelScope.launch {
             _otpResponse.value.loading = true
             Log.d("OtpResponse","Loading turned to true.")
             _otpResponse.value = otpValidationRepository.receiveOTP(emailOtpRequest)
+            loading.value = false
             if(_otpResponse.value.data.otp.isNotEmpty() == true) {
                 _otpResponse.value.loading = false
                 onOtpSuccess(context,navController)

@@ -24,7 +24,7 @@ fun convertEpochToDateString(epoch: Long?): String? {
 }
 
 object statesList{
-    val list = listOf(
+    val list:List<String> = listOf(
         "Andhra Pradesh",
         "Arunachal Pradesh",
         "Assam",
@@ -64,5 +64,11 @@ object StudentRules{
         "Deposit Fees (in advance) within first 7 days of every month.\n",
         "Second Saturday will be holiday.\n",
         "Every government holiday will be a holiday in the school.\n"
+    )
+}
+
+object SchoolList{
+    val listOfSchools:List<String> = listOf(
+        "Innocent Heart Playway School"
     )
 }

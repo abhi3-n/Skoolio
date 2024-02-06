@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -19,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
 import com.project.skoolio.components.CustomButton
-import com.project.skoolio.components.DropDownMenu
+import com.project.skoolio.components.CustomDropDownMenu
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -63,7 +61,7 @@ fun SelectAccountTypeScreen(
         }
         Text(text = "Select Account Type")
         Spacer(modifier = Modifier.height(20.dp))
-        DropDownMenu(selectedValue =  selectedAccountType, dataList =  accountTypeList)
+        CustomDropDownMenu(selectedValue =  selectedAccountType, dataList =  accountTypeList)
         Spacer(modifier = Modifier.height(20.dp))
 
         CustomButton(onClick = {
