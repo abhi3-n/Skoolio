@@ -98,7 +98,6 @@ fun ShowStudentRegistrationForm(
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionSchool = rememberSaveable { mutableStateOf("")}
     val admissionClass = rememberSaveable { mutableStateOf("")}
-    val admissionSection = rememberSaveable { mutableStateOf("")}
 
 
     //Father Details
@@ -137,8 +136,7 @@ fun ShowStudentRegistrationForm(
         dobState,
         nationalitySelected,
         admissionSchool,
-        admissionClass,
-        admissionSection
+        admissionClass
     )
     FamilyDetails("Father", fatherName, fatherQualification, fatherOccupation)
     FamilyDetails("Mother", motherName, motherQualification, motherOccupation)
@@ -345,7 +343,6 @@ fun BasicDetails(
     nationalitySelected: MutableState<String>,
     admissionSchool: MutableState<String>,
     admissionClass: MutableState<String>,
-    admissionSection: MutableState<String>
 ) {
     Surface(
         modifier = Modifier.padding(4.dp),
@@ -372,7 +369,6 @@ fun BasicDetails(
 //                    dataList = SchoolList.listOfSchools,
 //                    valueSelected = admissionSchool)
                 admissionSchool.value = "Innocent Heart Playway School" //Currently assuming for single school only
-                admissionSection.value = "-"
                 TextDropDownMenuRow(
                     text = "Admission Class:",
                     dataList = listOf("Pre-Nursery", "Nursery"),
