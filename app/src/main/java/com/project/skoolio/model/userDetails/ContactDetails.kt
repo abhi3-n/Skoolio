@@ -7,5 +7,4 @@ data class ContactDetails(
     val alternativeContact:String,
     val alternativeContactName:String,
     val alternativeContactRelation:String,
-    val email:String
 )

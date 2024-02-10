@@ -5,7 +5,16 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
-object registerStudent {
+interface registerType{
+    val email: MutableState<String>
+        get() = mutableStateOf("")
+
+    val rulesAccepted:MutableState<Boolean>
+        get() = mutableStateOf(false)
+
+}
+
+object registerStudent:registerType {
     val studentFirstName:MutableState<String> = mutableStateOf("")
     val studentMiddleName:MutableState<String> = mutableStateOf("")
     val studentLastName:MutableState<String> = mutableStateOf("")
@@ -30,11 +39,13 @@ object registerStudent {
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
     val alternativeContactRelation:MutableState<String> = mutableStateOf("")
-    val email:MutableState<String> = mutableStateOf("")
+    override val email:MutableState<String> = mutableStateOf("")
+    val password:MutableState<String> = mutableStateOf("")
 
     val resAddress:MutableState<String> = mutableStateOf("")
     val resCity:MutableState<String> = mutableStateOf("")
     val resState:MutableState<String> = mutableStateOf("")
 
     val MOT:MutableState<String> = mutableStateOf("")
+    override val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
 }

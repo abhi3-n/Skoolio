@@ -46,7 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.EmailOtpRequest
+import com.project.skoolio.model.registerSingleton.registerType
 import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.validDetails
 import com.project.skoolio.utils.convertEpochToDateString
 import com.project.skoolio.utils.statesList
 import com.project.skoolio.viewModels.OtpValidationViewModel
@@ -287,11 +289,13 @@ fun AddressComposable(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NextButton(
     viewModelProvider: ViewModelProvider,
-    email: MutableState<String>,
-    navController: NavHostController
+    registerType: registerType,
+    navController: NavHostController,
+    dobState: DatePickerState
 ) {
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
@@ -306,18 +310,18 @@ fun NextButton(
     val loading = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.Center){
         CustomButton(onClick = {
-            if(validDetails(email)) {
+            if(validDetails(registerType, context, dobState)) {
                 loading.value = true
-                otpValidationViewModel.receiveOTP(EmailOtpRequest(email.value),
+                otpValidationViewModel.receiveOTP(EmailOtpRequest(registerType.email.value),
                     context,
                     navController,
                     onOtpSuccess,
                     onOtpFailure,
                     loading)
             }
-            else {
-                Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
-            }
+//            else {
+//                Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
+//            }
         }) {
             if(loading.value){
                 CircularProgressIndicatorCustom()
@@ -343,14 +347,7 @@ fun CircularProgressIndicatorCustom() {
     )
 }
 
-fun validDetails(email: MutableState<String>): Boolean {
 
-    return if(email.value.isNotEmpty())
-        true
-    else
-        false
-    //TODO: this function needs to be modified for better checking
-}
 
 
 

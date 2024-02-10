@@ -1,5 +1,7 @@
 package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -42,6 +44,8 @@ import com.project.skoolio.components.NameFields
 import com.project.skoolio.components.NextButton
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
+import com.project.skoolio.model.registerSingleton.registerStudent
+import com.project.skoolio.model.registerSingleton.registerType
 import com.project.skoolio.utils.StudentRules
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -129,23 +133,31 @@ fun ShowStudentRegistrationForm(
     //Form Starts here
     FormTitle("Student Registration Form")
     BasicDetails("Student",
-        studentFirstName,
-        studentMiddleName,
-        studentLastName,
-        gender,
+        registerStudent.studentFirstName,
+        registerStudent.studentMiddleName,
+        registerStudent.studentLastName,
+        registerStudent.gender,
         dobState,
-        nationalitySelected,
-        admissionSchool,
-        admissionClass
+        registerStudent.nationalitySelected,
+        registerStudent.admissionSchool,
+        registerStudent.admissionClass
     )
-    FamilyDetails("Father", fatherName, fatherQualification, fatherOccupation)
-    FamilyDetails("Mother", motherName, motherQualification, motherOccupation)
-    OtherStudentDetails(primaryContact, primaryContactName, primaryContactRelation,
-        alternativeContact, alternativeContactName, alternativeContactRelation, email,
-        resAddress, resCity, resState,
-        MOT)
-    RulesDialog(StudentRules.rulesList, rulesAccepted)
-    NextButton(viewModelProvider, email, navController)
+    FamilyDetails("Father",
+        registerStudent.fatherName,
+        registerStudent.fatherQualification,
+        registerStudent.fatherOccupation)
+    FamilyDetails("Mother",
+        registerStudent.motherName,
+        registerStudent.motherQualification,
+        registerStudent.motherOccupation)
+    OtherStudentDetails(registerStudent.primaryContact, registerStudent.primaryContactName,
+        registerStudent.primaryContactRelation, registerStudent.alternativeContact,
+        registerStudent.alternativeContactName, registerStudent.alternativeContactRelation,
+        registerStudent.email, registerStudent.resAddress,
+        registerStudent.resCity, registerStudent.resState,
+        registerStudent.MOT)
+    RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
+    NextButton(viewModelProvider, registerStudent, navController, dobState)
 }
 
 @Composable
@@ -171,11 +183,11 @@ fun FamilyDetails(
             )
             CustomTextField(
                 valueState = qualification,
-                label = "Qualification"
+                label = "Qualification*"
             )
             CustomTextField(
                 valueState = occupation,
-                label = "Occupation"
+                label = "Occupation*"
             )
         }
     }
@@ -291,7 +303,7 @@ fun ContactDetails(
         alternativeContactName.value = ""
         alternativeContactRelation.value = ""
     }
-    CustomTextField(valueState = email, label = "Email")
+    CustomTextField(valueState = email, label = "Email*")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -383,4 +395,150 @@ fun BasicDetails(
 fun ShowAdminRegistrationForm() {
     ShowToast(LocalContext.current,"Admin Registration Form")
     FormTitle("Admin Registration Form")
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun validDetails(registerType: registerType,
+                 context: Context,
+                 dobState: DatePickerState): Boolean {
+    //Create all checks here
+    if(registerType is registerStudent) {
+        val student = registerType
+        if(!validStudentDetails(student, context, dobState)){
+            return false
+        }
+    }
+    return true
+    //TODO: this function needs to be modified for better checking
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun validStudentDetails(
+    student: registerStudent,
+    context: Context,
+    dobState: DatePickerState
+): Boolean {
+    if(!validGeneralDetails(context, student.studentFirstName, student.studentLastName,
+            dobState.selectedDateMillis, student.nationalitySelected, student.gender,
+            student.email, student.resAddress, student.resCity, student.resState)){
+        return false
+    }
+    if(student.admissionSchool.value.isEmpty()) {
+        Toast.makeText(context, "Select School", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.admissionClass.value.isEmpty()) {
+        Toast.makeText(context, "Select Class", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.fatherName.value.isEmpty()) {
+        Toast.makeText(context, "Enter Father Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.fatherQualification.value.isEmpty()) {
+        Toast.makeText(context, "Enter Father Qualification", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.fatherOccupation.value.isEmpty()) {
+        Toast.makeText(context, "Enter Father Occupation", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.motherName.value.isEmpty()) {
+        Toast.makeText(context, "Enter Mother Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.motherQualification.value.isEmpty()) {
+        Toast.makeText(context, "Enter Mother Qualification", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.motherOccupation.value.isEmpty()) {
+        Toast.makeText(context, "Enter Mother Occupation", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.primaryContact.value.isEmpty()) {
+        Toast.makeText(context, "Enter Contact", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.primaryContactName.value.isEmpty()) {
+        Toast.makeText(context, "Enter Contact Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.primaryContactRelation.value.isEmpty()) {
+        Toast.makeText(context, "Select Contact Relation", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.alternativeContact.value.isEmpty()) {
+        Toast.makeText(context, "Enter Alternative Contact", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.alternativeContactName.value.isEmpty()) {
+        Toast.makeText(context, "Enter Alternative Contact Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.alternativeContactRelation.value.isEmpty()) {
+        Toast.makeText(context, "Select Alternative Contact Relation", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(student.rulesAccepted.value == false){
+        Toast.makeText(context, "Please accept rules of the school", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    return true
+}
+
+
+fun validGeneralDetails(
+    context: Context,
+    firstName: MutableState<String>,
+    lastName: MutableState<String>,
+    dob: Long?,
+    nationalitySelected: MutableState<String>,
+    gender: MutableState<String>,
+    email: MutableState<String>,
+    resAddress: MutableState<String>,
+    resCity: MutableState<String>,
+    resState: MutableState<String>
+): Boolean {
+
+    if(firstName.value.isEmpty()) {
+        Toast.makeText(context, "Enter First Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(lastName.value.isEmpty()) {
+        Toast.makeText(context, "Enter Last Name", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(gender.value.isEmpty()) {
+        Toast.makeText(context, "Select Gender", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(nationalitySelected.value.isEmpty()) {
+        Toast.makeText(context, "Select Nationality", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(email.value.isEmpty()) {
+        Toast.makeText(context, "Enter Email", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(resAddress.value.isEmpty()) {
+        Toast.makeText(context, "Enter address", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(resCity.value.isEmpty()) {
+        Toast.makeText(context, "Enter city", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    if(resState.value.isEmpty()) {
+        Toast.makeText(context, "Enter State", Toast.LENGTH_SHORT).show()
+        return false
+    }
+//    if() {
+//        Toast.makeText(context, "Select Date of Birth", Toast.LENGTH_SHORT).show()
+//        return false
+//    }
+
+
+    return true
+
 }
