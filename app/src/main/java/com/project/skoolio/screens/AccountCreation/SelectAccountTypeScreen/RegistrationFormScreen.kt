@@ -93,7 +93,7 @@ fun ShowStudentRegistrationForm(
     val studentFirstName = rememberSaveable {mutableStateOf("")}
     val studentMiddleName = rememberSaveable {mutableStateOf("")}
     val studentLastName = rememberSaveable {mutableStateOf("")}
-    var dobState = rememberDatePickerState()
+    val dobState = rememberDatePickerState()
     val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionSchool = rememberSaveable { mutableStateOf("")}

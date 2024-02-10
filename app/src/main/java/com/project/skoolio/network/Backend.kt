@@ -15,6 +15,6 @@ interface Backend {
 
     @POST("email")
     suspend fun receiveOTP(
-       @Body emailOtpRequest: EmailOtpRequest
+        @Body emailOtpRequest: EmailOtpRequest
     ):EmailOtpResponse
 }

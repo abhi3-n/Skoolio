@@ -42,12 +42,6 @@ import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
-//@Preview
-//@Composable
-//fun Login(){
-//    LoginScreen()
-//}
-
 
 @Composable
 fun LoginScreen(
