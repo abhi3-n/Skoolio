@@ -98,8 +98,8 @@ fun ShowStudentRegistrationForm(
     val studentFirstName = rememberSaveable {mutableStateOf("")}
     val studentMiddleName = rememberSaveable {mutableStateOf("")}
     val studentLastName = rememberSaveable {mutableStateOf("")}
-    val dobState = rememberDatePickerState()
-//    registerStudent.dobState = rememberDatePickerState()
+//    val dobState = rememberDatePickerState()
+    registerStudent.dobState = rememberDatePickerState()
     val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionSchool = rememberSaveable { mutableStateOf("")}
@@ -139,7 +139,7 @@ fun ShowStudentRegistrationForm(
         registerStudent.studentMiddleName,
         registerStudent.studentLastName,
         registerStudent.gender,
-        dobState,
+        registerStudent.dobState!!,
         registerStudent.nationalitySelected,
         registerStudent.admissionSchool,
         registerStudent.admissionClass
@@ -159,7 +159,7 @@ fun ShowStudentRegistrationForm(
         registerStudent.resCity, registerStudent.resState,
         registerStudent.MOT, mailFieldEnabled)
     RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
-    NextButton(viewModelProvider, registerStudent, navController, dobState)
+    NextButton(viewModelProvider, registerStudent, navController)
 }
 
 @Composable
@@ -405,11 +405,12 @@ fun ShowAdminRegistrationForm() {
 @OptIn(ExperimentalMaterial3Api::class)
 fun validDetails(registerType: registerType,
                  context: Context,
-                 dobState: DatePickerState): Boolean {
+//                 dobState: DatePickerState
+): Boolean {
     //Create all checks here
     if(registerType is registerStudent) {
         val student = registerType
-        if(!validStudentDetails(student, context, dobState)){
+        if(!validStudentDetails(student, context)){
             return false
         }
     }
@@ -421,10 +422,10 @@ fun validDetails(registerType: registerType,
 fun validStudentDetails(
     student: registerStudent,
     context: Context,
-    dobState: DatePickerState
+//    dobState: DatePickerState
 ): Boolean {
     if(!validGeneralDetails(context, student.studentFirstName, student.studentLastName,
-            dobState.selectedDateMillis, student.nationalitySelected, student.gender,
+            student.dobState?.selectedDateMillis, student.nationalitySelected, student.gender,
             student.email, student.resAddress, student.resCity, student.resState)){
         return false
     }

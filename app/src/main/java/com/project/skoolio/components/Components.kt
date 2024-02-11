@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -202,8 +203,19 @@ fun DOB(dobState: DatePickerState) {
             if(!dobState.selectedDateMillis.toString().isNullOrEmpty()){
                 convertEpochToDateString(dobState.selectedDateMillis)?.let { Text(text = it, modifier = Modifier.padding(top = 13.dp)) }
             }
-            IconButton(onClick = { openDialog.value = true }) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date of Birth")
+            if(dobState.selectedDateMillis == null){
+                IconButton(onClick = {
+                    openDialog.value = true
+                }) {
+                    Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date of Birth")
+                }
+            }
+            else{
+                IconButton(onClick = {
+                    dobState.setSelection(null)
+                }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Clear Date of Birth")
+                }
             }
         }
     }
@@ -222,13 +234,14 @@ fun DatePickerCustom(
                 openDialog.value = false
             }) {
                 Text(text = "Select")
-            } },
-            dismissButton = { Button(onClick = {
-                openDialog.value = false
-                //TODO:when dismiss button is pressed, the date should be cleared.
-            }) {
-                Text(text = "Cancel")
-            }}) {
+            } }
+//            dismissButton = { Button(onClick = {
+//                openDialog.value = false
+//                //TODO:when dismiss button is pressed, the date should be cleared.
+//            }) {
+//                Text(text = "Cancel")
+//            }}
+        ) {
             DatePicker(state = dobState)
         }
     }
@@ -294,8 +307,8 @@ fun AddressComposable(
 fun NextButton(
     viewModelProvider: ViewModelProvider,
     registerType: registerType,
-    navController: NavHostController,
-    dobState: DatePickerState
+    navController: NavHostController
+//    dobState: DatePickerState
 ) {
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
@@ -310,7 +323,7 @@ fun NextButton(
     val progressIndicatorLoading = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.Center){
         CustomButton(onClick = {
-            if(validDetails(registerType, context, dobState)) {
+            if(validDetails(registerType, context)) {
                 progressIndicatorLoading.value = true
                 otpValidationViewModel.receiveOTP(EmailOtpRequest(registerType.email.value),
                     context,

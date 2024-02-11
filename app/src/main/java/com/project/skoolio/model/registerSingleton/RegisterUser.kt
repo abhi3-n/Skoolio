@@ -54,8 +54,8 @@ object registerStudent:registerType {
     val MOT:MutableState<String> = mutableStateOf("")
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
 
-//    @OptIn(ExperimentalMaterial3Api::class)
-//    var dobState:DatePickerState? = null
+    @OptIn(ExperimentalMaterial3Api::class)
+    var dobState:DatePickerState? = null
 
     fun getStudent(dob: Long): Student {
         return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dob,
