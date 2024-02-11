@@ -1,16 +1,21 @@
 package com.project.skoolio.model.registerSingleton
 
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.project.skoolio.model.userDetails.AddressDetails
+import com.project.skoolio.model.userDetails.AdmissionDetails
+import com.project.skoolio.model.userDetails.ContactDetails
+import com.project.skoolio.model.userDetails.RelativeDetails
+import com.project.skoolio.model.userType.Student
 
 interface registerType{
     val email: MutableState<String>
         get() = mutableStateOf("")
 
-    val rulesAccepted:MutableState<Boolean>
-        get() = mutableStateOf(false)
+//    val rulesAccepted:MutableState<Boolean>
+//        get() = mutableStateOf(false)
 
 }
 
@@ -47,5 +52,41 @@ object registerStudent:registerType {
     val resState:MutableState<String> = mutableStateOf("")
 
     val MOT:MutableState<String> = mutableStateOf("")
-    override val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
+    val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
+
+//    @OptIn(ExperimentalMaterial3Api::class)
+//    var dobState:DatePickerState? = null
+
+    fun getStudent(dob: Long): Student {
+        return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dob,
+            gender.value, nationalitySelected.value, email.value, password.value,
+            addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
+            admissionDetails = AdmissionDetails(admissionSchool.value, admissionClass.value),
+            contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
+            father = RelativeDetails(relationType = "father", name  = fatherName.value, occupation = fatherOccupation.value, qualification = fatherOccupation.value),
+            mother = RelativeDetails(relationType = "father", name  = motherName.value, occupation = motherOccupation.value, qualification = motherQualification.value),
+            mot = MOT.value);
+    }
+
+    init {
+        studentFirstName.value = "Abhinandan"
+        studentLastName.value = "Narang"
+        gender.value = "Male"
+        nationalitySelected.value = "Indian"
+        admissionClass.value = "Pre-Nursery"
+        fatherName.value = "Rajeev"
+        fatherQualification.value = "B.Com."
+        fatherOccupation.value = "Business"
+        motherName.value = "Anjuman"
+        motherQualification.value = "M.Com."
+        motherOccupation.value = "School Head"
+        primaryContact.value = "9646388606"
+        primaryContactName.value = "Abhinandan"
+        primaryContactRelation.value = "Other"
+        email.value = "abhinandannarang3@gmail.com"
+        resAddress.value = "Anant Nagar"
+        resCity.value = "Khanna"
+        resState.value = "Punjab"
+        MOT.value = "Activa"
+    }
 }

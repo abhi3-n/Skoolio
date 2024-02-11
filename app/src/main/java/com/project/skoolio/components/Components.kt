@@ -307,23 +307,23 @@ fun NextButton(
     val onOtpFailure:(Context)->Unit = {context ->
         Toast.makeText(context, "Some error has occured.", Toast.LENGTH_SHORT).show()
     }
-    val loading = rememberSaveable { mutableStateOf(false) }
+    val progressIndicatorLoading = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.Center){
         CustomButton(onClick = {
             if(validDetails(registerType, context, dobState)) {
-                loading.value = true
+                progressIndicatorLoading.value = true
                 otpValidationViewModel.receiveOTP(EmailOtpRequest(registerType.email.value),
                     context,
                     navController,
                     onOtpSuccess,
                     onOtpFailure,
-                    loading)
+                    progressIndicatorLoading)
             }
 //            else {
 //                Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
 //            }
         }) {
-            if(loading.value){
+            if(progressIndicatorLoading.value){
                 CircularProgressIndicatorCustom()
             }
             else{

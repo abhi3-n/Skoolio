@@ -92,12 +92,14 @@ fun ShowStudentRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
+    val mailFieldEnabled = viewModelProvider.getOtpValidationViewModel().getIsOtpValidated()
     //Some states to be used. TODO: Use some sort of class here
     //Basic Details
     val studentFirstName = rememberSaveable {mutableStateOf("")}
     val studentMiddleName = rememberSaveable {mutableStateOf("")}
     val studentLastName = rememberSaveable {mutableStateOf("")}
     val dobState = rememberDatePickerState()
+//    registerStudent.dobState = rememberDatePickerState()
     val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionSchool = rememberSaveable { mutableStateOf("")}
@@ -155,7 +157,7 @@ fun ShowStudentRegistrationForm(
         registerStudent.alternativeContactName, registerStudent.alternativeContactRelation,
         registerStudent.email, registerStudent.resAddress,
         registerStudent.resCity, registerStudent.resState,
-        registerStudent.MOT)
+        registerStudent.MOT, mailFieldEnabled)
     RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
     NextButton(viewModelProvider, registerStudent, navController, dobState)
 }
@@ -205,7 +207,8 @@ fun OtherStudentDetails(
     resAddress: MutableState<String>,
     resCity: MutableState<String>,
     resState: MutableState<String>,
-    MOT: MutableState<String>
+    MOT: MutableState<String>,
+    mailFieldEnabled: Boolean
 ) {
     Surface(
         modifier = Modifier.padding(4.dp),
@@ -219,7 +222,7 @@ fun OtherStudentDetails(
             FormTitle("Other Details", style = MaterialTheme.typography.titleSmall)
             ContactDetails(primaryContact, primaryContactName, primaryContactRelation,
                 alternativeContact, alternativeContactName, alternativeContactRelation,
-                email)
+                email, mailFieldEnabled)
             AddressComposable(resAddress, resCity, resState)
             CustomTextField(valueState = MOT, label = "Mode Of Transportation")
         }
@@ -276,7 +279,8 @@ fun ContactDetails(
     alternativeContact: MutableState<String>,
     alternativeContactName: MutableState<String>,
     alternativeContactRelation: MutableState<String>,
-    email: MutableState<String>
+    email: MutableState<String>,
+    mailFieldEnabled: Boolean
 ) {
     val isChecked = rememberSaveable { mutableStateOf(false)}
     CustomTextField(valueState = primaryContact, label = "Contact Number*")
@@ -303,7 +307,7 @@ fun ContactDetails(
         alternativeContactName.value = ""
         alternativeContactRelation.value = ""
     }
-    CustomTextField(valueState = email, label = "Email*")
+    CustomTextField(valueState = email, label = "Email*", enabled = !mailFieldEnabled)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -509,6 +513,10 @@ fun validGeneralDetails(
         Toast.makeText(context, "Enter Last Name", Toast.LENGTH_SHORT).show()
         return false
     }
+    if(dob == null) {
+        Toast.makeText(context, "Select Date of Birth", Toast.LENGTH_SHORT).show()
+        return false
+    }
     if(gender.value.isEmpty()) {
         Toast.makeText(context, "Select Gender", Toast.LENGTH_SHORT).show()
         return false
@@ -533,12 +541,5 @@ fun validGeneralDetails(
         Toast.makeText(context, "Enter State", Toast.LENGTH_SHORT).show()
         return false
     }
-//    if() {
-//        Toast.makeText(context, "Select Date of Birth", Toast.LENGTH_SHORT).show()
-//        return false
-//    }
-
-
     return true
-
 }
