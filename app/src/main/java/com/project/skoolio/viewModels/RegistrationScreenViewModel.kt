@@ -16,15 +16,14 @@ class RegistrationScreenViewModel @Inject constructor(private val registrationSc
     :ViewModel() {
     private var _registrationResponse: MutableState<DataOrException<RegisterResponse, Boolean, Exception>> =
         mutableStateOf<DataOrException<RegisterResponse, Boolean, Exception>>(
-            DataOrException(RegisterResponse(""), false, null)
+            DataOrException(RegisterResponse(), false, null)
         )
-    val otpResponse: State<DataOrException<RegisterResponse, Boolean, Exception>> = _registrationResponse
+    val registrationResponse: State<DataOrException<RegisterResponse, Boolean, Exception>> = _registrationResponse
 
     fun registerStudent(dob:Long):Unit{
         viewModelScope.launch {
             _registrationResponse.value.loading = true
-            _registrationResponse.value =
-                registrationScreenRepository.registerStudent(registerStudent.getStudent(dob))
+            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent(dob))
                 if (_registrationResponse.value.data.applicationId.isNotEmpty() == true){
                     //registration has succeeded
                     _registrationResponse.value.loading = false

@@ -41,6 +41,7 @@ fun SetPasswordScreen(navController: NavHostController, viewModelProvider: ViewM
         CustomButton(onClick = {
             if(validPassword(password, confirmPassword, context)){
                 registerStudent.password.value = password.value
+
             }
         }) {
             Text(text = "Set Password")

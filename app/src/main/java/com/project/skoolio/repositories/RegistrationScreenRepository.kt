@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class RegistrationScreenRepository @Inject constructor(private val backend: Backend){
     private val dataOrException: DataOrException<RegisterResponse, Boolean, Exception> =
-        DataOrException<RegisterResponse, Boolean, Exception>(RegisterResponse(""))
+        DataOrException<RegisterResponse, Boolean, Exception>(RegisterResponse())
     suspend fun registerStudent(student: Student)
     :DataOrException<RegisterResponse, Boolean, Exception> {
         val response = try {
