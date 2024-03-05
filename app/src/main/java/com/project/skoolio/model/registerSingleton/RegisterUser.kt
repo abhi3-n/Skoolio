@@ -5,9 +5,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.project.skoolio.model.userDetails.AddressDetails
-import com.project.skoolio.model.userDetails.AdmissionDetails
+import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
-import com.project.skoolio.model.userDetails.RelativeDetails
+import com.project.skoolio.model.userDetails.GuardianDetails
 import com.project.skoolio.model.userType.Student
 
 interface registerType{
@@ -57,14 +57,15 @@ object registerStudent:registerType {
     @OptIn(ExperimentalMaterial3Api::class)
     var dobState:DatePickerState? = null
 
-    fun getStudent(dob: Long): Student {
-        return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dob,
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun getStudent(): Student {
+        return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dobState?.selectedDateMillis!!,
             gender.value, nationalitySelected.value, email.value, password.value,
             addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
-            admissionDetails = AdmissionDetails(admissionSchool.value, admissionClass.value),
+            studentSchoolDetails = StudentSchoolDetails(admissionSchool.value, admissionClass.value, null),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
-            father = RelativeDetails(relationType = "father", name  = fatherName.value, occupation = fatherOccupation.value, qualification = fatherOccupation.value),
-            mother = RelativeDetails(relationType = "father", name  = motherName.value, occupation = motherOccupation.value, qualification = motherQualification.value),
+            father = GuardianDetails(relationType = "father", name  = fatherName.value, occupation = fatherOccupation.value, qualification = fatherOccupation.value),
+            mother = GuardianDetails(relationType = "father", name  = motherName.value, occupation = motherOccupation.value, qualification = motherQualification.value),
             mot = MOT.value);
     }
 
@@ -83,7 +84,7 @@ object registerStudent:registerType {
         primaryContact.value = "9646388606"
         primaryContactName.value = "Abhinandan"
         primaryContactRelation.value = "Other"
-        email.value = "abhinandannarang3@gmail.com"
+        email.value = "abhinandannarang016@gmail.com"
         resAddress.value = "Anant Nagar"
         resCity.value = "Khanna"
         resState.value = "Punjab"

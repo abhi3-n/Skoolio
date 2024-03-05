@@ -304,11 +304,11 @@ fun AddressComposable(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NextButton(
+fun SaveButton(
     viewModelProvider: ViewModelProvider,
     registerType: registerType,
-    navController: NavHostController
-//    dobState: DatePickerState
+    navController: NavHostController,
+    mailFieldEnabled: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
@@ -332,21 +332,20 @@ fun NextButton(
                     onOtpFailure,
                     progressIndicatorLoading)
             }
-//            else {
-//                Toast.makeText(context, "Fill details Correctly.", Toast.LENGTH_SHORT).show()
-//            }
+
         }) {
             if(progressIndicatorLoading.value){
                 CircularProgressIndicatorCustom()
             }
             else{
-                Text(text = "Next")
+                Text(text = "Save")
             }
         }
     }
 
     if(otpValidationViewModel.getIsOtpValidated()){
         otpValidationViewModel.resetOtpValidated()
+        mailFieldEnabled.value = false
         navController.navigate(AppScreens.SetPasswordScreen.name)
     }
 }

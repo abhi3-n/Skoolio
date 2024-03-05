@@ -22,7 +22,7 @@ interface Backend {
         @Body emailOtpRequest: EmailOtpRequest
     ):EmailOtpResponse
 
-    @POST("registerStudent")
+    @POST("students")
     suspend fun registerStudent(
         @Body student: Student
     ): RegisterResponse

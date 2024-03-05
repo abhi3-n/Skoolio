@@ -1,9 +1,9 @@
 package com.project.skoolio.model.userType
 
 import com.project.skoolio.model.userDetails.AddressDetails
-import com.project.skoolio.model.userDetails.AdmissionDetails
+import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
-import com.project.skoolio.model.userDetails.RelativeDetails
+import com.project.skoolio.model.userDetails.GuardianDetails
 
 open class User(
     protected val firstName:String,
@@ -29,9 +29,9 @@ class Student(
     email:String,
     password: String,
     addressDetails: AddressDetails,
-    protected val admissionDetails: AdmissionDetails,
-    protected val father: RelativeDetails,
-    protected val mother: RelativeDetails,
+    protected val studentSchoolDetails: StudentSchoolDetails,
+    protected val father: GuardianDetails,
+    protected val mother: GuardianDetails,
     protected val contactDetails: ContactDetails,
     protected val mot:String
     ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails) {

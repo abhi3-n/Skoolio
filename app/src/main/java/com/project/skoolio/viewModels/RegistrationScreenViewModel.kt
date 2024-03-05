@@ -1,5 +1,6 @@
 package com.project.skoolio.viewModels
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -20,18 +21,19 @@ class RegistrationScreenViewModel @Inject constructor(private val registrationSc
         )
     val registrationResponse: State<DataOrException<RegisterResponse, Boolean, Exception>> = _registrationResponse
 
-    fun registerStudent(dob:Long):Unit{
+    fun registerStudent(onRegisterFailure: (Context) -> Unit, context: Context):Unit{
         viewModelScope.launch {
             _registrationResponse.value.loading = true
-            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent(dob))
-                if (_registrationResponse.value.data.applicationId.isNotEmpty() == true){
-                    //registration has succeeded
-                    _registrationResponse.value.loading = false
-                }
-                else if(_registrationResponse.value.exception!=null){
-                    //registration has not succeeded
-                    _registrationResponse.value.loading = false
-                }
+            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent())
+            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
+                //registration has succeeded
+                _registrationResponse.value.loading = false
+            }
+            else if(_registrationResponse.value.exception!=null){
+                //registration has not succeeded
+                _registrationResponse.value.loading = false
+                onRegisterFailure(context)
+            }
         }
     }
 }

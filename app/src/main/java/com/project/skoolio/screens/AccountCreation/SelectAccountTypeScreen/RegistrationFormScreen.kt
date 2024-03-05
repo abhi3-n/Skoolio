@@ -1,5 +1,6 @@
 package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -37,16 +38,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
 import com.project.skoolio.components.AddressComposable
+import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.components.DOB
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.NameFields
-import com.project.skoolio.components.NextButton
+import com.project.skoolio.components.SaveButton
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.model.registerSingleton.registerStudent
 import com.project.skoolio.model.registerSingleton.registerType
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.StudentRules
+import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 //
@@ -92,7 +96,15 @@ fun ShowStudentRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
-    val mailFieldEnabled = viewModelProvider.getOtpValidationViewModel().getIsOtpValidated()
+    val context = LocalContext.current
+    val activity =  context as? Activity
+    androidx.activity.compose.BackHandler(enabled = true) {
+        registerStudent.password.value = ""
+        Toast.makeText(context,"password emptied", Toast.LENGTH_SHORT).show()
+        navController.popBackStack()
+    }
+
+    val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     //Some states to be used. TODO: Use some sort of class here
     //Basic Details
     val studentFirstName = rememberSaveable {mutableStateOf("")}
@@ -100,6 +112,7 @@ fun ShowStudentRegistrationForm(
     val studentLastName = rememberSaveable {mutableStateOf("")}
 //    val dobState = rememberDatePickerState()
     registerStudent.dobState = rememberDatePickerState()
+    val mailFieldEnabled = rememberSaveable { mutableStateOf(true) }
     val gender = rememberSaveable { mutableStateOf("") }
     val nationalitySelected = rememberSaveable { mutableStateOf("")}
     val admissionSchool = rememberSaveable { mutableStateOf("")}
@@ -159,7 +172,65 @@ fun ShowStudentRegistrationForm(
         registerStudent.resCity, registerStudent.resState,
         registerStudent.MOT, mailFieldEnabled)
     RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
-    NextButton(viewModelProvider, registerStudent, navController)
+    if(registerStudent.password.value.isEmpty()) {
+        SaveButton(viewModelProvider, registerStudent, navController, mailFieldEnabled)
+    }
+    else{
+        RegisterButton(registrationScreenViewModel, navController)
+    }
+}
+
+@Composable
+fun RegisterButton(
+    registrationScreenViewModel: RegistrationScreenViewModel,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    val showDialog = rememberSaveable { mutableStateOf(true)}
+    val onRegisterSuccess:(Context,NavHostController)->Unit = { context: Context, navHostController: NavHostController ->
+
+    }
+    val onRegisterFailure:(Context)->Unit = {context ->
+        Toast.makeText(context,"Some error occured while registering. Please try again", Toast.LENGTH_SHORT).show()
+    }
+    Row(horizontalArrangement = Arrangement.Center) {
+        CustomButton(onClick = {
+            registrationScreenViewModel.registerStudent(onRegisterFailure, context)
+        }) {
+           Text(text = "Register")
+        }
+    }
+
+    if(registrationScreenViewModel.registrationResponse.value.data.applicationId.isNotEmpty()
+        && showDialog.value == true){
+        AlertDialog(onDismissRequest = { },
+            confirmButton = {
+                Text(text = "Ok", Modifier.clickable {
+                    showDialog.value = false
+                    navController.navigate(AppScreens.LoginScreen.name){
+                        popUpTo(navController.graph.id){
+                            inclusive = true
+                        }
+                    }
+                })
+            },
+            title = {
+                Text(text = "Application Submitted.")
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .height(200.dp)
+                        .verticalScroll(rememberScrollState())) {
+                    //TODO:Format the string properly using bold for the application number
+                    Text(text = "The application has been submitted. Your application number is :- ${registrationScreenViewModel.registrationResponse.value.data.applicationId}.")
+                    Text(text = "It has also been sent on your registered mail.")
+                }
+            }
+        )
+    }
+
 }
 
 @Composable
@@ -208,7 +279,7 @@ fun OtherStudentDetails(
     resCity: MutableState<String>,
     resState: MutableState<String>,
     MOT: MutableState<String>,
-    mailFieldEnabled: Boolean
+    mailFieldEnabled: MutableState<Boolean>
 ) {
     Surface(
         modifier = Modifier.padding(4.dp),
@@ -280,7 +351,7 @@ fun ContactDetails(
     alternativeContactName: MutableState<String>,
     alternativeContactRelation: MutableState<String>,
     email: MutableState<String>,
-    mailFieldEnabled: Boolean
+    mailFieldEnabled: MutableState<Boolean>
 ) {
     val isChecked = rememberSaveable { mutableStateOf(false)}
     CustomTextField(valueState = primaryContact, label = "Contact Number*")
@@ -307,7 +378,7 @@ fun ContactDetails(
         alternativeContactName.value = ""
         alternativeContactRelation.value = ""
     }
-    CustomTextField(valueState = email, label = "Email*", enabled = !mailFieldEnabled)
+    CustomTextField(valueState = email, label = "Email*", enabled = mailFieldEnabled.value)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

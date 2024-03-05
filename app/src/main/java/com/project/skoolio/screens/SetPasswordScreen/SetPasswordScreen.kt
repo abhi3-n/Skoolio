@@ -24,7 +24,6 @@ import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable
 fun SetPasswordScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top) {
@@ -41,10 +40,10 @@ fun SetPasswordScreen(navController: NavHostController, viewModelProvider: ViewM
         CustomButton(onClick = {
             if(validPassword(password, confirmPassword, context)){
                 registerStudent.password.value = password.value
-
+                navController.popBackStack()
             }
         }) {
-            Text(text = "Set Password")
+            Text(text = "Save Password")
         }
     }
 }
