@@ -5,3 +5,7 @@ data class StudentSchoolDetails(
     val _class: String,
     val section:String?
 )
+
+data class TeacherSchoolDetails(
+    val school:String
+)

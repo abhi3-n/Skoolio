@@ -5,6 +5,7 @@ import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -25,5 +26,10 @@ interface Backend {
     @POST("students")
     suspend fun registerStudent(
         @Body student: Student
+    ): RegisterResponse
+
+    @POST("teachers")
+    suspend fun registerTeacher(
+        @Body teacher: Teacher
     ): RegisterResponse
 }

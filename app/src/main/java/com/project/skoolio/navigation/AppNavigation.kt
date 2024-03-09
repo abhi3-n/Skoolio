@@ -38,8 +38,13 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         composable(AppScreens.OtpValidationScreen.name){
             OtpValidationScreen(navController, viewModelProvider)
         }
-        composable(AppScreens.SetPasswordScreen.name){
-            SetPasswordScreen(navController,viewModelProvider)
+        composable(AppScreens.SetPasswordScreen.name+"/{userType}",
+            arguments = listOf(navArgument("userType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("userType").let { userType ->
+                SetPasswordScreen(navController, viewModelProvider, userType)
+            }
         }
     }
 }

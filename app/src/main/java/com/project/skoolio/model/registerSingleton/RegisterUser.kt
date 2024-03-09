@@ -4,11 +4,15 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.project.skoolio.model.registerSingleton.registerStudent.admissionSchool
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
 import com.project.skoolio.model.userDetails.GuardianDetails
+import com.project.skoolio.model.userDetails.PreviousEmploymentDetails
+import com.project.skoolio.model.userDetails.TeacherSchoolDetails
 import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 
 interface registerType{
     val email: MutableState<String>
@@ -91,3 +95,63 @@ object registerStudent:registerType {
         MOT.value = "Activa"
     }
 }
+
+object registerTeacher:registerType {
+    val teachertFirstName:MutableState<String> = mutableStateOf("")
+    val teacherMiddleName:MutableState<String> = mutableStateOf("")
+    val teacherLastName:MutableState<String> = mutableStateOf("")
+    //date of birth
+    val gender:MutableState<String> = mutableStateOf("")
+    val nationalitySelected:MutableState<String> = mutableStateOf("")
+
+    val employingSchool:MutableState<String> = mutableStateOf("")
+
+    val previousEmployerName:MutableState<String> = mutableStateOf("")
+    val previousEmploymentDuration:MutableState<String> = mutableStateOf("")
+    val jobTitle:MutableState<String> = mutableStateOf("")
+
+    val primaryContact:MutableState<String> = mutableStateOf("")
+    val primaryContactName:MutableState<String> = mutableStateOf("")
+//    val primaryContactRelation:MutableState<String> = mutableStateOf("")
+    val alternativeContact:MutableState<String> = mutableStateOf("")
+    val alternativeContactName:MutableState<String> = mutableStateOf("")
+//    val alternativeContactRelation:MutableState<String> = mutableStateOf("")
+    override val email:MutableState<String> = mutableStateOf("")
+    val password:MutableState<String> = mutableStateOf("")
+
+    val resAddress:MutableState<String> = mutableStateOf("")
+    val resCity:MutableState<String> = mutableStateOf("")
+    val resState:MutableState<String> = mutableStateOf("")
+
+    val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    var dobState:DatePickerState? = null
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun getTeacher(): Teacher {
+        return Teacher(
+            teachertFirstName.value, teacherMiddleName.value, teacherLastName.value,
+            dobState?.selectedDateMillis!!,
+            gender.value, nationalitySelected.value, email.value, password.value,
+            addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
+            teacherSchoolDetails = TeacherSchoolDetails(employingSchool.value),
+            previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, jobTitle.value),
+            contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
+    }
+//
+    init {
+        teachertFirstName.value = "Abhinandan"
+        teacherLastName.value = "Narang"
+        gender.value = "Male"
+        nationalitySelected.value = "Indian"
+        employingSchool.value = "Inn"
+        primaryContact.value = "9646388606"
+        primaryContactName.value = "Abhinandan"
+        email.value = "abhinandannarang016@gmail.com"
+        resAddress.value = "Anant Nagar"
+        resCity.value = "Khanna"
+        resState.value = "Punjab"
+    }
+}
+

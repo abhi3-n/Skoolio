@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.project.skoolio.navigation.AppScreens
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -13,6 +14,14 @@ fun ExitApp(navController: NavHostController, context: Context) {
     androidx.activity.compose.BackHandler(enabled = true) {
         navController.popBackStack(navController.graph.startDestinationId, false)
         activity?.finish()
+    }
+}
+
+fun BackToLoginScreen(navController: NavHostController) {
+    navController.navigate(AppScreens.LoginScreen.name) {
+        popUpTo(navController.graph.id) {
+            inclusive = true
+        }
     }
 }
 
@@ -57,6 +66,17 @@ object statesList{
 }
 
 object StudentRules{
+    val rulesList:List<String> =  listOf(
+        "School Timings\n"+
+                "Summer - 9AM to 12PM\n"+
+                "Winter - 9:30AM to 12:30PM\n",
+        "Deposit Fees (in advance) within first 7 days of every month.\n",
+        "Second Saturday will be holiday.\n",
+        "Every government holiday will be a holiday in the school.\n"
+    )
+}
+
+object TeacherRules{
     val rulesList:List<String> =  listOf(
         "School Timings\n"+
                 "Summer - 9AM to 12PM\n"+
