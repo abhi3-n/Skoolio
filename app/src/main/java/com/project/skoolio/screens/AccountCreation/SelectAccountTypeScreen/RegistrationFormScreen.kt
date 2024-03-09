@@ -100,7 +100,6 @@ fun ShowStudentRegistrationForm(
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
         registerStudent.password.value = ""
-        Toast.makeText(context,"password emptied", Toast.LENGTH_SHORT).show()
         navController.popBackStack()
     }
 
