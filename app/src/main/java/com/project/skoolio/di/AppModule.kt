@@ -45,7 +45,9 @@ object AppModule {
     fun provideLoginViewModel(backendRepository: BackendRepository) = LoginViewModel(backendRepository)
     @Provides
     @Singleton
-    fun provideRegistrationScreenViewModel(registrationScreenRepository: RegistrationScreenRepository) = RegistrationScreenViewModel(registrationScreenRepository)
+    fun provideRegistrationScreenViewModel(registrationScreenRepository: RegistrationScreenRepository, backend: Backend)
+    = RegistrationScreenViewModel(registrationScreenRepository, backend)
+
     @Provides
     @Singleton
     fun provideOtpValidationViewModel(otpValidationRepository: OtpValidationRepository) = OtpValidationViewModel(otpValidationRepository)

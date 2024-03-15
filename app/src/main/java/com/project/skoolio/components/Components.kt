@@ -571,7 +571,7 @@ fun SchoolDetails(userType: String,
         ) {
             FormTitle("School Details", style = MaterialTheme.typography.titleSmall)
             TextDropDownMenuRow(text = "School:",
-                dataList = SchoolList.listOfSchools,
+                dataList = SchoolList.getSchoolNames(),
                 valueSelected = school)
             school.value = "Innocent Heart Playway School" //Currently assuming for single school only
             if(userType == "Student"){

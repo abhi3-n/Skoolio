@@ -4,11 +4,13 @@ import Response
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
+import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import javax.inject.Singleton
 
 @Singleton
@@ -32,4 +34,9 @@ interface Backend {
     suspend fun registerTeacher(
         @Body teacher: Teacher
     ): RegisterResponse
+
+    @GET("/schools/{city}")
+    suspend fun getCitySchools(
+        @Path("city") value: String
+    ): List<SchoolInfo>
 }

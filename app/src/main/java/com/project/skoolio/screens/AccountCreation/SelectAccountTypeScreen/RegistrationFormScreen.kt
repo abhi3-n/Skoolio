@@ -47,6 +47,7 @@ import com.project.skoolio.components.ShowToast
 import com.project.skoolio.model.registerSingleton.registerStudent
 import com.project.skoolio.model.registerSingleton.registerTeacher
 import com.project.skoolio.model.registerSingleton.registerType
+import com.project.skoolio.utils.SchoolList
 import com.project.skoolio.utils.StudentRules
 import com.project.skoolio.utils.TeacherRules
 import com.project.skoolio.viewModels.ViewModelProvider

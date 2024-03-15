@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.navigation.AppScreens
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -88,7 +89,19 @@ object TeacherRules{
 }
 
 object SchoolList{
-    val listOfSchools:List<String> = listOf(
-        "Innocent Heart Playway School"
+    var listForCity:String = ""
+    var listOfSchools:List<SchoolInfo> = listOf(
+//        "Innocent Heart Playway School"
     )
+
+    fun getSchoolNames(): List<String> {
+        return listOfSchools.map {
+            it.schoolName
+        }
+    }
+}
+
+fun getCityList(): List<String> {
+    //TODO:Later we will fetch city list dynamically as more schools get added
+    return listOf("Khanna")
 }
