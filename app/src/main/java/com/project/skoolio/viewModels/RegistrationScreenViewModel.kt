@@ -76,11 +76,17 @@ class RegistrationScreenViewModel @Inject constructor(
                 SchoolList.listOfSchools = backend.getCitySchools(selectedSchoolCity.value)
                 SchoolList.listForCity = selectedSchoolCity.value
                 loading.value = false
+                SchoolList.printListOfSchools()
                 goToFormScreen(navController,selectedAccountType)
             }
             catch (e:Exception){
+                loading.value = false
                 Toast.makeText(context,"Some error occured while fetching school list.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun resetApplicationId() {
+        _registrationResponse.value.data.applicationId = ""
     }
 }

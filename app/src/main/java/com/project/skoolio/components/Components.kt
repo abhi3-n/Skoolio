@@ -1,6 +1,7 @@
 package com.project.skoolio.components
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -285,6 +287,7 @@ fun NameFields(
 @Composable
 fun FormTitle(formTitle: String,
               style: TextStyle = MaterialTheme.typography.titleLarge) {
+    Log.d("Next Button Clicked","9")
     Text(text = formTitle, style = style)
 }
 
@@ -324,6 +327,8 @@ fun SaveButton(
     navController: NavHostController,
     mailFieldEnabled: MutableState<Boolean>
 ) {
+    Log.d("Next Button Clicked","15")
+
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
 
@@ -424,6 +429,8 @@ fun RegisterButton(
     registrationScreenViewModel: RegistrationScreenViewModel,
     navController: NavHostController
 ) {
+    Log.d("Next Button Clicked","16")
+
     val context = LocalContext.current
     val showDialog = rememberSaveable { mutableStateOf(true)}
     val onRegisterFailure:(Context)->Unit = {context ->
@@ -448,6 +455,7 @@ fun RegisterButton(
             confirmButton = {
                 Text(text = "Ok", Modifier.clickable {
                     showDialog.value = false
+                    registrationScreenViewModel.resetApplicationId()
                     BackToLoginScreen(navController)
                 })
             },
@@ -534,6 +542,8 @@ fun OtherDetails(
     MOT: MutableState<String>?,
     mailFieldEnabled: MutableState<Boolean>
 ) {
+    Log.d("Next Button Clicked","13")
+
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -557,9 +567,11 @@ fun OtherDetails(
 
 @Composable
 fun SchoolDetails(userType: String,
-                  school: MutableState<String>,
+                  schoolName: MutableState<String>,
                   admissionClass: MutableState<String>?,
 ) {
+    Log.d("Next Button Clicked","11")
+
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -572,8 +584,8 @@ fun SchoolDetails(userType: String,
             FormTitle("School Details", style = MaterialTheme.typography.titleSmall)
             TextDropDownMenuRow(text = "School:",
                 dataList = SchoolList.getSchoolNames(),
-                valueSelected = school)
-            school.value = "Innocent Heart Playway School" //Currently assuming for single school only
+                valueSelected = schoolName)
+              schoolName.value = "Innocent Heart Playway School" //Currently assuming for single school only
             if(userType == "Student"){
                 if (admissionClass != null) {
                     TextDropDownMenuRow(
@@ -587,6 +599,8 @@ fun SchoolDetails(userType: String,
     }
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicDetails(
@@ -598,6 +612,8 @@ fun BasicDetails(
     dobState: DatePickerState,
     nationalitySelected: MutableState<String>
 ) {
+    Log.d("Next Button Clicked","10")
+
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -620,5 +636,48 @@ fun BasicDetails(
             )
 
         }
+    }
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
+    Log.d("Next Button Clicked","14")
+
+    val showDialog = rememberSaveable { mutableStateOf(false)}
+    val checked = rememberSaveable { mutableStateOf(false) }
+    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(horizontalArrangement = Arrangement.Start) {
+            Checkbox(checked = checked.value, onCheckedChange = {
+                checked.value = it
+                rulesAccepted.value = it
+            })
+            Text(text = "I have read and accept the rules of the school.", Modifier.width(250.dp))
+        }
+        Icon(imageVector = Icons.TwoTone.Info,
+            contentDescription = "School Rules Icon",
+            Modifier
+                .clickable { showDialog.value = true }
+                .padding(top = 16.dp))
+    }
+
+    if(showDialog.value){
+        AlertDialog(onDismissRequest = { showDialog.value = false },
+            confirmButton = { Text(text = "Ok", Modifier.clickable { showDialog.value = false }) },
+            title = {Text(text = "School Rules")},
+            text = {
+                Column(verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .height(300.dp)
+                        .verticalScroll(rememberScrollState())) {
+                    rulesList.forEachIndexed { index, rule ->
+                        Text(text = "${index+1}.) $rule")
+                    }
+                }
+            }
+        )
     }
 }

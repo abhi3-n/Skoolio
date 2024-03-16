@@ -2,27 +2,18 @@ package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -41,13 +32,13 @@ import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.OtherDetails
 import com.project.skoolio.components.RegisterButton
+import com.project.skoolio.components.RulesDialog
 import com.project.skoolio.components.SaveButton
 import com.project.skoolio.components.SchoolDetails
 import com.project.skoolio.components.ShowToast
 import com.project.skoolio.model.registerSingleton.registerStudent
 import com.project.skoolio.model.registerSingleton.registerTeacher
 import com.project.skoolio.model.registerSingleton.registerType
-import com.project.skoolio.utils.SchoolList
 import com.project.skoolio.utils.StudentRules
 import com.project.skoolio.utils.TeacherRules
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -65,6 +56,7 @@ fun RegistrationFormScreen(
     viewModelProvider: ViewModelProvider,
     userType: String?
 ) {
+    Log.d("Next Button Clicked","6")
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,6 +87,8 @@ fun ShowStudentRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
+    Log.d("Next Button Clicked","7")
+
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
@@ -106,6 +100,7 @@ fun ShowStudentRegistrationForm(
 
     registerStudent.dobState = rememberDatePickerState()
     val mailFieldEnabled = rememberSaveable { mutableStateOf(true) }
+    Log.d("Next Button Clicked","8")
 
     //Form Starts here
     FormTitle("Student Registration Form")
@@ -118,8 +113,8 @@ fun ShowStudentRegistrationForm(
         registerStudent.nationalitySelected
     )
     SchoolDetails("Student",
-        registerStudent.admissionSchool,
-        registerStudent.admissionClass);
+        registerStudent.admissionSchoolName,
+        registerStudent.admissionClassName);
     FamilyDetails("Father",
         registerStudent.fatherName,
         registerStudent.fatherQualification,
@@ -131,8 +126,8 @@ fun ShowStudentRegistrationForm(
     OtherDetails(registerStudent.primaryContact, registerStudent.primaryContactName,
         registerStudent.primaryContactRelation, registerStudent.alternativeContact,
         registerStudent.alternativeContactName, registerStudent.alternativeContactRelation,
-        registerStudent.email, registerStudent.resAddress,
-        registerStudent.resCity, registerStudent.resState,
+        registerStudent.email, registerStudent.addressLine,
+        registerStudent.city, registerStudent.state,
         registerStudent.MOT, mailFieldEnabled)
     RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
     if(registerStudent.password.value.isEmpty()) {
@@ -173,7 +168,7 @@ fun ShowTeacherRegistrationForm(
         registerTeacher.nationalitySelected,
     )
     SchoolDetails(userType = "Teacher",
-        school = registerTeacher.employingSchool,
+        schoolName = registerTeacher.employingSchoolName,
         admissionClass = null)
     PreviousEmploymentDetails(
         registerTeacher.previousEmployerName,
@@ -236,6 +231,7 @@ fun FamilyDetails(
     qualification: MutableState<String>,
     occupation: MutableState<String>,
 ) {
+    Log.d("Next Button Clicked","12 $member")
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -265,44 +261,6 @@ fun FamilyDetails(
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
-    val showDialog = rememberSaveable { mutableStateOf(false)}
-    val checked = rememberSaveable { mutableStateOf(false) }
-    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-        Row(horizontalArrangement = Arrangement.Start) {
-            Checkbox(checked = checked.value, onCheckedChange = {
-                checked.value = it
-                rulesAccepted.value = it
-            })
-            Text(text = "I have read and accept the rules of the school.", Modifier.width(250.dp))
-        }
-        Icon(imageVector = Icons.TwoTone.Info,
-            contentDescription = "School Rules Icon",
-            Modifier
-                .clickable { showDialog.value = true }
-                .padding(top = 16.dp))
-    }
-
-    if(showDialog.value){
-        AlertDialog(onDismissRequest = { showDialog.value = false },
-            confirmButton = { Text(text = "Ok", Modifier.clickable { showDialog.value = false }) },
-            title = {Text(text = "School Rules")},
-            text = {
-                Column(verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
-                        .height(300.dp)
-                        .verticalScroll(rememberScrollState())) {
-                    rulesList.forEachIndexed { index, rule ->
-                        Text(text = "${index+1}.) $rule")
-                    }
-                }
-            }
-        )
-    }
-}
 
 
 @Composable
@@ -357,17 +315,17 @@ fun validStudentDetails(
 ): Boolean {
     if(!validGeneralDetails(context, student.studentFirstName, student.studentLastName,
             student.dobState?.selectedDateMillis, student.nationalitySelected, student.gender,
-            student.email, student.resAddress, student.resCity, student.resState,
+            student.email, student.addressLine, student.city, student.state,
             student.primaryContact, student.primaryContactName, student.primaryContactRelation,
             student.alternativeContact, student.alternativeContactName, student.alternativeContactRelation,
             student.rulesAccepted)){
         return false
     }
-    if(student.admissionSchool.value.isEmpty()) {
+    if(student.admissionSchoolName.value.isEmpty()) {
         Toast.makeText(context, "Select School", Toast.LENGTH_SHORT).show()
         return false
     }
-    if(student.admissionClass.value.isEmpty()) {
+    if(student.admissionClassId.value.isEmpty()) {
         Toast.makeText(context, "Select Class", Toast.LENGTH_SHORT).show()
         return false
     }

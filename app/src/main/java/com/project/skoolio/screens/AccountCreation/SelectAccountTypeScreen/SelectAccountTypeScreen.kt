@@ -1,5 +1,6 @@
 package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -79,13 +80,19 @@ fun SelectAccountTypeScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         CustomButton(onClick = {
+            Log.d("Next Button Clicked","1")
+
             val goToFormScreen:(NavHostController, MutableState<String>)->Unit ={navController:NavHostController,selectedAccountType:MutableState<String>->
+                Log.d("Next Button Clicked","5")
                 navController.navigate(AppScreens.RegistrationFormScreen.name + "/${selectedAccountType.value}")
             }
+            Log.d("Next Button Clicked","2")
             if(SchoolList.listOfSchools.isEmpty() || SchoolList.listForCity != selectedSchoolCity.value) {
+                Log.d("Next Button Clicked","3")
                 registrationScreenViewModel.getCitySchools(context, goToFormScreen, navController, selectedAccountType, loading)
             }
             else{
+                Log.d("Next Button Clicked","4")
                 goToFormScreen(navController, selectedAccountType)
             }
         },

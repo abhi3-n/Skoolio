@@ -4,15 +4,16 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.project.skoolio.model.registerSingleton.registerStudent.admissionSchool
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
-import com.project.skoolio.model.userDetails.GuardianDetails
+import com.project.skoolio.model.userDetails.FatherDetails
+import com.project.skoolio.model.userDetails.MotherDetails
 import com.project.skoolio.model.userDetails.PreviousEmploymentDetails
 import com.project.skoolio.model.userDetails.TeacherSchoolDetails
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
+import com.project.skoolio.utils.SchoolList
 
 interface registerType{
     val email: MutableState<String>
@@ -31,8 +32,10 @@ object registerStudent:registerType {
     val gender:MutableState<String> = mutableStateOf("")
     val nationalitySelected:MutableState<String> = mutableStateOf("")
 
-    val admissionSchool:MutableState<String> = mutableStateOf("")
-    val admissionClass:MutableState<String> = mutableStateOf("")
+    val admissionSchoolId:MutableState<Int> = mutableStateOf(0)
+    val admissionSchoolName:MutableState<String> = mutableStateOf("")
+    val admissionClassName:MutableState<String> = mutableStateOf("")
+    val admissionClassId:MutableState<String> = mutableStateOf("")
 
     val fatherName:MutableState<String> = mutableStateOf("")
     val fatherQualification:MutableState<String> = mutableStateOf("")
@@ -51,9 +54,9 @@ object registerStudent:registerType {
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
 
-    val resAddress:MutableState<String> = mutableStateOf("")
-    val resCity:MutableState<String> = mutableStateOf("")
-    val resState:MutableState<String> = mutableStateOf("")
+    val addressLine:MutableState<String> = mutableStateOf("")
+    val city:MutableState<String> = mutableStateOf("")
+    val state:MutableState<String> = mutableStateOf("")
 
     val MOT:MutableState<String> = mutableStateOf("")
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
@@ -64,12 +67,12 @@ object registerStudent:registerType {
     @OptIn(ExperimentalMaterial3Api::class)
     fun getStudent(): Student {
         return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dobState?.selectedDateMillis!!,
-            gender.value, nationalitySelected.value, email.value, password.value,
-            addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
-            studentSchoolDetails = StudentSchoolDetails(admissionSchool.value, admissionClass.value, null),
+            gender = if(gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
+            addressDetails = AddressDetails(addressLine.value, city.value, state.value),
+            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(admissionSchoolName.value), admissionClassId.value),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
-            father = GuardianDetails(relationType = "father", name  = fatherName.value, occupation = fatherOccupation.value, qualification = fatherOccupation.value),
-            mother = GuardianDetails(relationType = "father", name  = motherName.value, occupation = motherOccupation.value, qualification = motherQualification.value),
+            father = FatherDetails(fatherName  = fatherName.value, fatherQualification = fatherQualification.value, fatherOccupation = fatherOccupation.value),
+            mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),
             mot = MOT.value);
     }
 
@@ -78,7 +81,7 @@ object registerStudent:registerType {
         studentLastName.value = "Narang"
         gender.value = "Male"
         nationalitySelected.value = "Indian"
-        admissionClass.value = "Pre-Nursery"
+        admissionClassId.value = "Pre-Nursery"
         fatherName.value = "Rajeev"
         fatherQualification.value = "B.Com."
         fatherOccupation.value = "Business"
@@ -89,9 +92,9 @@ object registerStudent:registerType {
         primaryContactName.value = "Abhinandan"
         primaryContactRelation.value = "Other"
         email.value = "abhinandannarang016@gmail.com"
-        resAddress.value = "Anant Nagar"
-        resCity.value = "Khanna"
-        resState.value = "Punjab"
+        addressLine.value = "Anant Nagar"
+        city.value = "Khanna"
+        state.value = "Punjab"
         MOT.value = "Activa"
     }
 }
@@ -104,7 +107,8 @@ object registerTeacher:registerType {
     val gender:MutableState<String> = mutableStateOf("")
     val nationalitySelected:MutableState<String> = mutableStateOf("")
 
-    val employingSchool:MutableState<String> = mutableStateOf("")
+    val employingSchoolId:MutableState<Int> = mutableStateOf(0)
+    val employingSchoolName:MutableState<String> = mutableStateOf("")
 
     val previousEmployerName:MutableState<String> = mutableStateOf("")
     val previousEmploymentDuration:MutableState<String> = mutableStateOf("")
@@ -133,9 +137,9 @@ object registerTeacher:registerType {
         return Teacher(
             teachertFirstName.value, teacherMiddleName.value, teacherLastName.value,
             dobState?.selectedDateMillis!!,
-            gender.value, nationalitySelected.value, email.value, password.value,
+            gender = if(registerStudent.gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
             addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
-            teacherSchoolDetails = TeacherSchoolDetails(employingSchool.value),
+            teacherSchoolDetails = TeacherSchoolDetails(employingSchoolId.value),
             previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, jobTitle.value),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
     }
@@ -145,7 +149,7 @@ object registerTeacher:registerType {
         teacherLastName.value = "Narang"
         gender.value = "Male"
         nationalitySelected.value = "Indian"
-        employingSchool.value = "Inn"
+        employingSchoolId.value = 4
         primaryContact.value = "9646388606"
         primaryContactName.value = "Abhinandan"
         email.value = "abhinandannarang016@gmail.com"

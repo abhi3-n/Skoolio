@@ -2,7 +2,9 @@ package com.project.skoolio.utils
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.navigation.AppScreens
@@ -97,6 +99,17 @@ object SchoolList{
     fun getSchoolNames(): List<String> {
         return listOfSchools.map {
             it.schoolName
+        }
+    }
+    fun getSchoolIdForSchoolName(schoolName:String): Int {
+        Log.d("SchoolId", "Searched for $schoolName")
+        val schoolInfo = listOfSchools.find { it.schoolName == schoolName.lowercase() }
+            return schoolInfo!!.schoolId
+    }
+
+    fun printListOfSchools() {
+        for(school in listOfSchools){
+            Log.d("School List -",school.schoolId.toString()+", "+school.schoolName)
         }
     }
 }

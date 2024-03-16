@@ -25,7 +25,7 @@ interface Backend {
         @Body emailOtpRequest: EmailOtpRequest
     ):EmailOtpResponse
 
-    @POST("students")
+    @POST("student")
     suspend fun registerStudent(
         @Body student: Student
     ): RegisterResponse
