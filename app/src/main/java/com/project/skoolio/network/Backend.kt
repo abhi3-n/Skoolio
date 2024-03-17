@@ -1,10 +1,11 @@
 package com.project.skoolio.network
 
-import Response
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
+import com.project.skoolio.model.login.LoginRequest
+import com.project.skoolio.model.login.LoginResponse
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
@@ -16,10 +17,6 @@ import javax.inject.Singleton
 @Singleton
 interface Backend {
 
-    //"users" endpoint is just for trial
-    @GET("users")
-    suspend fun hitBackend():Response
-
     @POST("email")
     suspend fun receiveOTP(
         @Body emailOtpRequest: EmailOtpRequest
@@ -30,7 +27,7 @@ interface Backend {
         @Body student: Student
     ): RegisterResponse
 
-    @POST("teachers")
+    @POST("teacher")
     suspend fun registerTeacher(
         @Body teacher: Teacher
     ): RegisterResponse
@@ -39,4 +36,20 @@ interface Backend {
     suspend fun getCitySchools(
         @Path("city") value: String
     ): List<SchoolInfo>
+
+
+    @POST("student/login")
+    suspend fun studentLogin(
+        @Body loginRequest: LoginRequest
+    ):LoginResponse
+    @GET("teacher/login")
+    suspend fun teacherLogin(
+        @Body loginRequest: LoginRequest
+    ):LoginResponse
+
+    @GET("school/admin/login")
+    suspend fun adminLogin(
+        @Body loginRequest: LoginRequest
+    ):LoginResponse
+
 }

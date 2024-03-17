@@ -92,7 +92,7 @@ fun ShowStudentRegistrationForm(
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
-        registerStudent.password.value = ""
+        registerStudent.resetPassword()
         navController.popBackStack()
     }
 

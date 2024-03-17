@@ -42,7 +42,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLoginViewModel(backendRepository: BackendRepository) = LoginViewModel(backendRepository)
+    fun provideLoginViewModel(backend: Backend) = LoginViewModel(backend)
     @Provides
     @Singleton
     fun provideRegistrationScreenViewModel(registrationScreenRepository: RegistrationScreenRepository, backend: Backend)

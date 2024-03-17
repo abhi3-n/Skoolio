@@ -118,3 +118,8 @@ fun getCityList(): List<String> {
     //TODO:Later we will fetch city list dynamically as more schools get added
     return listOf("Khanna")
 }
+
+
+object UserType{
+    var types = listOf("Student", "Teacher", "Admin")
+}

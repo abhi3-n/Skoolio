@@ -24,6 +24,7 @@ import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.CustomDropDownMenu
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.SchoolList
+import com.project.skoolio.utils.UserType
 import com.project.skoolio.utils.getCityList
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -50,10 +51,7 @@ fun SelectAccountTypeScreen(
         mutableStateOf(0)
     }
     val context = LocalContext.current
-    val accountTypeList = listOf("Student",
-                                "Teacher",
-                                "Admin"
-    )
+    val accountTypeList = UserType.types
     val cityList = getCityList()
     val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     val selectedSchoolCity = registrationScreenViewModel.selectedSchoolCity

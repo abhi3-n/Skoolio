@@ -45,14 +45,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,8 +70,10 @@ import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.validDetails
 import com.project.skoolio.utils.BackToLoginScreen
 import com.project.skoolio.utils.SchoolList
+import com.project.skoolio.utils.UserType
 import com.project.skoolio.utils.convertEpochToDateString
 import com.project.skoolio.utils.statesList
+import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -135,16 +142,16 @@ fun PasswordVisibility(passwordVisibility: MutableState<Boolean>) {
 
 
 @Composable
-fun SubmitButton(validInputs: Boolean,
-                 loading: Boolean,
-                 onClick:()->Unit = {}) {
+fun LoginButton(validInputs: Boolean,
+                loading: MutableState<Boolean>,
+                onClick:()->Unit = {}) {
     Button(onClick = { onClick.invoke() },
         modifier = Modifier
             .padding(3.dp)
-            .fillMaxWidth(),enabled = !loading && validInputs,
+            .fillMaxWidth(),enabled = !loading.value && validInputs,
         shape = CircleShape
     ) {
-        if(loading) CircularProgressIndicator(modifier = Modifier.size(25.dp))
+        if(loading.value) CircularProgressIndicator(modifier = Modifier.size(25.dp))
         else Text(text = "Login", Modifier.padding(5.dp))
 
     }
@@ -433,29 +440,40 @@ fun RegisterButton(
 
     val context = LocalContext.current
     val showDialog = rememberSaveable { mutableStateOf(true)}
+    val registrationDone = rememberSaveable {
+        mutableStateOf(false)
+    }
     val onRegisterFailure:(Context)->Unit = {context ->
         Toast.makeText(context,"Some error occured while registering. Please try again", Toast.LENGTH_SHORT).show()
     }
     Row(horizontalArrangement = Arrangement.Center) {
         CustomButton(onClick = {
-            if(registerType is registerStudent) {
-                registrationScreenViewModel.registerStudent(onRegisterFailure, context)
-            }
-            else if(registerType is registerTeacher){
-                registrationScreenViewModel.registerTeacher(onRegisterFailure, context)
-            }
+            registrationScreenViewModel.register(
+                onRegisterFailure,
+                context,
+                registerType,
+                registrationDone)
+//            if(registerType is registerStudent) {
+//                registrationScreenViewModel.registerStudent(onRegisterFailure, context)
+//            }
+//            else if(registerType is registerTeacher){
+//                registrationScreenViewModel.registerTeacher(onRegisterFailure, context)
+//            }
         }) {
             Text(text = "Register")
         }
     }
 
-    if(registrationScreenViewModel.registrationResponse.value.data.applicationId.isNotEmpty()
-        && showDialog.value == true){
+//    if(registrationScreenViewModel.registrationResponse.value.data.applicationId.isNotEmpty()
+//        && showDialog.value == true)
+    if(registrationDone.value)
+    {
         AlertDialog(onDismissRequest = { },
             confirmButton = {
                 Text(text = "Ok", Modifier.clickable {
-                    showDialog.value = false
-                    registrationScreenViewModel.resetApplicationId()
+                    registerType.resetPassword()
+                    registrationDone.value = false
+//                    showDialog.value = false
                     BackToLoginScreen(navController)
                 })
             },
@@ -585,7 +603,6 @@ fun SchoolDetails(userType: String,
             TextDropDownMenuRow(text = "School:",
                 dataList = SchoolList.getSchoolNames(),
                 valueSelected = schoolName)
-              schoolName.value = "Innocent Heart Playway School" //Currently assuming for single school only
             if(userType == "Student"){
                 if (admissionClass != null) {
                     TextDropDownMenuRow(
@@ -681,3 +698,105 @@ fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
         )
     }
 }
+
+
+@Composable
+fun AppLogoText() {
+    Text(
+        text = "Innocent Heart Playway School",
+        Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .height(40.dp),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge,
+        fontFamily = FontFamily.Cursive,
+        color = Color(0xFF008080),
+        fontWeight = FontWeight.ExtraBold
+    )
+}
+
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun UserLoginForm(
+    loginViewModel: LoginViewModel,
+    navController: NavHostController,
+) {
+    val email = loginViewModel.email
+    val password = loginViewModel.password
+    val passwordVisibility = rememberSaveable { mutableStateOf(false) }
+    val keyBoardController = LocalSoftwareKeyboardController.current
+    val valid = rememberSaveable(email.value, password.value) {
+        email.value.trim().isNotEmpty() && password.value.trim().isNotEmpty()
+    }
+    val loading = rememberSaveable { mutableStateOf(false) }
+    val userTypeSelectedForLoginRequest = loginViewModel.userType
+    val modifier = Modifier
+        .height(350.dp)
+        .verticalScroll(rememberScrollState())
+    val context = LocalContext.current
+    Column(modifier,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "Login", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        CustomTextField(valueState = email,
+            enabled = !loading.value,
+            keyboardType = KeyboardType.Email,
+            label = "Email")
+        PasswordTextField(passwordState = password,
+            enabled = !loading.value,
+            passwordVisibility = passwordVisibility,
+            onAction = KeyboardActions{
+                if(!valid) return@KeyboardActions
+                loginViewModel.loginRequest(
+                    email.value.trim(),
+                    password.value.trim(),
+                    loading,
+                    context,
+                    navController
+                )
+                keyBoardController?.hide()
+            })
+        CustomDropDownMenu(modifier = Modifier.padding(bottom = 10.dp, start = 10.dp, end = 10.dp),
+            userTypeSelectedForLoginRequest,
+            UserType.types)
+        LoginButton(
+            validInputs = valid,
+            loading = loading,
+            onClick = {
+                if(valid) {
+                    loginViewModel.loginRequest(
+                        email.value.trim(),
+                        password.value.trim(),
+                        loading,
+                        context,
+                        navController)
+                    keyBoardController?.hide()
+                }
+//                navController.navigate(AppScreens.HomeScreen.name+"/${userTypeSelectedForLoginRequest.value}")
+            }
+        )
+    }
+}
+
+
+@Composable
+fun NewAccountText(navController: NavHostController) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
+    ) {
+        Text(text = "New User?")
+        Text(
+            text = "Sign up",
+            Modifier
+                .clickable {
+                    navController.navigate(AppScreens.SelectAccountTypeScreen.name)
+                }
+                .padding(4.dp),
+            color = Color.Cyan,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+

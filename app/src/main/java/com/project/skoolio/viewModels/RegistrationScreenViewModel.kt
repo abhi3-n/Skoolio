@@ -12,6 +12,7 @@ import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.registerSingleton.registerStudent
 import com.project.skoolio.model.registerSingleton.registerTeacher
+import com.project.skoolio.model.registerSingleton.registerType
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.utils.SchoolList
@@ -31,37 +32,37 @@ class RegistrationScreenViewModel @Inject constructor(
 
     var selectedSchoolCity:MutableState<String> = mutableStateOf("")
 
-    fun registerStudent(onRegisterFailure: (Context) -> Unit, context: Context):Unit{
-        viewModelScope.launch {
-            _registrationResponse.value.loading = true
-            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent())
-            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
-                //registration has succeeded
-                _registrationResponse.value.loading = false
-            }
-            else if(_registrationResponse.value.exception!=null){
-                //registration has not succeeded
-                _registrationResponse.value.loading = false
-                onRegisterFailure(context)
-            }
-        }
-    }
-
-    fun registerTeacher(onRegisterFailure: (Context) -> Unit, context: Context) {
-        viewModelScope.launch {
-            _registrationResponse.value.loading = true
-            _registrationResponse.value = registrationScreenRepository.registerTeacher(registerTeacher.getTeacher())
-            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
-                //registration has succeeded
-                _registrationResponse.value.loading = false
-            }
-            else if(_registrationResponse.value.exception!=null){
-                //registration has not succeeded
-                _registrationResponse.value.loading = false
-                onRegisterFailure(context)
-            }
-        }
-    }
+//    fun registerStudent(onRegisterFailure: (Context) -> Unit, context: Context):Unit{
+//        viewModelScope.launch {
+//            _registrationResponse.value.loading = true
+//            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent())
+//            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
+//                //registration has succeeded
+//                _registrationResponse.value.loading = false
+//            }
+//            else if(_registrationResponse.value.exception!=null){
+//                //registration has not succeeded
+//                _registrationResponse.value.loading = false
+//                onRegisterFailure(context)
+//            }
+//        }
+//    }
+//
+//    fun registerTeacher(onRegisterFailure: (Context) -> Unit, context: Context) {
+//        viewModelScope.launch {
+//            _registrationResponse.value.loading = true
+//            _registrationResponse.value = registrationScreenRepository.registerTeacher(registerTeacher.getTeacher())
+//            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
+//                //registration has succeeded
+//                _registrationResponse.value.loading = false
+//            }
+//            else if(_registrationResponse.value.exception!=null){
+//                //registration has not succeeded
+//                _registrationResponse.value.loading = false
+//                onRegisterFailure(context)
+//            }
+//        }
+//    }
 
     fun getCitySchools(
         context: Context,
@@ -86,7 +87,32 @@ class RegistrationScreenViewModel @Inject constructor(
         }
     }
 
-    fun resetApplicationId() {
-        _registrationResponse.value.data.applicationId = ""
+    fun register(
+        onRegisterFailure: (Context) -> Unit,
+        context: Context,
+        registerType: registerType,
+        registrationDone: MutableState<Boolean>
+    ) {
+        viewModelScope.launch {
+            _registrationResponse.value.loading = true
+            if(registerType is registerStudent) {
+                _registrationResponse.value =
+                    registrationScreenRepository.registerStudent(registerStudent.getStudent())
+            }
+            else if(registerType is registerTeacher){
+                _registrationResponse.value =
+                    registrationScreenRepository.registerTeacher(registerTeacher.getTeacher())
+            }
+            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
+                registrationDone.value = true
+                //registration has succeeded
+                _registrationResponse.value.loading = false
+            }
+            else if(_registrationResponse.value.exception!=null){
+                //registration has not succeeded
+                _registrationResponse.value.loading = false
+                onRegisterFailure(context)
+            }
+        }
     }
 }

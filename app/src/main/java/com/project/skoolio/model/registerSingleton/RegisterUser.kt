@@ -16,6 +16,8 @@ import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.SchoolList
 
 interface registerType{
+    fun resetPassword()
+
     val email: MutableState<String>
         get() = mutableStateOf("")
 
@@ -51,6 +53,10 @@ object registerStudent:registerType {
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
     val alternativeContactRelation:MutableState<String> = mutableStateOf("")
+    override fun resetPassword() {
+        password.value = ""
+    }
+
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
 
@@ -119,7 +125,11 @@ object registerTeacher:registerType {
 //    val primaryContactRelation:MutableState<String> = mutableStateOf("")
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
-//    val alternativeContactRelation:MutableState<String> = mutableStateOf("")
+    override fun resetPassword() {
+        password.value = ""
+    }
+
+    //    val alternativeContactRelation:MutableState<String> = mutableStateOf("")
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
 
