@@ -7,6 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.SchoolInfo
+import com.project.skoolio.model.userDetails.AddressDetails
+import com.project.skoolio.model.userDetails.ContactDetails
+import com.project.skoolio.model.userDetails.FatherDetails
+import com.project.skoolio.model.userDetails.MotherDetails
+import com.project.skoolio.model.userDetails.StudentSchoolDetails
+import com.project.skoolio.model.userType.Student
 import com.project.skoolio.navigation.AppScreens
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -122,4 +128,22 @@ fun getCityList(): List<String> {
 
 object UserType{
     var types = listOf("Student", "Teacher", "Admin")
+}
+
+
+fun getDefaultStudent():Student{
+    return Student("",
+        "",
+        "",
+        "",
+        0,'o',
+        "",
+        "",
+        "",
+        AddressDetails("","",""),
+        ContactDetails("","","","","","",),
+        StudentSchoolDetails(-1,""),
+        FatherDetails("","",""),
+        MotherDetails("","",""),
+        "")
 }

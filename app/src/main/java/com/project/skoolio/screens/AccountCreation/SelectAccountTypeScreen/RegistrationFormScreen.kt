@@ -36,9 +36,9 @@ import com.project.skoolio.components.RulesDialog
 import com.project.skoolio.components.SaveButton
 import com.project.skoolio.components.SchoolDetails
 import com.project.skoolio.components.ShowToast
-import com.project.skoolio.model.registerSingleton.registerStudent
-import com.project.skoolio.model.registerSingleton.registerTeacher
-import com.project.skoolio.model.registerSingleton.registerType
+import com.project.skoolio.model.userDetailSingleton.studentDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.userDetailSingleton.userDetails
 import com.project.skoolio.utils.StudentRules
 import com.project.skoolio.utils.TeacherRules
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -92,49 +92,49 @@ fun ShowStudentRegistrationForm(
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
-        registerStudent.resetPassword()
+        studentDetails.resetPassword()
         navController.popBackStack()
     }
 
     val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
 
-    registerStudent.dobState = rememberDatePickerState()
+    studentDetails.dobState = rememberDatePickerState()
     val mailFieldEnabled = rememberSaveable { mutableStateOf(true) }
     Log.d("Next Button Clicked","8")
 
     //Form Starts here
     FormTitle("Student Registration Form")
     BasicDetails("Student",
-        registerStudent.studentFirstName,
-        registerStudent.studentMiddleName,
-        registerStudent.studentLastName,
-        registerStudent.gender,
-        registerStudent.dobState!!,
-        registerStudent.nationalitySelected
+        studentDetails.studentFirstName,
+        studentDetails.studentMiddleName,
+        studentDetails.studentLastName,
+        studentDetails.gender,
+        studentDetails.dobState!!,
+        studentDetails.nationality
     )
     SchoolDetails("Student",
-        registerStudent.admissionSchoolName,
-        registerStudent.admissionClassName);
+        studentDetails.schoolName,
+        studentDetails.className);
     FamilyDetails("Father",
-        registerStudent.fatherName,
-        registerStudent.fatherQualification,
-        registerStudent.fatherOccupation)
+        studentDetails.fatherName,
+        studentDetails.fatherQualification,
+        studentDetails.fatherOccupation)
     FamilyDetails("Mother",
-        registerStudent.motherName,
-        registerStudent.motherQualification,
-        registerStudent.motherOccupation)
-    OtherDetails(registerStudent.primaryContact, registerStudent.primaryContactName,
-        registerStudent.primaryContactRelation, registerStudent.alternativeContact,
-        registerStudent.alternativeContactName, registerStudent.alternativeContactRelation,
-        registerStudent.email, registerStudent.addressLine,
-        registerStudent.city, registerStudent.state,
-        registerStudent.MOT, mailFieldEnabled)
-    RulesDialog(StudentRules.rulesList, registerStudent.rulesAccepted)
-    if(registerStudent.password.value.isEmpty()) {
-        SaveButton(viewModelProvider, registerStudent, navController, mailFieldEnabled)
+        studentDetails.motherName,
+        studentDetails.motherQualification,
+        studentDetails.motherOccupation)
+    OtherDetails(studentDetails.primaryContact, studentDetails.primaryContactName,
+        studentDetails.primaryContactRelation, studentDetails.alternativeContact,
+        studentDetails.alternativeContactName, studentDetails.alternativeContactRelation,
+        studentDetails.email, studentDetails.addressLine,
+        studentDetails.city, studentDetails.state,
+        studentDetails.MOT, mailFieldEnabled)
+    RulesDialog(StudentRules.rulesList, studentDetails.rulesAccepted)
+    if(studentDetails.password.value.isEmpty()) {
+        SaveButton(viewModelProvider, studentDetails, navController, mailFieldEnabled)
     }
     else{
-        RegisterButton(registerStudent,registrationScreenViewModel, navController)
+        RegisterButton(studentDetails,registrationScreenViewModel, navController)
     }
 }
 
@@ -146,47 +146,47 @@ fun ShowTeacherRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
-    registerTeacher.dobState = rememberDatePickerState()
+    teacherDetails.dobState = rememberDatePickerState()
     val mailFieldEnabled = rememberSaveable { mutableStateOf(true) }
     val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
 
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
-        registerTeacher.password.value = ""
+        teacherDetails.password.value = ""
         navController.popBackStack()
     }
 
     FormTitle("Teacher Registration Form")
     BasicDetails(
         "Teacher",
-        registerTeacher.teachertFirstName,
-        registerTeacher.teacherMiddleName,
-        registerTeacher.teacherLastName,
-        registerTeacher.gender,
-        registerTeacher.dobState!!,
-        registerTeacher.nationalitySelected,
+        teacherDetails.teachertFirstName,
+        teacherDetails.teacherMiddleName,
+        teacherDetails.teacherLastName,
+        teacherDetails.gender,
+        teacherDetails.dobState!!,
+        teacherDetails.nationalitySelected,
     )
     SchoolDetails(userType = "Teacher",
-        schoolName = registerTeacher.employingSchoolName,
+        schoolName = teacherDetails.employingSchoolName,
         admissionClass = null)
     PreviousEmploymentDetails(
-        registerTeacher.previousEmployerName,
-        registerTeacher.previousEmploymentDuration,
-        registerTeacher.jobTitle
+        teacherDetails.previousEmployerName,
+        teacherDetails.previousEmploymentDuration,
+        teacherDetails.jobTitle
     )
-    OtherDetails(registerTeacher.primaryContact, registerTeacher.primaryContactName,
-        null, registerTeacher.alternativeContact,
-        registerTeacher.alternativeContactName, null,
-        registerTeacher.email, registerTeacher.resAddress,
-        registerTeacher.resCity, registerTeacher.resState,
+    OtherDetails(teacherDetails.primaryContact, teacherDetails.primaryContactName,
+        null, teacherDetails.alternativeContact,
+        teacherDetails.alternativeContactName, null,
+        teacherDetails.email, teacherDetails.resAddress,
+        teacherDetails.resCity, teacherDetails.resState,
         null, mailFieldEnabled)
-    RulesDialog(TeacherRules.rulesList, registerTeacher.rulesAccepted)
-    if(registerTeacher.password.value.isEmpty()) {
-        SaveButton(viewModelProvider, registerTeacher, navController, mailFieldEnabled)
+    RulesDialog(TeacherRules.rulesList, teacherDetails.rulesAccepted)
+    if(teacherDetails.password.value.isEmpty()) {
+        SaveButton(viewModelProvider, teacherDetails, navController, mailFieldEnabled)
     }
     else{
-        RegisterButton(registerTeacher, registrationScreenViewModel, navController)
+        RegisterButton(teacherDetails, registrationScreenViewModel, navController)
     }
 
 }
@@ -271,19 +271,19 @@ fun ShowAdminRegistrationForm() {
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun validDetails(registerType: registerType,
+fun validDetails(userDetails: userDetails,
                  context: Context,
 //                 dobState: DatePickerState
 ): Boolean {
     //Create all checks here
-    if(registerType is registerStudent) {
-        val student = registerType
+    if(userDetails is studentDetails) {
+        val student = userDetails
         if(!validStudentDetails(student, context)){
             return false
         }
     }
-    else if (registerType is registerTeacher){
-        val teacher = registerType
+    else if (userDetails is teacherDetails){
+        val teacher = userDetails
         if(!validTeacherDetails(teacher, context)){
             return false
         }
@@ -293,7 +293,7 @@ fun validDetails(registerType: registerType,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun validTeacherDetails(teacher: registerTeacher, context: Context): Boolean {
+fun validTeacherDetails(teacher: teacherDetails, context: Context): Boolean {
     if(!validGeneralDetails(context,teacher.teachertFirstName,teacher.teacherLastName,
             teacher.dobState?.selectedDateMillis,teacher.nationalitySelected,teacher.gender,
             teacher.email,
@@ -309,23 +309,23 @@ fun validTeacherDetails(teacher: registerTeacher, context: Context): Boolean {
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun validStudentDetails(
-    student: registerStudent,
+    student: studentDetails,
     context: Context,
 //    dobState: DatePickerState
 ): Boolean {
     if(!validGeneralDetails(context, student.studentFirstName, student.studentLastName,
-            student.dobState?.selectedDateMillis, student.nationalitySelected, student.gender,
+            student.dobState?.selectedDateMillis, student.nationality, student.gender,
             student.email, student.addressLine, student.city, student.state,
             student.primaryContact, student.primaryContactName, student.primaryContactRelation,
             student.alternativeContact, student.alternativeContactName, student.alternativeContactRelation,
             student.rulesAccepted)){
         return false
     }
-    if(student.admissionSchoolName.value.isEmpty()) {
+    if(student.schoolName.value.isEmpty()) {
         Toast.makeText(context, "Select School", Toast.LENGTH_SHORT).show()
         return false
     }
-    if(student.admissionClassId.value.isEmpty()) {
+    if(student.className.value.isEmpty()) {
         Toast.makeText(context, "Select Class", Toast.LENGTH_SHORT).show()
         return false
     }

@@ -10,9 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.RegisterResponse
-import com.project.skoolio.model.registerSingleton.registerStudent
-import com.project.skoolio.model.registerSingleton.registerTeacher
-import com.project.skoolio.model.registerSingleton.registerType
+import com.project.skoolio.model.userDetailSingleton.studentDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.userDetailSingleton.userDetails
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.utils.SchoolList
@@ -90,18 +90,18 @@ class RegistrationScreenViewModel @Inject constructor(
     fun register(
         onRegisterFailure: (Context) -> Unit,
         context: Context,
-        registerType: registerType,
+        userDetails: userDetails,
         registrationDone: MutableState<Boolean>
     ) {
         viewModelScope.launch {
             _registrationResponse.value.loading = true
-            if(registerType is registerStudent) {
+            if(userDetails is studentDetails) {
                 _registrationResponse.value =
-                    registrationScreenRepository.registerStudent(registerStudent.getStudent())
+                    registrationScreenRepository.registerStudent(studentDetails.getStudent())
             }
-            else if(registerType is registerTeacher){
+            else if(userDetails is teacherDetails){
                 _registrationResponse.value =
-                    registrationScreenRepository.registerTeacher(registerTeacher.getTeacher())
+                    registrationScreenRepository.registerTeacher(teacherDetails.getTeacher())
             }
             if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
                 registrationDone.value = true

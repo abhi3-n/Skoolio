@@ -1,4 +1,4 @@
-package com.project.skoolio.model.registerSingleton
+package com.project.skoolio.model.userDetailSingleton
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,29 +15,26 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.SchoolList
 
-interface registerType{
+interface userDetails{
     fun resetPassword()
 
     val email: MutableState<String>
         get() = mutableStateOf("")
 
-//    val rulesAccepted:MutableState<Boolean>
-//        get() = mutableStateOf(false)
-
 }
 
-object registerStudent:registerType {
+object studentDetails:userDetails {
     val studentFirstName:MutableState<String> = mutableStateOf("")
     val studentMiddleName:MutableState<String> = mutableStateOf("")
     val studentLastName:MutableState<String> = mutableStateOf("")
     //date of birth
     val gender:MutableState<String> = mutableStateOf("")
-    val nationalitySelected:MutableState<String> = mutableStateOf("")
+    val nationality:MutableState<String> = mutableStateOf("")
 
     val admissionSchoolId:MutableState<Int> = mutableStateOf(0)
-    val admissionSchoolName:MutableState<String> = mutableStateOf("")
-    val admissionClassName:MutableState<String> = mutableStateOf("")
-    val admissionClassId:MutableState<String> = mutableStateOf("")
+    val schoolName:MutableState<String> = mutableStateOf("")
+    val className:MutableState<String> = mutableStateOf("")
+    val classId:MutableState<String> = mutableStateOf("")
 
     val fatherName:MutableState<String> = mutableStateOf("")
     val fatherQualification:MutableState<String> = mutableStateOf("")
@@ -72,22 +69,75 @@ object registerStudent:registerType {
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getStudent(): Student {
-        return Student(studentFirstName.value, studentMiddleName.value, studentLastName.value, dobState?.selectedDateMillis!!,
-            gender = if(gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
+        return Student(id = "",studentFirstName.value, studentMiddleName.value, studentLastName.value, dobState?.selectedDateMillis!!,
+            gender = if(gender.value == "Male") 'm' else 'f', nationality.value, email.value, password.value,
             addressDetails = AddressDetails(addressLine.value, city.value, state.value),
-            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(admissionSchoolName.value), admissionClassId.value),
+            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value), className.value),  //TODO:className to be replaced with classId later.
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
             father = FatherDetails(fatherName  = fatherName.value, fatherQualification = fatherQualification.value, fatherOccupation = fatherOccupation.value),
             mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),
             mot = MOT.value);
+    }
+    fun populateStudentDetails(student: Student) {
+        studentFirstName.value = student.firstName
+        studentMiddleName.value = student.middleName
+        studentLastName.value = student.lastName
+        gender.value = if(student.gender == 'm') "Male" else "Female"
+        nationality.value = student.nationality
+        className.value = student.studentSchoolDetails.classId //TODO:need to have class Name
+        schoolName.value = student.studentSchoolDetails.schoolId.toString() //TODO:need to have school Name
+        fatherName.value = student.father.fatherName
+        fatherQualification.value = student.father.fatherQualification
+        fatherOccupation.value = student.father.fatherOccupation
+        motherName.value = student.mother.motherName
+        motherQualification.value = student.mother.motherQualification
+        motherOccupation.value = student.mother.motherOccupation
+        primaryContact.value = student.contactDetails.primaryContact
+        primaryContactName.value = student.contactDetails.primaryContactName
+        primaryContactRelation.value = student.contactDetails.primaryContactRelation.toString()
+        alternativeContact.value = student.contactDetails.alternativeContact
+        alternativeContactName.value = student.contactDetails.alternativeContactName
+        alternativeContactRelation.value = student.contactDetails.alternativeContactRelation.toString()
+        email.value = student.email
+        addressLine.value = student.addressDetails.addressLine
+        city.value = student.addressDetails.city
+        state.value = student.addressDetails.state
+        MOT.value = student.mot
+    }
+
+    fun resetStudentDetails(){
+        studentFirstName.value = ""
+        studentMiddleName.value = ""
+        studentLastName.value = ""
+        gender.value = ""
+        nationality.value = ""
+        className.value = ""
+        schoolName.value = ""
+        fatherName.value = ""
+        fatherQualification.value = ""
+        fatherOccupation.value = ""
+        motherName.value = ""
+        motherQualification.value = ""
+        motherOccupation.value = ""
+        primaryContact.value = ""
+        primaryContactName.value = ""
+        primaryContactRelation.value = ""
+        alternativeContact.value = ""
+        alternativeContactName.value = ""
+        alternativeContactRelation.value = ""
+        email.value = ""
+        addressLine.value = ""
+        city.value = ""
+        state.value = ""
+        MOT.value = ""
     }
 
     init {
         studentFirstName.value = "Abhinandan"
         studentLastName.value = "Narang"
         gender.value = "Male"
-        nationalitySelected.value = "Indian"
-        admissionClassId.value = "Pre-Nursery"
+        nationality.value = "Indian"
+        className.value = "Pre-Nursery"
         fatherName.value = "Rajeev"
         fatherQualification.value = "B.Com."
         fatherOccupation.value = "Business"
@@ -105,7 +155,7 @@ object registerStudent:registerType {
     }
 }
 
-object registerTeacher:registerType {
+object teacherDetails:userDetails {
     val teachertFirstName:MutableState<String> = mutableStateOf("")
     val teacherMiddleName:MutableState<String> = mutableStateOf("")
     val teacherLastName:MutableState<String> = mutableStateOf("")
@@ -122,14 +172,12 @@ object registerTeacher:registerType {
 
     val primaryContact:MutableState<String> = mutableStateOf("")
     val primaryContactName:MutableState<String> = mutableStateOf("")
-//    val primaryContactRelation:MutableState<String> = mutableStateOf("")
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
     override fun resetPassword() {
         password.value = ""
     }
 
-    //    val alternativeContactRelation:MutableState<String> = mutableStateOf("")
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
 
@@ -144,16 +192,21 @@ object registerTeacher:registerType {
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getTeacher(): Teacher {
-        return Teacher(
+        return Teacher(id = "",
             teachertFirstName.value, teacherMiddleName.value, teacherLastName.value,
             dobState?.selectedDateMillis!!,
-            gender = if(registerStudent.gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
+            gender = if(studentDetails.gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
             addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
             teacherSchoolDetails = TeacherSchoolDetails(employingSchoolId.value),
             previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, jobTitle.value),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
     }
-//
+
+    fun populateTeacherDetails(teacher: Teacher) {
+
+    }
+
+    //
     init {
         teachertFirstName.value = "Abhinandan"
         teacherLastName.value = "Narang"

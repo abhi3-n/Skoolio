@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.TextCustomTextField
-import com.project.skoolio.model.registerSingleton.registerStudent
-import com.project.skoolio.model.registerSingleton.registerTeacher
+import com.project.skoolio.model.userDetailSingleton.studentDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable
@@ -45,10 +45,10 @@ fun SetPasswordScreen(
         CustomButton(onClick = {
             if(validPassword(password, confirmPassword, context)){
                 if(userType == "Student"){
-                    registerStudent.password.value = password.value
+                    studentDetails.password.value = password.value
                 }
                 else if(userType == "Teacher"){
-                    registerTeacher.password.value = password.value
+                    teacherDetails.password.value = password.value
                 }
                 navController.popBackStack()
             }

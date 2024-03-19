@@ -5,7 +5,8 @@ import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.login.LoginRequest
-import com.project.skoolio.model.login.LoginResponse
+import com.project.skoolio.model.login.StudentLoginResponse
+import com.project.skoolio.model.login.TeacherLoginResponse
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
@@ -41,15 +42,21 @@ interface Backend {
     @POST("student/login")
     suspend fun studentLogin(
         @Body loginRequest: LoginRequest
-    ):LoginResponse
+    ):StudentLoginResponse
+
+//    @GET("student/detail")
+//    suspend fun getStudentDetails(
+//        @Body email:String
+//    ):Student
+
     @GET("teacher/login")
     suspend fun teacherLogin(
         @Body loginRequest: LoginRequest
-    ):LoginResponse
+    ): TeacherLoginResponse
 
-    @GET("school/admin/login")
-    suspend fun adminLogin(
-        @Body loginRequest: LoginRequest
-    ):LoginResponse
+//    @GET("school/admin/login")
+//    suspend fun adminLogin(
+//        @Body loginRequest: LoginRequest
+//    ):AdminLoginResponse
 
 }

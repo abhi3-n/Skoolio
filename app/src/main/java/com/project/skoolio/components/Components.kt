@@ -63,9 +63,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.EmailOtpRequest
-import com.project.skoolio.model.registerSingleton.registerStudent
-import com.project.skoolio.model.registerSingleton.registerTeacher
-import com.project.skoolio.model.registerSingleton.registerType
+import com.project.skoolio.model.userDetailSingleton.studentDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.userDetailSingleton.userDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.validDetails
 import com.project.skoolio.utils.BackToLoginScreen
@@ -235,7 +235,7 @@ fun DOB(dobState: DatePickerState) {
             }
             else{
                 IconButton(onClick = {
-                    dobState.setSelection(null)
+                    dobState.selectedDateMillis = null
                 }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Clear Date of Birth")
                 }
@@ -330,7 +330,7 @@ fun AddressComposable(
 @Composable
 fun SaveButton(
     viewModelProvider: ViewModelProvider,
-    registerType: registerType,
+    userDetails: userDetails,
     navController: NavHostController,
     mailFieldEnabled: MutableState<Boolean>
 ) {
@@ -349,9 +349,9 @@ fun SaveButton(
     val progressIndicatorLoading = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.Center){
         CustomButton(onClick = {
-            if(validDetails(registerType, context)) {
+            if(validDetails(userDetails, context)) {
                 progressIndicatorLoading.value = true
-                otpValidationViewModel.receiveOTP(EmailOtpRequest(registerType.email.value),
+                otpValidationViewModel.receiveOTP(EmailOtpRequest(userDetails.email.value),
                     context,
                     navController,
                     onOtpSuccess,
@@ -372,10 +372,10 @@ fun SaveButton(
     if(otpValidationViewModel.getIsOtpValidated()){
         otpValidationViewModel.resetOtpValidated()
         mailFieldEnabled.value = false
-        if(registerType is registerStudent) {
+        if(userDetails is studentDetails) {
             navController.navigate(AppScreens.SetPasswordScreen.name + "/Student")
         }
-        else if(registerType is registerTeacher){
+        else if(userDetails is teacherDetails){
             navController.navigate(AppScreens.SetPasswordScreen.name + "/Teacher")
         }
     }
@@ -432,7 +432,7 @@ fun CustomButton(
 
 @Composable
 fun RegisterButton(
-    registerType: registerType,
+    userDetails: userDetails,
     registrationScreenViewModel: RegistrationScreenViewModel,
     navController: NavHostController
 ) {
@@ -451,7 +451,7 @@ fun RegisterButton(
             registrationScreenViewModel.register(
                 onRegisterFailure,
                 context,
-                registerType,
+                userDetails,
                 registrationDone)
 //            if(registerType is registerStudent) {
 //                registrationScreenViewModel.registerStudent(onRegisterFailure, context)
@@ -471,7 +471,7 @@ fun RegisterButton(
         AlertDialog(onDismissRequest = { },
             confirmButton = {
                 Text(text = "Ok", Modifier.clickable {
-                    registerType.resetPassword()
+                    userDetails.resetPassword()
                     registrationDone.value = false
 //                    showDialog.value = false
                     BackToLoginScreen(navController)

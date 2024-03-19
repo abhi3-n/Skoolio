@@ -9,21 +9,23 @@ import com.project.skoolio.model.userDetails.PreviousEmploymentDetails
 import com.project.skoolio.model.userDetails.TeacherSchoolDetails
 
 open class User(
-    protected val firstName:String,
-    protected val middleName:String,
-    protected val lastName:String,
-    protected val dob: Long,
-    protected val gender:Char,
-    protected val nationality:String,
-    protected val email:String,
-    protected val password:String,
-    protected val addressDetails: AddressDetails,
-    protected val contactDetails: ContactDetails,
+    val id:String,
+    val firstName:String,
+    val middleName:String,
+    val lastName:String,
+    val dob: Long,
+    val gender:Char,
+    val nationality:String,
+    val email:String,
+    val password:String,
+    val addressDetails: AddressDetails,
+    val contactDetails: ContactDetails,
     ) {
 
 }
 
 class Student(
+    id:String,
     firstName: String,
     middleName: String,
     lastName: String,
@@ -34,14 +36,15 @@ class Student(
     password: String,
     addressDetails: AddressDetails,
     contactDetails: ContactDetails,
-    protected val studentSchoolDetails: StudentSchoolDetails,
-    protected val father: FatherDetails,
-    protected val mother: MotherDetails,
-    protected val mot:String
-    ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
+    val studentSchoolDetails: StudentSchoolDetails,
+    val father: FatherDetails,
+    val mother: MotherDetails,
+    val mot:String
+    ) : User(id, firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
 }
 
 class Teacher(
+    id:String,
     firstName: String,
     middleName: String,
     lastName: String,
@@ -52,8 +55,8 @@ class Teacher(
     password: String,
     addressDetails: AddressDetails,
     contactDetails: ContactDetails,
-    protected val teacherSchoolDetails: TeacherSchoolDetails,
-    protected val previousEmploymentDetails: PreviousEmploymentDetails,
-) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
+    val teacherSchoolDetails: TeacherSchoolDetails,
+    val previousEmploymentDetails: PreviousEmploymentDetails,
+) : User(id, firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
 
 }
