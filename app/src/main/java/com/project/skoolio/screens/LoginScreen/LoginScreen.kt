@@ -28,9 +28,9 @@ fun LoginScreen(
     viewModelProvider: ViewModelProvider
 ) {
     val loginViewModel = viewModelProvider.getLoginViewModel()
-    if(loginViewModel.isLoggedIn.value){
-        navController.navigate(AppScreens.HomeScreen.name+"/${loginViewModel.userType.value}")
-    }
+//    if(loginViewModel.isLoggedIn.value){
+//        navController.navigate(AppScreens.HomeScreen.name+"/${loginViewModel.userType.value}")
+//    }
     ExitApp(navController = navController, context = LocalContext.current)
 
     Surface(Modifier.fillMaxSize(), color = Color.White) {

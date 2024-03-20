@@ -20,6 +20,7 @@ import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.utils.getDefaultStudent
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 
@@ -45,23 +46,30 @@ class LoginViewModel @Inject constructor(private val backend: Backend):ViewModel
         viewModelScope.launch {
             loading.value = true
             _loginResponse.value.loading = true
+            try {
             _loginResponse.value.data =
                 if(userType.value == "Student") backend.studentLogin(LoginRequest(email,password))
                 else if(userType.value == "Teacher") backend.teacherLogin(LoginRequest(email,password))
                 else TODO() //backend.adminLogin(LoginRequest(email,password))
             _loginResponse.value.loading = false
             loading.value = false
-            if(_loginResponse.value.data.status == "Approved"){
+            if(_loginResponse.value.data.status == "Approved") {
                 _isLoggedIn.value = true
-                if(userType.value == "Student") studentDetails.populateStudentDetails((_loginResponse.value.data as StudentLoginResponse).student)
-                else if(userType.value == "Teacher") teacherDetails.populateTeacherDetails((_loginResponse.value.data as TeacherLoginResponse).teacher)
+                if (userType.value == "Student") studentDetails.populateStudentDetails((_loginResponse.value.data as StudentLoginResponse).student)
+                else if (userType.value == "Teacher") teacherDetails.populateTeacherDetails((_loginResponse.value.data as TeacherLoginResponse).teacher)
 //              else (userType.value == "Admin")
                 else TODO() //backend.adminLogin(LoginRequest(email,password))
 
-                navController.navigate(AppScreens.HomeScreen.name+"/${userType.value}")
+                navController.navigate(AppScreens.HomeScreen.name + "/${userType.value}")
+                }
             }
-            else{
-                Toast.makeText(context,_loginResponse.value.data.message, Toast.LENGTH_SHORT).show()
+            catch (e:HttpException){
+                _loginResponse.value.loading = false
+                loading.value = false
+                if(e.message() == "Not Found")
+                    Toast.makeText(context, "No user found with this email.", Toast.LENGTH_SHORT).show()
+                else if(e.message() == "Unauthorized")
+                    Toast.makeText(context, "Wrong Password.", Toast.LENGTH_SHORT).show()
             }
         }
     }

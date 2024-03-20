@@ -56,7 +56,6 @@ fun RegistrationFormScreen(
     viewModelProvider: ViewModelProvider,
     userType: String?
 ) {
-    Log.d("Next Button Clicked","6")
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,8 +86,6 @@ fun ShowStudentRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
-    Log.d("Next Button Clicked","7")
-
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
@@ -100,7 +97,6 @@ fun ShowStudentRegistrationForm(
 
     studentDetails.dobState = rememberDatePickerState()
     val mailFieldEnabled = rememberSaveable { mutableStateOf(true) }
-    Log.d("Next Button Clicked","8")
 
     //Form Starts here
     FormTitle("Student Registration Form")
@@ -231,7 +227,6 @@ fun FamilyDetails(
     qualification: MutableState<String>,
     occupation: MutableState<String>,
 ) {
-    Log.d("Next Button Clicked","12 $member")
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)

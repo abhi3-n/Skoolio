@@ -105,7 +105,7 @@ object studentDetails:userDetails {
         MOT.value = student.mot
     }
 
-    fun resetStudentDetails(){
+    suspend fun resetStudentDetails(){
         studentFirstName.value = ""
         studentMiddleName.value = ""
         studentLastName.value = ""

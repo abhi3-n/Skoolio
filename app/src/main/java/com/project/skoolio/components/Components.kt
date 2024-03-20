@@ -294,7 +294,6 @@ fun NameFields(
 @Composable
 fun FormTitle(formTitle: String,
               style: TextStyle = MaterialTheme.typography.titleLarge) {
-    Log.d("Next Button Clicked","9")
     Text(text = formTitle, style = style)
 }
 
@@ -334,7 +333,6 @@ fun SaveButton(
     navController: NavHostController,
     mailFieldEnabled: MutableState<Boolean>
 ) {
-    Log.d("Next Button Clicked","15")
 
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
@@ -436,7 +434,6 @@ fun RegisterButton(
     registrationScreenViewModel: RegistrationScreenViewModel,
     navController: NavHostController
 ) {
-    Log.d("Next Button Clicked","16")
 
     val context = LocalContext.current
     val showDialog = rememberSaveable { mutableStateOf(true)}
@@ -560,8 +557,6 @@ fun OtherDetails(
     MOT: MutableState<String>?,
     mailFieldEnabled: MutableState<Boolean>
 ) {
-    Log.d("Next Button Clicked","13")
-
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -588,8 +583,6 @@ fun SchoolDetails(userType: String,
                   schoolName: MutableState<String>,
                   admissionClass: MutableState<String>?,
 ) {
-    Log.d("Next Button Clicked","11")
-
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -629,8 +622,6 @@ fun BasicDetails(
     dobState: DatePickerState,
     nationalitySelected: MutableState<String>
 ) {
-    Log.d("Next Button Clicked","10")
-
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -661,8 +652,6 @@ fun BasicDetails(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
-    Log.d("Next Button Clicked","14")
-
     val showDialog = rememberSaveable { mutableStateOf(false)}
     val checked = rememberSaveable { mutableStateOf(false) }
     Row(horizontalArrangement = Arrangement.SpaceBetween) {
