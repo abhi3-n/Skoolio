@@ -2,9 +2,10 @@ package com.project.skoolio.utils
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.userDetails.AddressDetails
@@ -15,7 +16,10 @@ import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.navigation.AppScreens
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Period
 import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ExitApp(navController: NavHostController, context: Context) {
@@ -146,4 +150,26 @@ fun getDefaultStudent():Student{
         FatherDetails("","",""),
         MotherDetails("","",""),
         "")
+}
+
+
+fun capitalize(string: String):String{
+    return string.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(
+            Locale.ENGLISH
+        ) else it.toString()
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun calculateAge(epochMillis: Long?): String {
+    val birthDate = LocalDate.ofEpochDay(epochMillis!! / (24 * 60 * 60 * 1000))
+    val currentDate = LocalDate.now()
+    val age = Period.between(birthDate, currentDate)
+
+    val years = age.years
+    val months = age.months
+
+    return "$years years, "+months + if(months == 1) " month" else " months"
 }

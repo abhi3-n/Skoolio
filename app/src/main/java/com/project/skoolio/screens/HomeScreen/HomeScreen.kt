@@ -1,5 +1,7 @@
 package com.project.skoolio.screens.HomeScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,8 +37,10 @@ import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.SkoolioAppBar
 import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.utils.ExitApp
+import com.project.skoolio.utils.calculateAge
 import com.project.skoolio.viewModels.ViewModelProvider
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
@@ -58,6 +61,7 @@ fun HomeScreen(
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScaffold(
     navController: NavHostController = rememberNavController(),
@@ -77,12 +81,14 @@ fun MainScaffold(
         )
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun prev()
 {
     MainScaffold()
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainContent(
     paddingValues: PaddingValues = PaddingValues(),
@@ -121,116 +127,54 @@ fun MainContent(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StudentProfilePage() {
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-            border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
+    val basicDetails = @Composable {
+        FormTitle(formTitle = "Basic Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileBasicDetails(
+            studentDetails.studentFirstName.value,
+            studentDetails.studentMiddleName.value,
+            studentDetails.studentLastName.value,
+            studentDetails.nationality.value,
+            studentDetails.dobValue.value,
+            studentDetails.gender.value
+        )
+
     }
-    Spacer(modifier = Modifier.height(8.dp))
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
-    }
-    Spacer(modifier = Modifier.height(8.dp))
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
-    }
-    Spacer(modifier = Modifier.height(8.dp))
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
-    }
-    Spacer(modifier = Modifier.height(8.dp))
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
-    }
-    Spacer(modifier = Modifier.height(8.dp))
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            FormTitle(formTitle = "Basic Details")
-            Spacer(modifier = Modifier.height(4.dp))
-            ProfileBasicDetails(studentDetails.studentFirstName.value,
-                studentDetails.studentMiddleName.value,
-                studentDetails.studentLastName.value)
-        }
-    }
+    DetailSection(basicDetails)
+
+
 }
 
+@Composable
+fun DetailSection(basicDetails: @Composable () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+        border = BorderStroke(width = 2.dp, color = Color.LightGray)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            basicDetails.invoke()
+        }
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileBasicDetails(
     firstName: String,
     middleName: String,
-    lastName: String
+    lastName: String,
+    nationality: String,
+    dob: Long,
+    gender: String
 ) {
     DetailRow("First Name:", firstName)
     Spacer(modifier = Modifier.height(4.dp))
@@ -240,6 +184,13 @@ fun ProfileBasicDetails(
     }
     DetailRow("Last Name:", lastName)
     Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Age:", calculateAge(881289600000))
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Gender:", gender)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Nationality:", nationality)
+    Spacer(modifier = Modifier.height(4.dp))
+
 }
 
 @Composable

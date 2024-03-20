@@ -2,8 +2,10 @@ package com.project.skoolio.model.userDetailSingleton
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.capitalize
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
@@ -14,6 +16,8 @@ import com.project.skoolio.model.userDetails.TeacherSchoolDetails
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.SchoolList
+import com.project.skoolio.utils.capitalize
+import java.util.Locale
 
 interface userDetails{
     fun resetPassword()
@@ -30,6 +34,7 @@ object studentDetails:userDetails {
     //date of birth
     val gender:MutableState<String> = mutableStateOf("")
     val nationality:MutableState<String> = mutableStateOf("")
+    val dobValue:MutableState<Long> = mutableStateOf(0)
 
     val admissionSchoolId:MutableState<Int> = mutableStateOf(0)
     val schoolName:MutableState<String> = mutableStateOf("")
@@ -78,31 +83,33 @@ object studentDetails:userDetails {
             mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),
             mot = MOT.value);
     }
+    @OptIn(ExperimentalMaterial3Api::class)
     fun populateStudentDetails(student: Student) {
-        studentFirstName.value = student.firstName
-        studentMiddleName.value = student.middleName
-        studentLastName.value = student.lastName
+        studentFirstName.value = capitalize(student.firstName)
+        studentMiddleName.value = capitalize(student.middleName)
+        studentLastName.value = capitalize(student.lastName)
         gender.value = if(student.gender == 'm') "Male" else "Female"
-        nationality.value = student.nationality
-        className.value = student.studentSchoolDetails.classId //TODO:need to have class Name
-        schoolName.value = student.studentSchoolDetails.schoolId.toString() //TODO:need to have school Name
-        fatherName.value = student.father.fatherName
-        fatherQualification.value = student.father.fatherQualification
-        fatherOccupation.value = student.father.fatherOccupation
-        motherName.value = student.mother.motherName
-        motherQualification.value = student.mother.motherQualification
-        motherOccupation.value = student.mother.motherOccupation
-        primaryContact.value = student.contactDetails.primaryContact
-        primaryContactName.value = student.contactDetails.primaryContactName
-        primaryContactRelation.value = student.contactDetails.primaryContactRelation.toString()
-        alternativeContact.value = student.contactDetails.alternativeContact
-        alternativeContactName.value = student.contactDetails.alternativeContactName
-        alternativeContactRelation.value = student.contactDetails.alternativeContactRelation.toString()
-        email.value = student.email
-        addressLine.value = student.addressDetails.addressLine
-        city.value = student.addressDetails.city
-        state.value = student.addressDetails.state
-        MOT.value = student.mot
+        nationality.value = capitalize(student.nationality)
+        dobValue.value = student.dob
+        className.value = capitalize(student.studentSchoolDetails.classId) //TODO:need to have class Name
+        schoolName.value = capitalize(student.studentSchoolDetails.schoolId.toString()) //TODO:need to have school Name
+        fatherName.value = capitalize(student.father.fatherName)
+        fatherQualification.value = capitalize(student.father.fatherQualification)
+        fatherOccupation.value = capitalize(student.father.fatherOccupation)
+        motherName.value = capitalize(student.mother.motherName)
+        motherQualification.value = capitalize(student.mother.motherQualification)
+        motherOccupation.value = capitalize(student.mother.motherOccupation)
+        primaryContact.value = capitalize(student.contactDetails.primaryContact)
+        primaryContactName.value = capitalize(student.contactDetails.primaryContactName)
+        primaryContactRelation.value = capitalize(student.contactDetails.primaryContactRelation.toString())
+        alternativeContact.value = capitalize(student.contactDetails.alternativeContact)
+        alternativeContactName.value = capitalize(student.contactDetails.alternativeContactName)
+        alternativeContactRelation.value = capitalize(student.contactDetails.alternativeContactRelation.toString())
+        email.value = capitalize(student.email)
+        addressLine.value = capitalize(student.addressDetails.addressLine)
+        city.value = capitalize(student.addressDetails.city)
+        state.value = capitalize(student.addressDetails.state)
+        MOT.value = capitalize(student.mot)
     }
 
     suspend fun resetStudentDetails(){
@@ -111,6 +118,7 @@ object studentDetails:userDetails {
         studentLastName.value = ""
         gender.value = ""
         nationality.value = ""
+        dobValue.value = 0
         className.value = ""
         schoolName.value = ""
         fatherName.value = ""
