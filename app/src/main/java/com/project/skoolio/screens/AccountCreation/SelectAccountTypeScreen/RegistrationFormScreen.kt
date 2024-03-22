@@ -2,7 +2,6 @@ package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -90,6 +89,7 @@ fun ShowStudentRegistrationForm(
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
         studentDetails.resetPassword()
+        studentDetails.schoolName.value = ""
         navController.popBackStack()
     }
 
@@ -101,16 +101,16 @@ fun ShowStudentRegistrationForm(
     //Form Starts here
     FormTitle("Student Registration Form")
     BasicDetails("Student",
-        studentDetails.studentFirstName,
-        studentDetails.studentMiddleName,
-        studentDetails.studentLastName,
+        studentDetails.firstName,
+        studentDetails.middleName,
+        studentDetails.lastName,
         studentDetails.gender,
         studentDetails.dobState!!,
         studentDetails.nationality
     )
     SchoolDetails("Student",
         studentDetails.schoolName,
-        studentDetails.className);
+        studentDetails.className, registrationScreenViewModel);
     FamilyDetails("Father",
         studentDetails.fatherName,
         studentDetails.fatherQualification,
@@ -149,6 +149,7 @@ fun ShowTeacherRegistrationForm(
     val context = LocalContext.current
     val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
+        teacherDetails.employingSchoolName.value = ""
         teacherDetails.password.value = ""
         navController.popBackStack()
     }
@@ -156,16 +157,19 @@ fun ShowTeacherRegistrationForm(
     FormTitle("Teacher Registration Form")
     BasicDetails(
         "Teacher",
-        teacherDetails.teachertFirstName,
-        teacherDetails.teacherMiddleName,
-        teacherDetails.teacherLastName,
+        teacherDetails.firstName,
+        teacherDetails.middleName,
+        teacherDetails.lastName,
         teacherDetails.gender,
         teacherDetails.dobState!!,
         teacherDetails.nationalitySelected,
     )
-    SchoolDetails(userType = "Teacher",
+    SchoolDetails(
+        userType = "Teacher",
         schoolName = teacherDetails.employingSchoolName,
-        admissionClass = null)
+        admissionClass = null,
+        registrationScreenViewModel = registrationScreenViewModel
+    )
     PreviousEmploymentDetails(
         teacherDetails.previousEmployerName,
         teacherDetails.previousEmploymentDuration,
@@ -289,7 +293,7 @@ fun validDetails(userDetails: userDetails,
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun validTeacherDetails(teacher: teacherDetails, context: Context): Boolean {
-    if(!validGeneralDetails(context,teacher.teachertFirstName,teacher.teacherLastName,
+    if(!validGeneralDetails(context,teacher.firstName,teacher.lastName,
             teacher.dobState?.selectedDateMillis,teacher.nationalitySelected,teacher.gender,
             teacher.email,
             teacher.resAddress, teacher.resCity, teacher.resState,
@@ -308,7 +312,7 @@ fun validStudentDetails(
     context: Context,
 //    dobState: DatePickerState
 ): Boolean {
-    if(!validGeneralDetails(context, student.studentFirstName, student.studentLastName,
+    if(!validGeneralDetails(context, student.firstName, student.lastName,
             student.dobState?.selectedDateMillis, student.nationality, student.gender,
             student.email, student.addressLine, student.city, student.state,
             student.primaryContact, student.primaryContactName, student.primaryContactRelation,

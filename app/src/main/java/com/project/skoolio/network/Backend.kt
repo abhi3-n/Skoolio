@@ -59,4 +59,13 @@ interface Backend {
 //        @Body loginRequest: LoginRequest
 //    ):AdminLoginResponse
 
+
+    @GET("schools/cities")
+    suspend fun getCitiesList(): List<String>
+
+    @GET("class/classListForSchool/{schoolId}")
+    suspend fun getClassNameAndIdListForSchool(
+        @Path("schoolId") schoolId: String
+    ):List<String>
+
 }

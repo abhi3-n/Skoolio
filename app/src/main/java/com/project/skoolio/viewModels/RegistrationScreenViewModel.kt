@@ -13,10 +13,13 @@ import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.model.userDetailSingleton.userDetails
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.RegistrationScreenRepository
+import com.project.skoolio.utils.CityList
 import com.project.skoolio.utils.SchoolList
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class RegistrationScreenViewModel @Inject constructor(
@@ -31,6 +34,8 @@ class RegistrationScreenViewModel @Inject constructor(
     val registrationResponse: State<DataOrException<RegisterResponse, Boolean, Exception>> = _registrationResponse
 
     var selectedSchoolCity:MutableState<String> = mutableStateOf("")
+
+    val isClassIdAndNameListReady:MutableState<Boolean> = mutableStateOf(false)
 
 //    fun registerStudent(onRegisterFailure: (Context) -> Unit, context: Context):Unit{
 //        viewModelScope.launch {
@@ -77,7 +82,6 @@ class RegistrationScreenViewModel @Inject constructor(
                 SchoolList.listOfSchools = backend.getCitySchools(selectedSchoolCity.value)
                 SchoolList.listForCity = selectedSchoolCity.value
                 loading.value = false
-                SchoolList.printListOfSchools()
                 goToFormScreen(navController,selectedAccountType)
             }
             catch (e:Exception){
@@ -112,6 +116,44 @@ class RegistrationScreenViewModel @Inject constructor(
                 //registration has not succeeded
                 _registrationResponse.value.loading = false
                 onRegisterFailure(context)
+            }
+        }
+    }
+
+    fun getCitiesList(
+        navController: NavHostController,
+        signUpLoading: MutableState<Boolean>,
+        context: Context
+    ) {
+        viewModelScope.launch {
+            try {
+                signUpLoading.value = true
+                CityList.listOfCities = backend.getCitiesList()
+                signUpLoading.value = false
+                navController.navigate(AppScreens.SelectAccountTypeScreen.name)
+            }
+            catch (e:Exception){
+                signUpLoading.value = false
+                Toast.makeText(context,e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun getClassNameAndIdListForSchool(
+        schoolId: Int,
+        context: Context
+    ) {
+        viewModelScope.launch {
+            try {
+                isClassIdAndNameListReady.value = false
+                val list = backend.getClassNameAndIdListForSchool(schoolId.toString())
+                SchoolList.setClassInfoOnSchool(schoolId, list)
+                isClassIdAndNameListReady.value = true
+                Toast.makeText(context,"Got class list successfully for school.", Toast.LENGTH_SHORT).show()
+            }
+            catch (e: HttpException){
+                if(e.message() == "Not Found")
+                    Toast.makeText(context, "No classes found for this school.", Toast.LENGTH_SHORT).show()
             }
         }
     }

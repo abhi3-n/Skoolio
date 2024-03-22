@@ -1,7 +1,6 @@
 package com.project.skoolio.components
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -176,10 +175,11 @@ fun ForgotPasswordText() {
 fun CustomDropDownMenu(
     modifier: Modifier = Modifier,
     selectedValue: MutableState<String>,
-    dataList: List<String>
+    dataList: List<String>?,
+    registrationScreenViewModel: RegistrationScreenViewModel?
 ) {
     val expanded = rememberSaveable { mutableStateOf(false)}
-
+    val context = LocalContext.current
     ExposedDropdownMenuBox(modifier = modifier
         ,expanded = expanded.value, onExpandedChange = {
         expanded.value = it
@@ -193,13 +193,24 @@ fun CustomDropDownMenu(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) })
         ExposedDropdownMenu(expanded = expanded.value,
             onDismissRequest = { expanded.value = false }) {
-            dataList.forEach { item ->
+            dataList!!.forEach { item ->
                 DropdownMenuItem(text = {
                     Text(text = item, color = Color.Black)
                 }, onClick = {
                     dataList.forEach{
                         if(item == it){
                             selectedValue.value = item
+                            if(registrationScreenViewModel!=null) {
+                                val schoolId = SchoolList.getSchoolIdForSchoolName(item)
+                                //fetch all class names of this school
+                                if (!SchoolList.IsClassListPopulatedForSchoolId(schoolId)) //registrationScreenViewModel != null is for school name selection only
+                                {
+                                    registrationScreenViewModel.getClassNameAndIdListForSchool(
+                                        schoolId,
+                                        context
+                                    )
+                                }
+                            }
                         }
                     }
                     expanded.value = false
@@ -302,12 +313,13 @@ fun FormTitle(formTitle: String,
 @Composable
 fun TextDropDownMenuRow(
     text: String,
-    dataList: List<String>,
-    valueSelected: MutableState<String>
+    dataList: List<String>?,
+    valueSelected: MutableState<String>,
+    registrationScreenViewModel: RegistrationScreenViewModel?
 ) {
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = text, modifier = Modifier.padding(top = 13.dp, start = 8.dp))
-        CustomDropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList)
+        CustomDropDownMenu(modifier = Modifier.width(180.dp), selectedValue = valueSelected, dataList = dataList, registrationScreenViewModel)
     }
 }
 
@@ -321,7 +333,12 @@ fun AddressComposable(
 ) {
     CustomTextField(valueState = resAddress, label = "Residential Address*")
     CustomTextField(valueState = resCity, label = "City*")
-    TextDropDownMenuRow(text = "State*", dataList = statesList.list, valueSelected = resState)
+    TextDropDownMenuRow(
+        text = "State*",
+        dataList = statesList.list,
+        valueSelected = resState,
+        null
+    )
 }
 
 
@@ -509,7 +526,12 @@ fun ContactDetails(
     CustomTextField(valueState = primaryContact, label = "Contact Number*")
     CustomTextField(valueState = primaryContactName, label = "Contact Name*")
     if (primaryContactRelation != null) {
-        TextDropDownMenuRow(text = "Relation*", dataList = listOf("Father", "Mother", "Other"), valueSelected = primaryContactRelation)
+        TextDropDownMenuRow(
+            text = "Relation*",
+            dataList = listOf("Father", "Mother", "Other"),
+            valueSelected = primaryContactRelation,
+            null
+        )
     }
     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.padding(4.dp)) {
         Checkbox(checked = isChecked.value, onCheckedChange ={
@@ -522,7 +544,12 @@ fun ContactDetails(
     CustomTextField(valueState = alternativeContact, label = "Alternative Contact Number*")
     CustomTextField(valueState = alternativeContactName, label = "Alternative Contact Name*")
     if (alternativeContactRelation != null) {
-        TextDropDownMenuRow(text = "Relation*", dataList = listOf("Father", "Mother", "Other"), valueSelected = alternativeContactRelation)
+        TextDropDownMenuRow(
+            text = "Relation*",
+            dataList = listOf("Father", "Mother", "Other"),
+            valueSelected = alternativeContactRelation,
+            null
+        )
     }
 
     if(isChecked.value){
@@ -579,10 +606,13 @@ fun OtherDetails(
 }
 
 @Composable
-fun SchoolDetails(userType: String,
-                  schoolName: MutableState<String>,
-                  admissionClass: MutableState<String>?,
+fun SchoolDetails(
+    userType: String,
+    schoolName: MutableState<String>,
+    admissionClass: MutableState<String>?,
+    registrationScreenViewModel: RegistrationScreenViewModel,
 ) {
+    val isClassListReady = registrationScreenViewModel.isClassIdAndNameListReady
     Surface(
         modifier = Modifier.padding(4.dp),
         border = BorderStroke(width = 2.dp, color = Color.LightGray)
@@ -593,15 +623,24 @@ fun SchoolDetails(userType: String,
             verticalArrangement = Arrangement.Center
         ) {
             FormTitle("School Details", style = MaterialTheme.typography.titleSmall)
-            TextDropDownMenuRow(text = "School:",
+            TextDropDownMenuRow(
+                text = "School:",
                 dataList = SchoolList.getSchoolNames(),
-                valueSelected = schoolName)
-            if(userType == "Student"){
+                valueSelected = schoolName,
+                registrationScreenViewModel = registrationScreenViewModel
+            )
+            if(userType == "Student" && isClassListReady.value){
                 if (admissionClass != null) {
                     TextDropDownMenuRow(
                         text = "Admission Class:",
-                        dataList = listOf("Pre-Nursery", "Nursery"),
-                        valueSelected = admissionClass
+//                        dataList = listOf("Pre-Nursery", "Nursery"),
+                        dataList =
+//                        if(schoolName.value.isNotEmpty())
+                            SchoolList.getClassNames(schoolName.value)
+//                        else listOf()
+                        ,
+                        valueSelected = admissionClass,
+                        null
                     )
                 }
             }
@@ -634,13 +673,17 @@ fun BasicDetails(
             FormTitle("Basic Details", style = MaterialTheme.typography.titleSmall)
             NameFields(firstName, middleName, lastName)
             DOB(dobState)
-            TextDropDownMenuRow(text = "Gender",
+            TextDropDownMenuRow(
+                text = "Gender",
                 dataList = listOf("Male", "Female"),
-                valueSelected = gender)
+                valueSelected = gender,
+                null
+            )
             TextDropDownMenuRow(
                 "Nationality:",
                 dataList = listOf("Indian", "Other"),
-                valueSelected = nationalitySelected
+                valueSelected = nationalitySelected,
+                null
             )
 
         }
@@ -747,9 +790,12 @@ fun UserLoginForm(
                 )
                 keyBoardController?.hide()
             })
-        CustomDropDownMenu(modifier = Modifier.padding(bottom = 10.dp, start = 10.dp, end = 10.dp),
+        CustomDropDownMenu(
+            modifier = Modifier.padding(bottom = 10.dp, start = 10.dp, end = 10.dp),
             userTypeSelectedForLoginRequest,
-            UserType.types)
+            UserType.types,
+            null
+        )
         LoginButton(
             validInputs = valid,
             loading = loading,
@@ -763,7 +809,6 @@ fun UserLoginForm(
                         navController)
                     keyBoardController?.hide()
                 }
-//                navController.navigate(AppScreens.HomeScreen.name+"/${userTypeSelectedForLoginRequest.value}")
             }
         )
     }
@@ -771,7 +816,13 @@ fun UserLoginForm(
 
 
 @Composable
-fun NewAccountText(navController: NavHostController) {
+fun NewAccountText(
+    navController: NavHostController,
+    viewModelProvider: ViewModelProvider,
+    signUpLoading: MutableState<Boolean>
+) {
+    val context = LocalContext.current
+    val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     Row(
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
     ) {
@@ -780,7 +831,7 @@ fun NewAccountText(navController: NavHostController) {
             text = "Sign up",
             Modifier
                 .clickable {
-                    navController.navigate(AppScreens.SelectAccountTypeScreen.name)
+                    registrationScreenViewModel.getCitiesList(navController, signUpLoading, context)
                 }
                 .padding(4.dp),
             color = Color.Cyan,

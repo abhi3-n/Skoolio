@@ -102,13 +102,11 @@ object TeacherRules{
 
 object SchoolList{
     var listForCity:String = ""
-    var listOfSchools:List<SchoolInfo> = listOf(
-//        "Innocent Heart Playway School"
-    )
+    var listOfSchools:List<SchoolInfo> = listOf()
 
     fun getSchoolNames(): List<String> {
         return listOfSchools.map {
-            it.schoolName
+            capitalize(it.schoolName)
         }
     }
     fun getSchoolIdForSchoolName(schoolName:String): Int {
@@ -122,12 +120,39 @@ object SchoolList{
             Log.d("School List -",school.schoolId.toString()+", "+school.schoolName)
         }
     }
+
+    fun setClassInfoOnSchool(schoolId: Int, classInfoList: List<String>) {
+        val schoolInfo = listOfSchools.find { it.schoolId == schoolId }
+        schoolInfo?.listOfClasses = classInfoList
+    }
+
+    fun IsClassListPopulatedForSchoolId(schoolId: Int): Boolean {
+        val schoolInfo = listOfSchools.find { it.schoolId == schoolId }
+        if(schoolInfo!=null && schoolInfo.listOfClasses == null){
+            return false
+        }
+        return true
+    }
+
+    fun getClassNames(schoolName: String): List<String>? {
+        val schoolInfo = listOfSchools.find { capitalize(it.schoolName) == schoolName }
+        return schoolInfo?.listOfClasses?.map{ _class->
+            capitalize(_class)
+        }?.sorted()
+    }
 }
 
-fun getCityList(): List<String> {
-    //TODO:Later we will fetch city list dynamically as more schools get added
-    return listOf("Khanna")
+
+object CityList{
+    var listOfCities:List<String> = listOf()
+    fun getCities(): List<String> {
+        return listOfCities.map { city->
+            capitalize(city)
+        }
+    }
 }
+
+
 
 
 object UserType{
@@ -146,7 +171,7 @@ fun getDefaultStudent():Student{
         "",
         AddressDetails("","",""),
         ContactDetails("","","","","","",),
-        StudentSchoolDetails(-1,""),
+        StudentSchoolDetails(-1,"", ""),
         FatherDetails("","",""),
         MotherDetails("","",""),
         "")
@@ -154,11 +179,14 @@ fun getDefaultStudent():Student{
 
 
 fun capitalize(string: String):String{
-    return string.replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(
-            Locale.ENGLISH
-        ) else it.toString()
+    return string.split(" ").joinToString(" ") {string->
+        string.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.ENGLISH
+            ) else it.toString()
+        }
     }
+
 }
 
 

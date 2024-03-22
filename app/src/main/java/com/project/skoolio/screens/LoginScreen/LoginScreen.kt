@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,10 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.AppLogoText
+import com.project.skoolio.components.CircularProgressIndicatorCustom
 import com.project.skoolio.components.ForgotPasswordText
 import com.project.skoolio.components.NewAccountText
 import com.project.skoolio.components.UserLoginForm
-import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -33,6 +35,7 @@ fun LoginScreen(
 //    }
     ExitApp(navController = navController, context = LocalContext.current)
 
+    val signUpLoading = rememberSaveable { mutableStateOf(false) }
     Surface(Modifier.fillMaxSize(), color = Color.White) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -42,7 +45,10 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(15.dp))
             UserLoginForm(loginViewModel, navController)
             ForgotPasswordText()
-            NewAccountText(navController)
+            NewAccountText(navController, viewModelProvider, signUpLoading)
+            if(signUpLoading.value){
+                CircularProgressIndicatorCustom()
+            }
         }
     }
 

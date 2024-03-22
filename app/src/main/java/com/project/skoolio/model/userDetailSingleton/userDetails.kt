@@ -2,10 +2,8 @@ package com.project.skoolio.model.userDetailSingleton
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.capitalize
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
@@ -17,7 +15,6 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.SchoolList
 import com.project.skoolio.utils.capitalize
-import java.util.Locale
 
 interface userDetails{
     fun resetPassword()
@@ -28,15 +25,16 @@ interface userDetails{
 }
 
 object studentDetails:userDetails {
-    val studentFirstName:MutableState<String> = mutableStateOf("")
-    val studentMiddleName:MutableState<String> = mutableStateOf("")
-    val studentLastName:MutableState<String> = mutableStateOf("")
+    val studentId:MutableState<String> = mutableStateOf("")
+    val firstName:MutableState<String> = mutableStateOf("")
+    val middleName:MutableState<String> = mutableStateOf("")
+    val lastName:MutableState<String> = mutableStateOf("")
     //date of birth
     val gender:MutableState<String> = mutableStateOf("")
     val nationality:MutableState<String> = mutableStateOf("")
     val dobValue:MutableState<Long> = mutableStateOf(0)
 
-    val admissionSchoolId:MutableState<Int> = mutableStateOf(0)
+    val schoolId:MutableState<Int> = mutableStateOf(0)
     val schoolName:MutableState<String> = mutableStateOf("")
     val className:MutableState<String> = mutableStateOf("")
     val classId:MutableState<String> = mutableStateOf("")
@@ -74,20 +72,21 @@ object studentDetails:userDetails {
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getStudent(): Student {
-        return Student(id = "",studentFirstName.value, studentMiddleName.value, studentLastName.value, dobState?.selectedDateMillis!!,
+        return Student(
+            studentId = "",firstName.value, middleName.value, lastName.value, dobState?.selectedDateMillis!!,
             gender = if(gender.value == "Male") 'm' else 'f', nationality.value, email.value, password.value,
             addressDetails = AddressDetails(addressLine.value, city.value, state.value),
-            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value), className.value),  //TODO:className to be replaced with classId later.
+            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value),classId = classId.value , admissionClass = className.value),  //TODO:className to be replaced with classId later.
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
             father = FatherDetails(fatherName  = fatherName.value, fatherQualification = fatherQualification.value, fatherOccupation = fatherOccupation.value),
             mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),
             mot = MOT.value);
     }
-    @OptIn(ExperimentalMaterial3Api::class)
     fun populateStudentDetails(student: Student) {
-        studentFirstName.value = capitalize(student.firstName)
-        studentMiddleName.value = capitalize(student.middleName)
-        studentLastName.value = capitalize(student.lastName)
+        studentId.value = student.studentId
+        firstName.value = capitalize(student.firstName)
+        middleName.value = capitalize(student.middleName)
+        lastName.value = capitalize(student.lastName)
         gender.value = if(student.gender == 'm') "Male" else "Female"
         nationality.value = capitalize(student.nationality)
         dobValue.value = student.dob
@@ -113,9 +112,10 @@ object studentDetails:userDetails {
     }
 
     suspend fun resetStudentDetails(){
-        studentFirstName.value = ""
-        studentMiddleName.value = ""
-        studentLastName.value = ""
+        studentId.value = ""
+        firstName.value = ""
+        middleName.value = ""
+        lastName.value = ""
         gender.value = ""
         nationality.value = ""
         dobValue.value = 0
@@ -141,8 +141,8 @@ object studentDetails:userDetails {
     }
 
     init {
-        studentFirstName.value = "Abhinandan"
-        studentLastName.value = "Narang"
+        firstName.value = "Abhinandan"
+        lastName.value = "Narang"
         gender.value = "Male"
         nationality.value = "Indian"
         className.value = "Pre-Nursery"
@@ -164,9 +164,9 @@ object studentDetails:userDetails {
 }
 
 object teacherDetails:userDetails {
-    val teachertFirstName:MutableState<String> = mutableStateOf("")
-    val teacherMiddleName:MutableState<String> = mutableStateOf("")
-    val teacherLastName:MutableState<String> = mutableStateOf("")
+    val firstName:MutableState<String> = mutableStateOf("")
+    val middleName:MutableState<String> = mutableStateOf("")
+    val lastName:MutableState<String> = mutableStateOf("")
     //date of birth
     val gender:MutableState<String> = mutableStateOf("")
     val nationalitySelected:MutableState<String> = mutableStateOf("")
@@ -200,8 +200,8 @@ object teacherDetails:userDetails {
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getTeacher(): Teacher {
-        return Teacher(id = "",
-            teachertFirstName.value, teacherMiddleName.value, teacherLastName.value,
+        return Teacher(teacherId = "",
+            firstName.value, middleName.value, lastName.value,
             dobState?.selectedDateMillis!!,
             gender = if(studentDetails.gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
             addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
@@ -216,8 +216,8 @@ object teacherDetails:userDetails {
 
     //
     init {
-        teachertFirstName.value = "Abhinandan"
-        teacherLastName.value = "Narang"
+        firstName.value = "Abhinandan"
+        lastName.value = "Narang"
         gender.value = "Male"
         nationalitySelected.value = "Indian"
         employingSchoolId.value = 4

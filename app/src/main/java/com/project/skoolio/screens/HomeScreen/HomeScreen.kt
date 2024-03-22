@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -64,8 +64,8 @@ fun HomeScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScaffold(
-    navController: NavHostController = rememberNavController(),
-    userType: String? = "Student",
+    navController: NavHostController,
+    userType: String? ,
 //    viewModelProvider: ViewModelProvider
 ) {
     Scaffold(
@@ -81,13 +81,7 @@ fun MainScaffold(
         )
     }
 }
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun prev()
-{
-    MainScaffold()
-}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainContent(
@@ -101,13 +95,11 @@ fun MainContent(
         .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
-//        Text(text = "Hi $userType")
         Surface(
             modifier = Modifier
                 .padding(4.dp)
                 .height(100.dp)
                 .width(100.dp),
-//            border = BorderStroke(width = 2.dp, color = Color.LightGray)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.baseline_account_circle_24),
@@ -130,26 +122,115 @@ fun MainContent(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StudentProfilePage() {
-    val basicDetails = @Composable {
+    DetailSection(@Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
         ProfileBasicDetails(
-            studentDetails.studentFirstName.value,
-            studentDetails.studentMiddleName.value,
-            studentDetails.studentLastName.value,
+            studentDetails.firstName.value,
+            studentDetails.middleName.value,
+            studentDetails.lastName.value,
             studentDetails.nationality.value,
             studentDetails.dobValue.value,
             studentDetails.gender.value
         )
-
     }
-    DetailSection(basicDetails)
+    )
+    DetailSection {
+        FormTitle(formTitle = "School Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileSchoolDetails(studentDetails.studentId.value,studentDetails.schoolName.value, studentDetails.className.value)
+    }
+    
+    DetailSection {
+        FormTitle(formTitle = "Father Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        GuardianDetails("Father", studentDetails.fatherName.value, studentDetails.fatherQualification.value, studentDetails.fatherOccupation.value)
+    }
+    DetailSection {
+        FormTitle(formTitle = "Mother Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        GuardianDetails("Mother", studentDetails.motherName.value, studentDetails.motherQualification.value, studentDetails.motherOccupation.value)
+    }
+    DetailSection {
+        FormTitle(formTitle = "Address Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileAddressDetails(studentDetails.addressLine.value,
+            studentDetails.city.value,
+            studentDetails.state.value)
+    }
+    DetailSection {
+        FormTitle(formTitle = "Contact Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileContactDetails(studentDetails.email.value,studentDetails.primaryContact.value, studentDetails.primaryContactName.value, studentDetails.primaryContactRelation.value,
+            studentDetails.alternativeContact.value,studentDetails.alternativeContactName.value, studentDetails.alternativeContactRelation.value
+            )
+    }
+}
 
+@Composable
+fun ProfileSchoolDetails(id: String, schoolName: String, className: String?) {
+    DetailRow( "Skoolio Id:", id)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow( "School Name:", schoolName)
+    Spacer(modifier = Modifier.height(4.dp))
+    if(className!=null){
+        DetailRow( "Class Name:", className)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+
+@Composable
+fun ProfileContactDetails(email:String,primaryContact: String, primaryContactName: String, primaryContactRelation: String?,
+                          alternativeContact: String, alternativeContactName: String, alternativeContactRelation: String?) {
+    DetailRow(field = "Email", value = email)
+    FormTitle(formTitle = "Primary Contact", style = MaterialTheme.typography.titleMedium)
+    GeneralContactDetails(primaryContact, primaryContactName, primaryContactRelation)
+    FormTitle(formTitle = "Alternate Contact", style = MaterialTheme.typography.titleMedium)
+    GeneralContactDetails(alternativeContact, alternativeContactName, alternativeContactRelation)
 
 }
 
 @Composable
-fun DetailSection(basicDetails: @Composable () -> Unit) {
+fun GeneralContactDetails(
+    contact: String,
+    contactName: String,
+    contactRelation: String?
+) {
+    DetailRow( "No.:", contact)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Name:", contactName)
+    Spacer(modifier = Modifier.height(4.dp))
+    if(contactRelation!=null){
+        DetailRow("Relation:", contactRelation)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+@Composable
+fun ProfileAddressDetails(addressLine: String, city: String, state: String) {
+    DetailRow( "Address Line:", addressLine)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("City:", city)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("State:", state)
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun GuardianDetails(
+    guardian: String,
+    name: String,
+    qualification: String,
+    occupation: String) {
+    DetailRow(guardian + "'s Name:", name)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow(guardian + "'s Qualification:", qualification)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow(guardian + "'s Occupation:", occupation)
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun DetailSection(details: @Composable () -> Unit) {
     Surface(
         modifier = Modifier
             .padding(4.dp)
@@ -160,7 +241,7 @@ fun DetailSection(basicDetails: @Composable () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            basicDetails.invoke()
+            details.invoke()
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
@@ -195,7 +276,9 @@ fun ProfileBasicDetails(
 
 @Composable
 fun DetailRow(field: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),horizontalArrangement = Arrangement.SpaceBetween) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 8.dp, end = 8.dp),horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = field, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp))
         Text(text = value, style = TextStyle(fontSize = 20.sp))
     }

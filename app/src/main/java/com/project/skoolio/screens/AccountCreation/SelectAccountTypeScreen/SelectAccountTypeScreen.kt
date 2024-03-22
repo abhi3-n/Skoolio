@@ -1,6 +1,5 @@
 package com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,9 +22,9 @@ import com.project.skoolio.components.CircularProgressIndicatorCustom
 import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.CustomDropDownMenu
 import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.utils.CityList
 import com.project.skoolio.utils.SchoolList
 import com.project.skoolio.utils.UserType
-import com.project.skoolio.utils.getCityList
 import com.project.skoolio.viewModels.ViewModelProvider
 
 //@Preview
@@ -52,7 +51,7 @@ fun SelectAccountTypeScreen(
     }
     val context = LocalContext.current
     val accountTypeList = UserType.types
-    val cityList = getCityList()
+    val cityList = CityList.getCities()
     val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     val selectedSchoolCity = registrationScreenViewModel.selectedSchoolCity
 
@@ -72,9 +71,17 @@ fun SelectAccountTypeScreen(
         }
         Text(text = "Select Account Type")
         Spacer(modifier = Modifier.height(20.dp))
-        CustomDropDownMenu(selectedValue =  selectedAccountType, dataList =  accountTypeList)
+        CustomDropDownMenu(
+            selectedValue =  selectedAccountType,
+            dataList =  accountTypeList,
+            registrationScreenViewModel = null
+        )
         Spacer(modifier = Modifier.height(20.dp))
-        CustomDropDownMenu(selectedValue =  selectedSchoolCity, dataList =  cityList)
+        CustomDropDownMenu(
+            selectedValue =  selectedSchoolCity,
+            dataList =  cityList,
+            registrationScreenViewModel = null
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         CustomButton(onClick = {

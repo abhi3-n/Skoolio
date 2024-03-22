@@ -9,7 +9,6 @@ import com.project.skoolio.model.userDetails.PreviousEmploymentDetails
 import com.project.skoolio.model.userDetails.TeacherSchoolDetails
 
 open class User(
-    val id:String,
     val firstName:String,
     val middleName:String,
     val lastName:String,
@@ -25,7 +24,7 @@ open class User(
 }
 
 class Student(
-    id:String,
+    val studentId:String,
     firstName: String,
     middleName: String,
     lastName: String,
@@ -40,11 +39,11 @@ class Student(
     val father: FatherDetails,
     val mother: MotherDetails,
     val mot:String
-    ) : User(id, firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
+    ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
 }
 
 class Teacher(
-    id:String,
+    val teacherId:String,
     firstName: String,
     middleName: String,
     lastName: String,
@@ -57,6 +56,6 @@ class Teacher(
     contactDetails: ContactDetails,
     val teacherSchoolDetails: TeacherSchoolDetails,
     val previousEmploymentDetails: PreviousEmploymentDetails,
-) : User(id, firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
+) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
 
 }
