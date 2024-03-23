@@ -91,7 +91,7 @@ object studentDetails:userDetails {
         nationality.value = capitalize(student.nationality)
         dobValue.value = student.dob
         className.value = capitalize(student.studentSchoolDetails.classId) //TODO:need to have class Name
-        schoolName.value = capitalize(student.studentSchoolDetails.schoolId.toString()) //TODO:need to have school Name
+        schoolId.value = student.studentSchoolDetails.schoolId //TODO:need to have school Name
         fatherName.value = capitalize(student.father.fatherName)
         fatherQualification.value = capitalize(student.father.fatherQualification)
         fatherOccupation.value = capitalize(student.father.fatherOccupation)
@@ -104,7 +104,7 @@ object studentDetails:userDetails {
         alternativeContact.value = capitalize(student.contactDetails.alternativeContact)
         alternativeContactName.value = capitalize(student.contactDetails.alternativeContactName)
         alternativeContactRelation.value = capitalize(student.contactDetails.alternativeContactRelation.toString())
-        email.value = capitalize(student.email)
+        email.value = student.email
         addressLine.value = capitalize(student.addressDetails.addressLine)
         city.value = capitalize(student.addressDetails.city)
         state.value = capitalize(student.addressDetails.state)
@@ -120,6 +120,8 @@ object studentDetails:userDetails {
         nationality.value = ""
         dobValue.value = 0
         className.value = ""
+        classId.value = ""
+        schoolId.value = 0
         schoolName.value = ""
         fatherName.value = ""
         fatherQualification.value = ""
@@ -164,14 +166,16 @@ object studentDetails:userDetails {
 }
 
 object teacherDetails:userDetails {
+    val teacherId:MutableState<String> = mutableStateOf("")
     val firstName:MutableState<String> = mutableStateOf("")
     val middleName:MutableState<String> = mutableStateOf("")
     val lastName:MutableState<String> = mutableStateOf("")
     //date of birth
     val gender:MutableState<String> = mutableStateOf("")
-    val nationalitySelected:MutableState<String> = mutableStateOf("")
+    val nationality:MutableState<String> = mutableStateOf("")
+    val dobValue:MutableState<Long> = mutableStateOf(0)
 
-    val employingSchoolId:MutableState<Int> = mutableStateOf(0)
+    val schoolId:MutableState<Int> = mutableStateOf(0)
     val employingSchoolName:MutableState<String> = mutableStateOf("")
 
     val previousEmployerName:MutableState<String> = mutableStateOf("")
@@ -189,9 +193,9 @@ object teacherDetails:userDetails {
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
 
-    val resAddress:MutableState<String> = mutableStateOf("")
-    val resCity:MutableState<String> = mutableStateOf("")
-    val resState:MutableState<String> = mutableStateOf("")
+    val addressLine:MutableState<String> = mutableStateOf("")
+    val city:MutableState<String> = mutableStateOf("")
+    val state:MutableState<String> = mutableStateOf("")
 
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
 
@@ -203,30 +207,61 @@ object teacherDetails:userDetails {
         return Teacher(teacherId = "",
             firstName.value, middleName.value, lastName.value,
             dobState?.selectedDateMillis!!,
-            gender = if(studentDetails.gender.value == "Male") 'm' else 'f', nationalitySelected.value, email.value, password.value,
-            addressDetails = AddressDetails(resAddress.value, resCity.value, resState.value),
-            teacherSchoolDetails = TeacherSchoolDetails(employingSchoolId.value),
+            gender = if(studentDetails.gender.value == "Male") 'm' else 'f', nationality.value, email.value, password.value,
+            addressDetails = AddressDetails(addressLine.value, city.value, state.value),
+            teacherSchoolDetails = TeacherSchoolDetails(SchoolList.getSchoolIdForSchoolName(
+                employingSchoolName.value)),
             previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, jobTitle.value),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
     }
 
     fun populateTeacherDetails(teacher: Teacher) {
-
+        teacherId.value = teacher.teacherId
+        firstName.value = capitalize(teacher.firstName)
+        middleName.value = capitalize(teacher.middleName)
+        lastName.value = capitalize(teacher.lastName)
+        gender.value = if(teacher.gender == 'm') "Male" else "Female"
+        nationality.value = capitalize(teacher.nationality)
+        dobValue.value = teacher.dob
+        schoolId.value = teacher.teacherSchoolDetails.schoolId
+        primaryContact.value = capitalize(teacher.contactDetails.primaryContact)
+        primaryContactName.value = capitalize(teacher.contactDetails.primaryContactName)
+        alternativeContact.value = capitalize(teacher.contactDetails.alternativeContact)
+        alternativeContactName.value = capitalize(teacher.contactDetails.alternativeContactName)
+        email.value = teacher.email
+        addressLine.value = capitalize(teacher.addressDetails.addressLine)
+        city.value = capitalize(teacher.addressDetails.city)
+        state.value = capitalize(teacher.addressDetails.state)
     }
 
-    //
     init {
         firstName.value = "Abhinandan"
         lastName.value = "Narang"
         gender.value = "Male"
-        nationalitySelected.value = "Indian"
-        employingSchoolId.value = 4
+        nationality.value = "Indian"
+        schoolId.value = 4
         primaryContact.value = "9646388606"
         primaryContactName.value = "Abhinandan"
         email.value = "abhinandannarang016@gmail.com"
-        resAddress.value = "Anant Nagar"
-        resCity.value = "Khanna"
-        resState.value = "Punjab"
+        addressLine.value = "Anant Nagar"
+        city.value = "Khanna"
+        state.value = "Punjab"
+    }
+    suspend fun resetTeacherDetails(){
+        firstName.value = ""
+        middleName.value = ""
+        lastName.value = ""
+        gender.value = ""
+        nationality.value = ""
+        dobValue.value = 0
+        primaryContact.value = ""
+        primaryContactName.value = ""
+        alternativeContact.value = ""
+        alternativeContactName.value = ""
+        email.value = ""
+        addressLine.value = ""
+        city.value = ""
+        state.value = ""
     }
 }
 

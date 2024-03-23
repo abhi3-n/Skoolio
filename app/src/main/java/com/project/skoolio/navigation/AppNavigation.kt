@@ -1,5 +1,6 @@
 package com.project.skoolio.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,6 +16,7 @@ import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
+@SuppressLint("NewApi")
 @Composable
 fun AppNavigation(viewModelProvider: ViewModelProvider) {
     val navController = rememberNavController()

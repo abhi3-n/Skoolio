@@ -162,7 +162,7 @@ fun ShowTeacherRegistrationForm(
         teacherDetails.lastName,
         teacherDetails.gender,
         teacherDetails.dobState!!,
-        teacherDetails.nationalitySelected,
+        teacherDetails.nationality,
     )
     SchoolDetails(
         userType = "Teacher",
@@ -178,8 +178,8 @@ fun ShowTeacherRegistrationForm(
     OtherDetails(teacherDetails.primaryContact, teacherDetails.primaryContactName,
         null, teacherDetails.alternativeContact,
         teacherDetails.alternativeContactName, null,
-        teacherDetails.email, teacherDetails.resAddress,
-        teacherDetails.resCity, teacherDetails.resState,
+        teacherDetails.email, teacherDetails.addressLine,
+        teacherDetails.city, teacherDetails.state,
         null, mailFieldEnabled)
     RulesDialog(TeacherRules.rulesList, teacherDetails.rulesAccepted)
     if(teacherDetails.password.value.isEmpty()) {
@@ -294,9 +294,9 @@ fun validDetails(userDetails: userDetails,
 @OptIn(ExperimentalMaterial3Api::class)
 fun validTeacherDetails(teacher: teacherDetails, context: Context): Boolean {
     if(!validGeneralDetails(context,teacher.firstName,teacher.lastName,
-            teacher.dobState?.selectedDateMillis,teacher.nationalitySelected,teacher.gender,
+            teacher.dobState?.selectedDateMillis,teacher.nationality,teacher.gender,
             teacher.email,
-            teacher.resAddress, teacher.resCity, teacher.resState,
+            teacher.addressLine, teacher.city, teacher.state,
             teacher.primaryContact, teacher.primaryContactName, null,
             teacher.alternativeContact, teacher.alternativeContactName, null,
             teacher.rulesAccepted

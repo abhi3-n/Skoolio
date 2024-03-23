@@ -205,7 +205,7 @@ fun CustomDropDownMenu(
                                 //fetch all class names of this school
                                 if (!SchoolList.IsClassListPopulatedForSchoolId(schoolId)) //registrationScreenViewModel != null is for school name selection only
                                 {
-                                    registrationScreenViewModel.getClassNameAndIdListForSchool(
+                                    registrationScreenViewModel.getClassNameListForSchool(
                                         schoolId,
                                         context
                                     )

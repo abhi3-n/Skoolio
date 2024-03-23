@@ -139,17 +139,17 @@ class RegistrationScreenViewModel @Inject constructor(
         }
     }
 
-    fun getClassNameAndIdListForSchool(
+    fun getClassNameListForSchool(
         schoolId: Int,
         context: Context
     ) {
         viewModelScope.launch {
             try {
                 isClassIdAndNameListReady.value = false
-                val list = backend.getClassNameAndIdListForSchool(schoolId.toString())
+                val list = backend.getClassNameListForSchool(schoolId.toString())
                 SchoolList.setClassInfoOnSchool(schoolId, list)
                 isClassIdAndNameListReady.value = true
-                Toast.makeText(context,"Got class list successfully for school.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context,"Got class list successfully for school.", Toast.LENGTH_SHORT).show()
             }
             catch (e: HttpException){
                 if(e.message() == "Not Found")

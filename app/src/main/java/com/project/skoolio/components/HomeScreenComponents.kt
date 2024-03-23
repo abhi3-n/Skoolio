@@ -1,7 +1,12 @@
 package com.project.skoolio.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -23,6 +29,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,15 +45,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.project.skoolio.R
+import com.project.skoolio.model.userDetailSingleton.studentDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.utils.calculateAge
 
 
 //@Preview
@@ -60,7 +71,8 @@ fun SkoolioAppBar(
     pageTitle: String,
     icon: ImageVector? = null,
     elevation: Dp = 0.dp,
-    navController: NavHostController
+    navController: NavHostController,
+    sideDrawerToggle: () -> Unit
 ){
     val showDialog = remember {        // show dialog for MoreVert button
         mutableStateOf(false)
@@ -100,7 +112,9 @@ fun SkoolioAppBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /*Open Side Bar*/ }) {
+            IconButton(onClick = {
+                sideDrawerToggle.invoke()
+            }) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
             }           
         }
@@ -168,5 +182,154 @@ fun ShowDropDownMenu(showDialog: MutableState<Boolean> ,
                 })
             }
         }
+    }
+}
+
+
+@Composable
+fun ProfileSchoolDetails(id: String, schoolName: String, className: String?) {
+    DetailRow( "Skoolio Id:", id)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow( "School Name:", schoolName)
+    Spacer(modifier = Modifier.height(4.dp))
+    if(className!=null){
+        DetailRow( "Class Name:", className)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+
+@Composable
+fun ProfileContactDetails(email:String,primaryContact: String, primaryContactName: String, primaryContactRelation: String?,
+                          alternativeContact: String, alternativeContactName: String, alternativeContactRelation: String?) {
+    DetailRow(field = "Email", value = email, valueStyle = TextStyle(fontSize = 15.sp), modifier = Modifier.padding(top = 4.dp))
+    FormTitle(formTitle = "Primary Contact", style = MaterialTheme.typography.titleMedium)
+    GeneralContactDetails(primaryContact, primaryContactName, primaryContactRelation)
+    FormTitle(formTitle = "Alternate Contact", style = MaterialTheme.typography.titleMedium)
+    GeneralContactDetails(alternativeContact, alternativeContactName, alternativeContactRelation)
+
+}
+
+@Composable
+fun GeneralContactDetails(
+    contact: String,
+    contactName: String,
+    contactRelation: String?
+) {
+    DetailRow( "No.:", contact)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Name:", contactName)
+    Spacer(modifier = Modifier.height(4.dp))
+    if(contactRelation!=null){
+        DetailRow("Relation:", contactRelation)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+@Composable
+fun ProfileAddressDetails(addressLine: String, city: String, state: String) {
+    DetailRow( "Address Line:", addressLine)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("City:", city)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("State:", state)
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun GuardianDetails(
+    guardian: String,
+    name: String,
+    qualification: String,
+    occupation: String) {
+    DetailRow(guardian + "'s Name:", name)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow(guardian + "'s Qualification:", qualification)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow(guardian + "'s Occupation:", occupation)
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun DetailSection(details: @Composable () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+        border = BorderStroke(width = 2.dp, color = Color.LightGray)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            details.invoke()
+        }
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ProfileBasicDetails(
+    firstName: String,
+    middleName: String,
+    lastName: String,
+    nationality: String,
+    dob: Long,
+    gender: String
+) {
+    DetailRow("First Name:", firstName)
+    Spacer(modifier = Modifier.height(4.dp))
+    if(middleName.isNotEmpty()) {
+        DetailRow("Middle Name:", middleName)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+    DetailRow("Last Name:", lastName)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Age:", calculateAge(881289600000))
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Gender:", gender)
+    Spacer(modifier = Modifier.height(4.dp))
+    DetailRow("Nationality:", nationality)
+    Spacer(modifier = Modifier.height(4.dp))
+
+}
+
+@Composable
+fun DetailRow(field: String,
+              value: String,
+              valueStyle: TextStyle= TextStyle(fontSize = 20.sp),
+              modifier: Modifier = Modifier) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 8.dp, end = 8.dp),horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(text = field, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp))
+        Text(text = value, style = valueStyle, modifier = modifier)
+    }
+}
+
+
+@Composable
+fun ProfileImageSurface(
+    modifier:Modifier = Modifier
+        .padding(4.dp)
+        .height(100.dp)
+        .width(100.dp)
+) {
+    Surface(
+        modifier = modifier,
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.baseline_account_circle_24),
+            contentDescription = "User Image"
+        )
+    }
+}
+
+@Composable
+fun SideDrawerTitle(userType: String?) {
+    if(userType == "Student"){
+        Text("Welcome, ${studentDetails.firstName.value}", modifier = Modifier.padding(16.dp))
+    }
+    else if(userType == "Teacher"){
+        Text("Welcome, ${teacherDetails.firstName.value}", modifier = Modifier.padding(16.dp))
     }
 }
