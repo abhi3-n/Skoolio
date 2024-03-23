@@ -15,6 +15,7 @@ import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
 import com.project.skoolio.screens.SettingsScreen.SettingsScreen
 import com.project.skoolio.screens.SplashScreen
+import com.project.skoolio.screens.TakeAttendanceScreen.TakeAttendanceScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @SuppressLint("NewApi")
@@ -64,6 +65,14 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
             })){navBack->
             navBack.arguments?.getString("userType").let { userType ->
                 SettingsScreen(navController, viewModelProvider, userType)
+            }
+        }
+        composable(AppScreens.TakeAttendanceScreen.name+"/{userType}",
+            arguments = listOf(navArgument("userType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("userType").let { userType ->
+                TakeAttendanceScreen(navController, viewModelProvider, userType)
             }
         }
     }

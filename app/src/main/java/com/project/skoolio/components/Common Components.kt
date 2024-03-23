@@ -99,14 +99,21 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
         )
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
+            label = { Text(text = "Take Attendance") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.TakeAttendanceScreen.name + "/Teacher")
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
             label = { Text(text = "Settings") },
             selected = false,
             onClick = {
                 navController.navigate(AppScreens.SettingsScreen.name + "/Teacher")
             }
         )
-
-    }
+        }
 }
 
 fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit {

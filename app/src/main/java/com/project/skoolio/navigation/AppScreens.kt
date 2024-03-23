@@ -9,5 +9,5 @@ enum class AppScreens{
     SetPasswordScreen,
     HomeScreen,
     SettingsScreen,
-    AttendancePage,
+    TakeAttendanceScreen, //Only teacher and admin can access this page
 }
