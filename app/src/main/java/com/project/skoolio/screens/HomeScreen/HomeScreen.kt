@@ -1,5 +1,6 @@
 package com.project.skoolio.screens.HomeScreen
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -29,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.project.skoolio.components.CommonModalNavigationDrawer
+import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.DetailSection
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.GuardianDetails
@@ -43,6 +48,7 @@ import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
+import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.viewModels.ViewModelProvider
 import kotlinx.coroutines.launch
 
@@ -59,13 +65,38 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        MainScaffold(navController = navController, userType,
-//            viewModelProvider
-        )
+//        MainScaffold(navController = navController, userType,
+////            viewModelProvider
+//        )
+        HomeScreenContent(navController, userType)
     }
-
-
 }
+
+@SuppressLint("NewApi")
+@Composable
+fun HomeScreenContent(navController: NavHostController, userType: String?) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    CommonModalNavigationDrawer(drawerState,userType, getUserDrawerItemsList(userType, navController),
+        scaffold = {
+            CommonScaffold(
+                title = "Profile",
+                icon = Icons.Filled.AccountCircle,
+                navController = navController,
+                scope = scope,
+                drawerState = drawerState,
+                mainContent = {
+                    HomeScreenMainContent(it,userType)
+                }
+            )
+        }
+    )
+}
+
+
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -97,7 +128,7 @@ fun MainScaffold(
                     label = { Text(text = "Profile Page") },
                     selected = true,
                     onClick = {
-                        navController.navigate(AppScreens.HomeScreen.name)
+                        navController.navigate(AppScreens.HomeScreen.name+"/$userType")
                     }
                 )
             }
@@ -108,6 +139,7 @@ fun MainScaffold(
                 SkoolioAppBar("Profile",
                     navController= navController,
                     elevation = 5.dp,
+                    icon = Icons.Filled.AccountCircle,
                     sideDrawerToggle = {
                         scope.launch {
                             drawerState.apply {
@@ -118,7 +150,7 @@ fun MainScaffold(
                 )
             },
         ){
-            MainContent(it, userType,
+            HomeScreenMainContent(it, userType,
 //            viewModelProvider
             )
         }
@@ -130,7 +162,7 @@ fun MainScaffold(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainContent(
+fun HomeScreenMainContent(
     paddingValues: PaddingValues = PaddingValues(),
     userType: String? = "Student"
 //    viewModelProvider: ViewModelProvider

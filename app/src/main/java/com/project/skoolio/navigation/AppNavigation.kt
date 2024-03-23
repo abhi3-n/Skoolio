@@ -13,6 +13,7 @@ import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
+import com.project.skoolio.screens.SettingsScreen.SettingsScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -57,6 +58,13 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 HomeScreen(navController, viewModelProvider, userType)
             }
         }
-
+        composable(AppScreens.SettingsScreen.name+"/{userType}",
+            arguments = listOf(navArgument("userType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("userType").let { userType ->
+                SettingsScreen(navController, viewModelProvider, userType)
+            }
+        }
     }
 }

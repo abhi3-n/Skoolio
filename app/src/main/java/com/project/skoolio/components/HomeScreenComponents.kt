@@ -69,7 +69,7 @@ import com.project.skoolio.utils.calculateAge
 @Composable
 fun SkoolioAppBar(
     pageTitle: String,
-    icon: ImageVector? = null,
+    icon: ImageVector,
     elevation: Dp = 0.dp,
     navController: NavHostController,
     sideDrawerToggle: () -> Unit
@@ -89,7 +89,7 @@ fun SkoolioAppBar(
                 Column {
                     Spacer(modifier = Modifier.height(3.dp))
                     Icon(
-                        imageVector = Icons.Filled.AccountCircle,
+                        imageVector = icon,
                         contentDescription = "",
                         modifier = Modifier
                             .size(25.dp)
@@ -333,3 +333,4 @@ fun SideDrawerTitle(userType: String?) {
         Text("Welcome, ${teacherDetails.firstName.value}", modifier = Modifier.padding(16.dp))
     }
 }
+

@@ -4,9 +4,19 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.project.skoolio.components.adminDrawerItems
+import com.project.skoolio.components.studentDrawerItems
+import com.project.skoolio.components.teacherDrawerItems
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.ContactDetails
@@ -202,4 +212,11 @@ fun calculateAge(epochMillis: Long?): String {
     return "$years years, "+months + if(months == 1) " month" else " months"
 }
 
+fun getUserDrawerItemsList(userType: String?, navController: NavHostController): @Composable () -> Unit {
+    if(userType == "Student")
+        return studentDrawerItems(navController)
+    else if(userType == "Teacher")
+        return teacherDrawerItems(navController)
 
+    return adminDrawerItems(navController)
+}

@@ -8,4 +8,6 @@ enum class AppScreens{
     OtpValidationScreen,
     SetPasswordScreen,
     HomeScreen,
+    SettingsScreen,
+    AttendancePage,
 }
