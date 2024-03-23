@@ -10,3 +10,7 @@ data class StudentSchoolDetails(
 data class TeacherSchoolDetails(
     val schoolId:Int
 )
+
+data class AdminSchoolDetails(
+    val schoolId:Int
+)

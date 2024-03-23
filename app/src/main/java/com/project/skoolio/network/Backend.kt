@@ -4,6 +4,7 @@ import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
+import com.project.skoolio.model.login.AdminLoginResponse
 import com.project.skoolio.model.login.LoginRequest
 import com.project.skoolio.model.login.SchoolName
 import com.project.skoolio.model.login.StudentLoginResponse
@@ -55,10 +56,10 @@ interface Backend {
         @Body loginRequest: LoginRequest
     ): TeacherLoginResponse
 
-//    @GET("school/admin/login")
-//    suspend fun adminLogin(
-//        @Body loginRequest: LoginRequest
-//    ):AdminLoginResponse
+    @POST("admin/login")
+    suspend fun adminLogin(
+        @Body loginRequest: LoginRequest
+    ): AdminLoginResponse
 
 
     @GET("schools/cities")
@@ -73,5 +74,6 @@ interface Backend {
     suspend fun getSchoolNameForSchoolId(
         @Path("schoolId") schoolId: String
     ): SchoolName
+
 
 }

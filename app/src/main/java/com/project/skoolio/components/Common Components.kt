@@ -85,7 +85,31 @@ fun CommonScaffold(title:String,
 
 
 fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
-    TODO("Not yet implemented")
+    return {
+        NavigationDrawerItem(
+            label = { Text(text = "Profile Page") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.HomeScreen.name + "/Admin")
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Take Attendance") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.TakeAttendanceScreen.name + "/Admin")
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Settings") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.SettingsScreen.name + "/Admin")
+            }
+        )
+    }
 }
 
 fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit {

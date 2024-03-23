@@ -5,12 +5,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.project.skoolio.model.userDetails.AddressDetails
+import com.project.skoolio.model.userDetails.AdminSchoolDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
 import com.project.skoolio.model.userDetails.FatherDetails
 import com.project.skoolio.model.userDetails.MotherDetails
 import com.project.skoolio.model.userDetails.PreviousEmploymentDetails
 import com.project.skoolio.model.userDetails.TeacherSchoolDetails
+import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.SchoolList
@@ -170,7 +172,6 @@ object teacherDetails:userDetails {
     val firstName:MutableState<String> = mutableStateOf("")
     val middleName:MutableState<String> = mutableStateOf("")
     val lastName:MutableState<String> = mutableStateOf("")
-    //date of birth
     val gender:MutableState<String> = mutableStateOf("")
     val nationality:MutableState<String> = mutableStateOf("")
     val dobValue:MutableState<Long> = mutableStateOf(0)
@@ -180,15 +181,12 @@ object teacherDetails:userDetails {
 
     val previousEmployerName:MutableState<String> = mutableStateOf("")
     val previousEmploymentDuration:MutableState<String> = mutableStateOf("")
-    val jobTitle:MutableState<String> = mutableStateOf("")
+    val previousJobTitle:MutableState<String> = mutableStateOf("")
 
     val primaryContact:MutableState<String> = mutableStateOf("")
     val primaryContactName:MutableState<String> = mutableStateOf("")
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
-    override fun resetPassword() {
-        password.value = ""
-    }
 
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
@@ -199,6 +197,9 @@ object teacherDetails:userDetails {
 
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
 
+    override fun resetPassword() {
+        password.value = ""
+    }
     @OptIn(ExperimentalMaterial3Api::class)
     var dobState:DatePickerState? = null
 
@@ -211,7 +212,7 @@ object teacherDetails:userDetails {
             addressDetails = AddressDetails(addressLine.value, city.value, state.value),
             teacherSchoolDetails = TeacherSchoolDetails(SchoolList.getSchoolIdForSchoolName(
                 employingSchoolName.value)),
-            previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, jobTitle.value),
+            previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, previousJobTitle.value),
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
     }
 
@@ -232,6 +233,9 @@ object teacherDetails:userDetails {
         addressLine.value = capitalize(teacher.addressDetails.addressLine)
         city.value = capitalize(teacher.addressDetails.city)
         state.value = capitalize(teacher.addressDetails.state)
+        previousEmployerName.value = capitalize(teacher.previousEmploymentDetails.employerName)
+        previousEmploymentDuration.value = capitalize(teacher.previousEmploymentDetails.employmentDuration)
+        previousJobTitle.value = capitalize(teacher.previousEmploymentDetails.jobTitle)
     }
 
     init {
@@ -262,6 +266,111 @@ object teacherDetails:userDetails {
         addressLine.value = ""
         city.value = ""
         state.value = ""
+        previousEmployerName.value = ""
+        previousEmploymentDuration.value = ""
+        previousJobTitle.value = ""
+        employingSchoolName.value = ""
+        schoolId.value = 0
     }
 }
+
+object adminDetails:userDetails {
+    //TODO:A person who is admin can be admin of multiple schools. Currently, assuming only single school. Later Extend it to encapsulate multiple schools.
+    val adminId:MutableState<String> = mutableStateOf("")
+    val firstName:MutableState<String> = mutableStateOf("")
+    val middleName:MutableState<String> = mutableStateOf("")
+    val lastName:MutableState<String> = mutableStateOf("")
+
+    val dobValue:MutableState<Long> = mutableStateOf(0)
+    val gender:MutableState<String> = mutableStateOf("")
+    val nationality:MutableState<String> = mutableStateOf("")
+
+    val schoolName:MutableState<String> = mutableStateOf("")
+
+    val primaryContact:MutableState<String> = mutableStateOf("")
+    val primaryContactName:MutableState<String> = mutableStateOf("")
+    val alternativeContact:MutableState<String> = mutableStateOf("")
+    val alternativeContactName:MutableState<String> = mutableStateOf("")
+
+    val schoolId:MutableState<Int> = mutableStateOf(0)
+
+    override val email:MutableState<String> = mutableStateOf("")
+    val password:MutableState<String> = mutableStateOf("")
+
+    val addressLine:MutableState<String> = mutableStateOf("")
+    val city:MutableState<String> = mutableStateOf("")
+    val state:MutableState<String> = mutableStateOf("")
+
+    override fun resetPassword() {
+        password.value = ""
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    var dobState:DatePickerState? = null
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun getAdmin(): SchoolAdministrator {
+        return SchoolAdministrator(adminId = "",
+            firstName.value, middleName.value, lastName.value,
+            dob = dobState?.selectedDateMillis!!,
+            gender = if(adminDetails.gender.value == "Male") 'm' else 'f', nationality = nationality.value,
+            email = email.value, password = password.value,
+            addressDetails = AddressDetails(addressLine.value, city.value, state.value),
+            contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null),
+            schoolId = AdminSchoolDetails(schoolId.value)
+        );
+    }
+
+    fun populateAdminDetails(admin: SchoolAdministrator) {
+        adminId.value = admin.adminId
+        firstName.value = capitalize(admin.firstName)
+        middleName.value = capitalize(admin.middleName)
+        lastName.value = capitalize(admin.lastName)
+        gender.value = if(admin.gender == 'm') "Male" else "Female"
+        nationality.value = capitalize(admin.nationality)
+        dobValue.value = admin.dob
+        schoolId.value = admin.schoolId.schoolId
+        primaryContact.value = capitalize(admin.contactDetails.primaryContact)
+        primaryContactName.value = capitalize(admin.contactDetails.primaryContactName)
+        alternativeContact.value = capitalize(admin.contactDetails.alternativeContact)
+        alternativeContactName.value = capitalize(admin.contactDetails.alternativeContactName)
+        email.value = admin.email
+        addressLine.value = capitalize(admin.addressDetails.addressLine)
+        city.value = capitalize(admin.addressDetails.city)
+        state.value = capitalize(admin.addressDetails.state)
+    }
+
+    init {
+        firstName.value = "Anjuman"
+        lastName.value = "-"
+        gender.value = "Female"
+        nationality.value = "Indian"
+        schoolId.value = 4
+        primaryContact.value = "9888802706"
+        primaryContactName.value = "Anjuman"
+        email.value = "anjumannarang17@gmail.com"
+        addressLine.value = "Anant Nagar"
+        city.value = "Khanna"
+        state.value = "Punjab"
+    }
+    suspend fun resetAdminDetails(){
+        firstName.value = ""
+        middleName.value = ""
+        lastName.value = ""
+        gender.value = ""
+        nationality.value = ""
+        dobValue.value = 0
+        primaryContact.value = ""
+        primaryContactName.value = ""
+        alternativeContact.value = ""
+        alternativeContactName.value = ""
+        email.value = ""
+        addressLine.value = ""
+        city.value = ""
+        state.value = ""
+        schoolId.value = 0
+        schoolName.value = ""
+    }
+}
+
 

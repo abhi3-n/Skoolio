@@ -44,6 +44,7 @@ import com.project.skoolio.components.ProfileImageSurface
 import com.project.skoolio.components.ProfileSchoolDetails
 import com.project.skoolio.components.SideDrawerTitle
 import com.project.skoolio.components.SkoolioAppBar
+import com.project.skoolio.model.userDetailSingleton.adminDetails
 import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
@@ -93,10 +94,6 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
         }
     )
 }
-
-
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -258,7 +255,7 @@ fun TeacherProfilePage() {
         FormTitle(formTitle = "School Details")
         Spacer(modifier = Modifier.height(4.dp))
         ProfileSchoolDetails(teacherDetails.teacherId.value,
-            teacherDetails.employingSchoolName.value, //TODO:Need to send school name
+            teacherDetails.employingSchoolName.value,
             null)
     }
     DetailSection {
@@ -277,9 +274,44 @@ fun TeacherProfilePage() {
     }
 }
 
+@SuppressLint("NewApi")
 @Composable
 fun AdminProfilePage() {
+    DetailSection(@Composable {
+        FormTitle(formTitle = "Basic Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileBasicDetails(
+            adminDetails.firstName.value,
+            adminDetails.middleName.value,
+            adminDetails.lastName.value,
+            adminDetails.nationality.value,
+            adminDetails.dobValue.value,
+            adminDetails.gender.value
+        )
+    }
+    )
+    DetailSection {
+        FormTitle(formTitle = "School Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileSchoolDetails(adminDetails.adminId.value,
+            adminDetails.schoolName.value,
+            null)
+    }
 
+    DetailSection {
+        FormTitle(formTitle = "Address Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileAddressDetails(adminDetails.addressLine.value,
+            adminDetails.city.value,
+            adminDetails.state.value)
+    }
+    DetailSection {
+        FormTitle(formTitle = "Contact Details")
+        Spacer(modifier = Modifier.height(4.dp))
+        ProfileContactDetails(adminDetails.email.value,adminDetails.primaryContact.value, adminDetails.primaryContactName.value, null,
+            adminDetails.alternativeContact.value,adminDetails.alternativeContactName.value, null
+        )
+    }
 }
 
 

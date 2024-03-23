@@ -173,7 +173,7 @@ fun ShowTeacherRegistrationForm(
     PreviousEmploymentDetails(
         teacherDetails.previousEmployerName,
         teacherDetails.previousEmploymentDuration,
-        teacherDetails.jobTitle
+        teacherDetails.previousJobTitle
     )
     OtherDetails(teacherDetails.primaryContact, teacherDetails.primaryContactName,
         null, teacherDetails.alternativeContact,

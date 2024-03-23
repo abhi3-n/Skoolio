@@ -1,6 +1,7 @@
 package com.project.skoolio.model.userType
 
 import com.project.skoolio.model.userDetails.AddressDetails
+import com.project.skoolio.model.userDetails.AdminSchoolDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userDetails.ContactDetails
 import com.project.skoolio.model.userDetails.FatherDetails
@@ -56,6 +57,23 @@ class Teacher(
     contactDetails: ContactDetails,
     val teacherSchoolDetails: TeacherSchoolDetails,
     val previousEmploymentDetails: PreviousEmploymentDetails,
+) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
+
+}
+
+class SchoolAdministrator(
+    val adminId:String,
+    firstName: String,
+    middleName: String,
+    lastName: String,
+    dob: Long,
+    gender: Char,
+    nationality: String,
+    email: String,
+    password: String,
+    addressDetails: AddressDetails,
+    contactDetails: ContactDetails,
+    val schoolId: AdminSchoolDetails
 ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
 
 }
