@@ -71,6 +71,7 @@ import com.project.skoolio.utils.BackToLoginScreen
 import com.project.skoolio.utils.SchoolList
 import com.project.skoolio.utils.UserType
 import com.project.skoolio.utils.convertEpochToDateString
+import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.utils.statesList
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.OtpValidationViewModel
@@ -756,15 +757,17 @@ fun UserLoginForm(
     loginViewModel: LoginViewModel,
     navController: NavHostController,
 ) {
-    val email = loginViewModel.email
-    val password = loginViewModel.password
+//    val email = loginViewModel.email
+//    val password = loginViewModel.password
+    val email = rememberSaveable { mutableStateOf("anjumannarang17@gmail.com") }
+    val password = rememberSaveable { mutableStateOf("123") }
     val passwordVisibility = rememberSaveable { mutableStateOf(false) }
     val keyBoardController = LocalSoftwareKeyboardController.current
     val valid = rememberSaveable(email.value, password.value) {
         email.value.trim().isNotEmpty() && password.value.trim().isNotEmpty()
     }
     val loading = rememberSaveable { mutableStateOf(false) }
-    val userTypeSelectedForLoginRequest = loginViewModel.userType
+    val userTypeSelectedForLoginRequest = loginUserType
     val modifier = Modifier
         .height(350.dp)
         .verticalScroll(rememberScrollState())

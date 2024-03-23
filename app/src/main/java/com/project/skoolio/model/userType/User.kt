@@ -39,6 +39,7 @@ class Student(
     val studentSchoolDetails: StudentSchoolDetails,
     val father: FatherDetails,
     val mother: MotherDetails,
+    val registrationId:String,
     val mot:String
     ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
 }
@@ -57,6 +58,7 @@ class Teacher(
     contactDetails: ContactDetails,
     val teacherSchoolDetails: TeacherSchoolDetails,
     val previousEmploymentDetails: PreviousEmploymentDetails,
+    val registrationId:String,
 ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails){
 
 }

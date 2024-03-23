@@ -12,6 +12,8 @@ import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.Selec
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
+import com.project.skoolio.screens.PendingApprovalsScreen.PendingApprovalsScreen
+import com.project.skoolio.screens.SchoolInformationScreen.SchoolInformationScreen
 import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
 import com.project.skoolio.screens.SettingsScreen.SettingsScreen
 import com.project.skoolio.screens.SplashScreen
@@ -74,6 +76,12 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
             navBack.arguments?.getString("userType").let { userType ->
                 TakeAttendanceScreen(navController, viewModelProvider, userType)
             }
+        }
+        composable(AppScreens.SchoolInformation.name){
+                SchoolInformationScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.PendingApprovals.name){
+                PendingApprovalsScreen(navController, viewModelProvider)
         }
     }
 }

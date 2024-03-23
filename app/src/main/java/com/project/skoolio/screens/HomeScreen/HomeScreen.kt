@@ -50,6 +50,7 @@ import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.utils.getUserDrawerItemsList
+import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.ViewModelProvider
 import kotlinx.coroutines.launch
 
@@ -61,14 +62,13 @@ fun HomeScreen(
     userType: String?
 ){
     val context = LocalContext.current
-    ExitApp(navController = navController, context = context)
+    if(loginUserType.value == userType){
+        ExitApp(navController = navController, context = context)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-//        MainScaffold(navController = navController, userType,
-////            viewModelProvider
-//        )
         HomeScreenContent(navController, userType)
     }
 }
@@ -94,67 +94,67 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
         }
     )
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun MainScaffold(
-    navController: NavHostController,
-    userType: String? ,
-//    viewModelProvider: ViewModelProvider
-) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    ModalNavigationDrawer(
-        gesturesEnabled = true,
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .width(300.dp)    // or your desired width
-                    .fillMaxHeight(),
-            ) {
-                ProfileImageSurface(
-                    Modifier
-                        .padding(4.dp)
-                        .height(50.dp)
-                        .width(50.dp))
-                SideDrawerTitle(userType)
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(2.dp))
-                NavigationDrawerItem(
-                    label = { Text(text = "Profile Page") },
-                    selected = true,
-                    onClick = {
-                        navController.navigate(AppScreens.HomeScreen.name+"/$userType")
-                    }
-                )
-            }
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                SkoolioAppBar("Profile",
-                    navController= navController,
-                    elevation = 5.dp,
-                    icon = Icons.Filled.AccountCircle,
-                    sideDrawerToggle = {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    }
-                )
-            },
-        ){
-            HomeScreenMainContent(it, userType,
-//            viewModelProvider
-            )
-        }
-    }
-
-}
-
+//
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Composable
+//fun MainScaffold(
+//    navController: NavHostController,
+//    userType: String? ,
+////    viewModelProvider: ViewModelProvider
+//) {
+//    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+//    val scope = rememberCoroutineScope()
+//    ModalNavigationDrawer(
+//        gesturesEnabled = true,
+//        drawerState = drawerState,
+//        drawerContent = {
+//            ModalDrawerSheet(
+//                modifier = Modifier
+//                    .width(300.dp)    // or your desired width
+//                    .fillMaxHeight(),
+//            ) {
+//                ProfileImageSurface(
+//                    Modifier
+//                        .padding(4.dp)
+//                        .height(50.dp)
+//                        .width(50.dp))
+//                SideDrawerTitle(userType)
+//                HorizontalDivider()
+//                Spacer(modifier = Modifier.height(2.dp))
+//                NavigationDrawerItem(
+//                    label = { Text(text = "Profile Page") },
+//                    selected = true,
+//                    onClick = {
+//                        navController.navigate(AppScreens.HomeScreen.name+"/$userType")
+//                    }
+//                )
+//            }
+//        }
+//    ) {
+//        Scaffold(
+//            topBar = {
+//                SkoolioAppBar("Profile",
+//                    navController= navController,
+//                    elevation = 5.dp,
+//                    icon = Icons.Filled.AccountCircle,
+//                    sideDrawerToggle = {
+//                        scope.launch {
+//                            drawerState.apply {
+//                                if (isClosed) open() else close()
+//                            }
+//                        }
+//                    }
+//                )
+//            },
+//        ){
+//            HomeScreenMainContent(it, userType,
+////            viewModelProvider
+//            )
+//        }
+//    }
+//
+//}
+//
 
 
 @RequiresApi(Build.VERSION_CODES.O)

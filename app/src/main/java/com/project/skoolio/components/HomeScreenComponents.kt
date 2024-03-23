@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
+import com.project.skoolio.model.userDetailSingleton.adminDetails
 import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
@@ -331,6 +332,9 @@ fun SideDrawerTitle(userType: String?) {
     }
     else if(userType == "Teacher"){
         Text("Welcome, ${teacherDetails.firstName.value}", modifier = Modifier.padding(16.dp))
+    }
+    else if(userType == "Admin"){
+        Text("Welcome, ${adminDetails.firstName.value}", modifier = Modifier.padding(16.dp))
     }
 }
 

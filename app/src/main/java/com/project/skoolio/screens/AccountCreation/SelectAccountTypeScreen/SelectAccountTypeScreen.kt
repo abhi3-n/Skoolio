@@ -50,7 +50,7 @@ fun SelectAccountTypeScreen(
         mutableStateOf(0)
     }
     val context = LocalContext.current
-    val accountTypeList = UserType.types
+//    val accountTypeList = UserType.types
     val cityList = CityList.getCities()
     val registrationScreenViewModel = viewModelProvider.getRegistrationScreenViewModel()
     val selectedSchoolCity = registrationScreenViewModel.selectedSchoolCity
@@ -73,7 +73,7 @@ fun SelectAccountTypeScreen(
         Spacer(modifier = Modifier.height(20.dp))
         CustomDropDownMenu(
             selectedValue =  selectedAccountType,
-            dataList =  accountTypeList,
+            dataList =  UserType.types,
             registrationScreenViewModel = null
         )
         Spacer(modifier = Modifier.height(20.dp))

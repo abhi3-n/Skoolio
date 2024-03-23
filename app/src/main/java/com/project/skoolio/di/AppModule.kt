@@ -3,10 +3,12 @@ package com.project.skoolio.di
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.BackendRepository
 import com.project.skoolio.repositories.OtpValidationRepository
+import com.project.skoolio.repositories.PendingApprovalsRepository
 import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.utils.Constants
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.OtpValidationViewModel
+import com.project.skoolio.viewModels.PendingApprovalsViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import dagger.Module
 import dagger.Provides
@@ -29,6 +31,8 @@ object AppModule {
             .create(Backend::class.java)
     }
 
+
+    //Repositories
     @Provides
     @Singleton
     fun provideBackendRepository(backend: Backend) = BackendRepository(backend)
@@ -38,8 +42,12 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOtpValidationRepository(backend: Backend) = OtpValidationRepository(backend)
+    @Provides
+    @Singleton
+    fun providePendingApprovalsRepository(backend: Backend) = PendingApprovalsRepository(backend)
 
 
+    //ViewModels
     @Provides
     @Singleton
     fun provideLoginViewModel(backend: Backend) = LoginViewModel(backend)
@@ -51,4 +59,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOtpValidationViewModel(otpValidationRepository: OtpValidationRepository) = OtpValidationViewModel(otpValidationRepository)
+
+    @Provides
+    @Singleton
+    fun providePendingApprovalsViewModel(pendingApprovalsRepository: PendingApprovalsRepository): PendingApprovalsViewModel = PendingApprovalsViewModel(pendingApprovalsRepository)
 }

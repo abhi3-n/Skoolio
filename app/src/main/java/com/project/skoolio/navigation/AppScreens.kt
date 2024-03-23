@@ -7,7 +7,17 @@ enum class AppScreens{
     RegistrationFormScreen,
     OtpValidationScreen,
     SetPasswordScreen,
+
+    //Common To students, teachers and admins
     HomeScreen,
     SettingsScreen,
-    TakeAttendanceScreen, //Only teacher and admin can access this page
+
+
+    //Common to teachers and admins
+    TakeAttendanceScreen, //Only teacher and admin can access this page;
+    IssueReporting,
+
+    //Only Accessible to Admins
+    SchoolInformation,
+    PendingApprovals
 }

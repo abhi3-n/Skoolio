@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -198,7 +199,7 @@ fun getDefaultStudent():Student{
         StudentSchoolDetails(-1,"", ""),
         FatherDetails("","",""),
         MotherDetails("","",""),
-        "")
+        "", "")
 }
 
 
@@ -234,3 +235,6 @@ fun getUserDrawerItemsList(userType: String?, navController: NavHostController):
 
     return adminDrawerItems(navController)
 }
+
+
+val loginUserType = mutableStateOf("Admin")

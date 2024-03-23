@@ -55,9 +55,6 @@ object studentDetails:userDetails {
     val alternativeContact:MutableState<String> = mutableStateOf("")
     val alternativeContactName:MutableState<String> = mutableStateOf("")
     val alternativeContactRelation:MutableState<String> = mutableStateOf("")
-    override fun resetPassword() {
-        password.value = ""
-    }
 
     override val email:MutableState<String> = mutableStateOf("")
     val password:MutableState<String> = mutableStateOf("")
@@ -68,6 +65,10 @@ object studentDetails:userDetails {
 
     val MOT:MutableState<String> = mutableStateOf("")
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
+    val registrationId:MutableState<String> = mutableStateOf("")
+    override fun resetPassword() {
+        password.value = ""
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     var dobState:DatePickerState? = null
@@ -82,7 +83,7 @@ object studentDetails:userDetails {
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
             father = FatherDetails(fatherName  = fatherName.value, fatherQualification = fatherQualification.value, fatherOccupation = fatherOccupation.value),
             mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),
-            mot = MOT.value);
+            mot = MOT.value, registrationId = "");
     }
     fun populateStudentDetails(student: Student) {
         studentId.value = student.studentId
@@ -111,6 +112,7 @@ object studentDetails:userDetails {
         city.value = capitalize(student.addressDetails.city)
         state.value = capitalize(student.addressDetails.state)
         MOT.value = capitalize(student.mot)
+        registrationId.value = student.registrationId
     }
 
     suspend fun resetStudentDetails(){
@@ -142,6 +144,7 @@ object studentDetails:userDetails {
         city.value = ""
         state.value = ""
         MOT.value = ""
+        registrationId.value = ""
     }
 
     init {
@@ -196,6 +199,8 @@ object teacherDetails:userDetails {
     val state:MutableState<String> = mutableStateOf("")
 
     val rulesAccepted:MutableState<Boolean> = mutableStateOf(false)
+    val registrationId:MutableState<String> = mutableStateOf("")
+
 
     override fun resetPassword() {
         password.value = ""
@@ -213,7 +218,8 @@ object teacherDetails:userDetails {
             teacherSchoolDetails = TeacherSchoolDetails(SchoolList.getSchoolIdForSchoolName(
                 employingSchoolName.value)),
             previousEmploymentDetails = PreviousEmploymentDetails(previousEmployerName.value, previousEmploymentDuration.value, previousJobTitle.value),
-            contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null));
+            contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, null, alternativeContact.value, alternativeContactName.value, null),
+            registrationId = "")
     }
 
     fun populateTeacherDetails(teacher: Teacher) {
@@ -236,6 +242,7 @@ object teacherDetails:userDetails {
         previousEmployerName.value = capitalize(teacher.previousEmploymentDetails.employerName)
         previousEmploymentDuration.value = capitalize(teacher.previousEmploymentDetails.employmentDuration)
         previousJobTitle.value = capitalize(teacher.previousEmploymentDetails.jobTitle)
+        registrationId.value = teacher.registrationId
     }
 
     init {
@@ -271,6 +278,7 @@ object teacherDetails:userDetails {
         previousJobTitle.value = ""
         employingSchoolName.value = ""
         schoolId.value = 0
+        registrationId.value = ""
     }
 }
 

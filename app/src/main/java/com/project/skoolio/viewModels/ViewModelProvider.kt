@@ -8,11 +8,13 @@ import javax.inject.Inject
 class ViewModelProvider @Inject constructor(
     private val loginViewModel: LoginViewModel,
     private val registrationScreenViewModel: RegistrationScreenViewModel,
-    private val otpValidationViewModel: OtpValidationViewModel
+    private val otpValidationViewModel: OtpValidationViewModel,
+    private val pendingApprovalsViewModel: PendingApprovalsViewModel
 ):ViewModel(){
 
     fun getLoginViewModel() = loginViewModel
     fun getRegistrationScreenViewModel() = registrationScreenViewModel
     fun getOtpValidationViewModel() = otpValidationViewModel
 
+    fun getPendingApprovalsViewModel() = pendingApprovalsViewModel
 }
