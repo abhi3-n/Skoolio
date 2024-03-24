@@ -79,7 +79,7 @@ object studentDetails:userDetails {
             studentId = "",firstName.value, middleName.value, lastName.value, dobState?.selectedDateMillis!!,
             gender = if(gender.value == "Male") 'm' else 'f', nationality.value, email.value, password.value,
             addressDetails = AddressDetails(addressLine.value, city.value, state.value),
-            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value),classId = classId.value , admissionClass = className.value),  //TODO:className to be replaced with classId later.
+            studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value),classId = classId.value , admissionClass = className.value, null),  //TODO:className to be replaced with classId later.
             contactDetails = ContactDetails(primaryContact.value, primaryContactName.value, primaryContactRelation.value, alternativeContact.value, alternativeContactName.value, alternativeContactRelation.value),
             father = FatherDetails(fatherName  = fatherName.value, fatherQualification = fatherQualification.value, fatherOccupation = fatherOccupation.value),
             mother = MotherDetails(motherName  = motherName.value, motherQualification = motherQualification.value, motherOccupation = motherOccupation.value),

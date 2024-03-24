@@ -1,7 +1,7 @@
 package com.project.skoolio.screens.PendingApprovalsScreen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,14 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +34,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -39,11 +43,11 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.components.CircularProgressIndicatorCustom
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
+import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userType.Student
-import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
+import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.viewModels.PendingApprovalsViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -157,10 +161,7 @@ fun PendingStudentsList(
         ) {
             LazyColumn {
                 items(pendingApprovalsViewModel.pendingStudentsList.value.data) { student: Student ->
-                    ListItem(navController, student){
-                        studentDetails.populateStudentDetails(student)
-                        navController.navigate(AppScreens.HomeScreen.name+"/Student")
-                    }
+                    ListItem(pendingApprovalsViewModel, student)
                 }
             }
         }
@@ -173,27 +174,89 @@ fun PendingStudentsList(
 }
 
 @Composable
-fun ListItem(navController: NavHostController, student: Student, onClick:()->Unit = {}) {
+fun ListItem(pendingApprovalsViewModel: PendingApprovalsViewModel, student: Student) {
     Surface(
         Modifier
             .padding(3.dp)
-            .fillMaxWidth()
-            .clickable {
-                onClick.invoke()
-            },
-        shape = CircleShape,
-        color = Color.White
+            .fillMaxWidth(),
+        shape = RectangleShape,
+        color = Color.LightGray
     ) {
+        val showMoreInfo = rememberSaveable { mutableStateOf(false) }
+        val classSelected = rememberSaveable { mutableStateOf("") }
+        val context = LocalContext.current
         Row(Modifier.padding(start = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween) {
-            Column(
+            Column(modifier = Modifier
+                .padding(top = 5.dp, bottom = 5.dp)
+                .width(300.dp),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center) {
-                Text(text = "Name: ${student.firstName} ${student.lastName}")
+                Text(text = "Name: "+ capitalize(student.firstName)+" " + capitalize(student.lastName))
                 Text(text = "Registration Id: ${student.registrationId}")
+
+                if(showMoreInfo.value) {
+                    Text(text = "Address: "+ capitalize(student.addressDetails.addressLine)+", "+ capitalize(student.addressDetails.city)+", "+ capitalize(student.addressDetails.state)+".")
+                    Text(text = "Admission Class: ${student.studentSchoolDetails.admissionClass}")
+                    TextDropDownMenuRow(
+                        text = "Class Options",
+                        dataList = student.getStudentClassOptionsList(),
+                        valueSelected = classSelected,
+                        registrationScreenViewModel = null
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TextButton(onClick = {
+                        if(classSelected.value.isEmpty()){
+                            Toast.makeText(context,"Please select grade and section for ${student.firstName}", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            val classId = student.getClassIdForClassSelected(classSelected.value)
+                            if(classId.isNotEmpty()) {
+                                pendingApprovalsViewModel.updateStudentClassId(
+                                    student.studentId,
+                                    classId
+                                )
+                                pendingApprovalsViewModel.removeStudentFromPendingList(student.studentId)
+                            }
+                            else{
+                                Toast.makeText(context,"Invalid Class", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
+                        colors = ButtonDefaults.textButtonColors(containerColor = Color.Green)
+                    ) {
+                        Text(text = "Approve", style = TextStyle(color = Color.Black))
+                    }
+//                    TextButton(onClick = {  },
+//                        colors = ButtonDefaults.textButtonColors(containerColor = Color.Red)
+//                    ) {
+//                        Text(text = "Decline", style = TextStyle(color = Color.Black))
+//                    }
+                }
             }
-            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Student Image", modifier = Modifier.size(70.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                Icon(
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = "Student Image",
+                    modifier = Modifier.size(70.dp)
+                )
+                IconButton(onClick = {
+                    showMoreInfo.value = !showMoreInfo.value
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = "More Details",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
         }
     }
 }

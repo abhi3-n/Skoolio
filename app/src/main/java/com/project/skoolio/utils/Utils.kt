@@ -196,12 +196,11 @@ fun getDefaultStudent():Student{
         "",
         AddressDetails("","",""),
         ContactDetails("","","","","","",),
-        StudentSchoolDetails(-1,"", ""),
+        StudentSchoolDetails(-1,"", "", mutableListOf()),
         FatherDetails("","",""),
         MotherDetails("","",""),
         "", "")
 }
-
 
 fun capitalize(string: String):String{
     return string.split(" ").joinToString(" ") {string->

@@ -1,5 +1,7 @@
 package com.project.skoolio.network
 
+import com.project.skoolio.model.ClassInfo
+import com.project.skoolio.model.ClassInfoRequest
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.RegisterResponse
@@ -13,6 +15,7 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import javax.inject.Singleton
@@ -79,6 +82,18 @@ interface Backend {
     suspend fun getPendingStudents(
         @Path("schoolId") schoolId: String
     ): List<Student>
+
+    @GET("classes/classInfoList/{schoolId}/{admissionClass}")
+    suspend fun getClassOptionsForStudent(
+        @Path ("schoolId") schoolId: String,
+        @Path ("admissionClass") admissionClass:String
+    ): List<ClassInfo>?
+
+    @PATCH("student/approve/{studentId}/{classId}")
+    suspend fun updateStudentClassId(
+        @Path("studentId") studentId: String,
+        @Path("classId") classId: String,
+    ):Unit
 
 
 }
