@@ -28,7 +28,6 @@ import com.project.skoolio.components.ListItem
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.userDetailSingleton.adminDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
-import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList
@@ -95,9 +94,7 @@ fun TakeAttendanceScreenMainContent(
     }
     Column(modifier = Modifier
         .padding(paddingValues)
-        .fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
+        .fillMaxSize()
     ) {
         if(attendanceViewModel.classList.value.data.isNotEmpty()){
             LazyColumn {
@@ -105,8 +102,7 @@ fun TakeAttendanceScreenMainContent(
                     _class.grade
                 }){ _class:_Class->
                     val onClick:()->Unit = {
-                        attendanceViewModel.getClassStudents(_class, context)
-                        navController.navigate(AppScreens.ClassStudentsAttendanceScreen.name + "/${loginUserType.value}")
+                        attendanceViewModel.getClassStudents(_class, context, navController)
                     }
                     ListItem(itemInfo = { ClassItem(_class,navController,attendanceViewModel, onClick) },
                         onClick = onClick)

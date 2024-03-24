@@ -1,5 +1,6 @@
 package com.project.skoolio.network
 
+import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
@@ -16,6 +17,7 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -130,4 +132,10 @@ interface Backend {
     fun getClassListForTeacher(
         @Path("teacherId") teacherId: String
     ): List<_Class>
+
+    //attendance endpoints
+    @POST("attendance")
+    suspend fun submitAttendance(
+        @Body list: List<Attendance>
+    ):Unit
 }

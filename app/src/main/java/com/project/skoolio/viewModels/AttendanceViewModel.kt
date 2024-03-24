@@ -1,16 +1,24 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model._Class
+import com.project.skoolio.model.userDetailSingleton.adminDetails
+import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.repositories.AttendanceRepository
+import com.project.skoolio.utils.classAttendance
+import com.project.skoolio.utils.loginUserType
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +38,7 @@ class AttendanceViewModel @Inject constructor(private val attendanceRepository: 
         viewModelScope.launch {
             _classList.value = attendanceRepository.getClassListForSchoolForAdmin(schoolId)
             if(_classList.value.exception != null){
-                Toast.makeText(context,"Some Error Occured while fetching the class list.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Some Error Occured while fetching the class list - ${_classList.value.exception}.", Toast.LENGTH_SHORT).show()
             }
             else{
                 Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()
@@ -45,14 +53,13 @@ class AttendanceViewModel @Inject constructor(private val attendanceRepository: 
                 Toast.makeText(context,"Some Error Occured while fetching the class list.", Toast.LENGTH_SHORT).show()
             }
             else{
-                Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    fun getClassStudents(_class: _Class, context: Context) {
+    fun getClassStudents(_class: _Class, context: Context, navController: NavHostController) {
         viewModelScope.launch{
-            selectedClass.value = _class
             _classStudentsList.value = attendanceRepository.getClassStudents(_class.classId)
             if(_classStudentsList.value.exception!= null){
                 Toast.makeText(context,"Some Error Occured while fetching the class list.", Toast.LENGTH_SHORT).show()
@@ -63,7 +70,34 @@ class AttendanceViewModel @Inject constructor(private val attendanceRepository: 
                 }
                 else{
                     Toast.makeText(context,"Class list fetched for ${_class.grade} ${_class.section} successfully.", Toast.LENGTH_SHORT).show()
+                    selectedClass.value = _class
+                    navController.navigate(AppScreens.ClassStudentsAttendanceScreen.name + "/${loginUserType.value}")
                 }
+            }
+        }
+    }
+
+    fun resetClassStudentsList() {
+        classStudentsList.value.data = mutableListOf()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun initializeStudentsAttendanceList() {
+        viewModelScope.launch {
+            classAttendance.initializeStudentsAttendanceList(classStudentsList.value.data,selectedClass.value.classId,
+                if(loginUserType.value == "Admin") adminDetails.adminId.value else teacherDetails.teacherId.value,
+                if(loginUserType.value == "Admin") 'A' else 'T',
+                )
+        }
+    }
+
+    fun submitAttendance(current: Context) {
+        viewModelScope.launch{
+            try {
+                attendanceRepository.submitAttendance(classAttendance.studentsAttendanceList)
+            }
+            catch (e:Exception){
+                Toast.makeText(current,"Some error with submitting attendance - ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

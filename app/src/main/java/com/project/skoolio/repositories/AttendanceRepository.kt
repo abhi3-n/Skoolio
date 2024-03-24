@@ -3,6 +3,7 @@ package com.project.skoolio.repositories
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model._Class
 import com.project.skoolio.network.Backend
@@ -50,5 +51,9 @@ class AttendanceRepository @Inject constructor(private val backend: Backend): Vi
             }
         studentsList.data = response.toMutableList()
         return studentsList
+    }
+
+    suspend fun submitAttendance(studentsAttendanceList: MutableList<Attendance>) {
+        backend.submitAttendance(studentsAttendanceList.toList())
     }
 }
