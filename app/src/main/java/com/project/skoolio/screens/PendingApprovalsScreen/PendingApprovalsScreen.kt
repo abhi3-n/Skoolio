@@ -149,9 +149,7 @@ fun PendingTeachersList(
         ) {
             LazyColumn {
                 items(pendingApprovalsViewModel.pendingTeachersList.value.data) { teacher: Teacher ->
-                    ListItem{
-                        PendingTeacherInfo(pendingApprovalsViewModel,teacher)
-                    }
+                    ListItem(itemInfo = { PendingTeacherInfo(pendingApprovalsViewModel,teacher) })
                 }
             }
         }
@@ -317,9 +315,7 @@ fun PendingStudentsList(
         ) {
             LazyColumn {
                 items(pendingApprovalsViewModel.pendingStudentsList.value.data) { student: Student ->
-                    ListItem{
-                        PendingStudentInfo(pendingApprovalsViewModel, student)
-                    }
+                    ListItem(itemInfo = {PendingStudentInfo(pendingApprovalsViewModel, student)})
 
                 }
             }

@@ -5,8 +5,3 @@ data class ClassInfo(
     val grade:String,
     val section:String
 )
-
-data class ClassInfoRequest(
-    private val schoolId:String,
-    private val admissionClass:String
-)

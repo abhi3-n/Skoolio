@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.RegistrationFormScreen
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.SelectAccountTypeScreen
+import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAttendanceScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
@@ -77,11 +78,19 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 TakeAttendanceScreen(navController, viewModelProvider, userType)
             }
         }
-        composable(AppScreens.SchoolInformation.name){
+        composable(AppScreens.SchoolInformationScreen.name){
                 SchoolInformationScreen(navController, viewModelProvider)
         }
-        composable(AppScreens.PendingApprovals.name){
+        composable(AppScreens.PendingApprovalsScreen.name){
                 PendingApprovalsScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.ClassStudentsAttendanceScreen.name+"/{userType}",
+            arguments = listOf(navArgument("userType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("userType").let { userType ->
+                ClassStudentsAttendanceScreen(navController, viewModelProvider, userType)
+            }
         }
     }
 }

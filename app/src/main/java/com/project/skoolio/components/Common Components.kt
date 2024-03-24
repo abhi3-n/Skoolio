@@ -1,5 +1,6 @@
 package com.project.skoolio.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -102,7 +103,7 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
             label = { Text(text = "School Information") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.SchoolInformation.name)
+                navController.navigate(AppScreens.SchoolInformationScreen.name)
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -110,7 +111,7 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
             label = { Text(text = "Pending Approvals") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.PendingApprovals.name)
+                navController.navigate(AppScreens.PendingApprovalsScreen.name)
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -118,7 +119,7 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
             label = { Text(text = "Issue Reporting") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.IssueReporting.name + "/Admin")
+                navController.navigate(AppScreens.IssueReportingScreen.name + "/Admin")
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -162,7 +163,7 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
             label = { Text(text = "Issue Reporting") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.IssueReporting.name + "/Teacher")
+                navController.navigate(AppScreens.IssueReportingScreen.name + "/Teacher")
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -200,11 +201,14 @@ fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit
 
 
 @Composable
-fun ListItem(itemInfo:@Composable ()->Unit = {}) {
+fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}) {
     Surface(
         Modifier
             .padding(3.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                       onClick.invoke()
+            },
         shape = RectangleShape,
         color = Color.LightGray
     ) {
