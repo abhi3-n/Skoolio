@@ -1,19 +1,20 @@
 package com.project.skoolio.repositories
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.ClassInfo
-import com.project.skoolio.model.ClassInfoRequest
 import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.network.Backend
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class PendingApprovalsRepository @Inject constructor(private val backend: Backend) {
-    private val dataOrException: DataOrException<MutableList<Student>, Boolean, Exception> =
+    private val studentDataOrException: DataOrException<MutableList<Student>, Boolean, Exception> =
         DataOrException<MutableList<Student>, Boolean, Exception>(mutableListOf())
+
+    private val teacherDataOrException: DataOrException<MutableList<Teacher>, Boolean, Exception> =
+        DataOrException<MutableList<Teacher>, Boolean, Exception>(mutableListOf())
 
     suspend fun getPendingStudents(schoolId: Int): DataOrException<MutableList<Student>, Boolean, Exception> {
         val response =
@@ -21,11 +22,25 @@ class PendingApprovalsRepository @Inject constructor(private val backend: Backen
                 backend.getPendingStudents(schoolId.toString())
             }
             catch (e:Exception){
-                dataOrException.exception = e
-                return dataOrException
+                studentDataOrException.exception = e
+                return studentDataOrException
             }
-        dataOrException.data = response.toMutableList()
-        return dataOrException
+        studentDataOrException.data = response.toMutableList()
+        return studentDataOrException
+    }
+
+    suspend fun getPendingTeachers(schoolId: Int): DataOrException<MutableList<Teacher>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getPendingTeachers(schoolId.toString())
+            }
+            catch (e:Exception){
+                Log.d("Teacher pending", "${e.message}")
+                teacherDataOrException.exception = e
+                return teacherDataOrException
+            }
+        teacherDataOrException.data = response.toMutableList()
+        return teacherDataOrException
     }
 
     suspend fun getClassOptionsForStudent(admissionClass: String, schoolId: Int): MutableList<ClassInfo>? {
@@ -40,4 +55,6 @@ class PendingApprovalsRepository @Inject constructor(private val backend: Backen
             Log.d("Update class","Some error ${e.message()}")
         }
     }
+
+
 }

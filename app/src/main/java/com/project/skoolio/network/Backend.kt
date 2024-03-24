@@ -95,5 +95,8 @@ interface Backend {
         @Path("classId") classId: String,
     ):Unit
 
-
+    @GET("teachers/approvalPending/{schoolId}")
+    suspend fun getPendingTeachers(
+        @Path("schoolId") schoolId: String
+    ): List<Teacher>
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.repositories.PendingApprovalsRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -20,6 +21,13 @@ class PendingApprovalsViewModel @Inject constructor(private val pendingApprovals
             DataOrException(mutableListOf(), false, null)
         )
     val pendingStudentsList:State<DataOrException<MutableList<Student>, Boolean, Exception>> = _pendingStudentsList
+
+    private val _pendingTeachersList: MutableState<DataOrException<MutableList<Teacher>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<Teacher>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val pendingTeachersList:State<DataOrException<MutableList<Teacher>, Boolean, Exception>> = _pendingTeachersList
+
 
     fun getPendingStudents(schoolId: Int, context: Context): Unit {
         viewModelScope.launch {
@@ -56,6 +64,20 @@ class PendingApprovalsViewModel @Inject constructor(private val pendingApprovals
             _pendingStudentsList.value.data.removeIf {student:Student->
                 student.studentId == studentId
             }
+        }
+    }
+
+
+    fun getPendingTeachers(schoolId: Int, context: Context): Unit {
+        viewModelScope.launch {
+            _pendingTeachersList.value = pendingApprovalsRepository.getPendingTeachers(schoolId)
+            if(_pendingTeachersList.value.exception!=null){
+                Toast.makeText(context,"Some Error Occured while fetching the teachers list.", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(context,"Pending teachers list fetched successfully.", Toast.LENGTH_SHORT).show()
+            }
+//            getClassOptionsForEachStudent(schoolId, context)
         }
     }
 }

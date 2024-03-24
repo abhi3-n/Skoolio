@@ -46,6 +46,7 @@ import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.model.userDetailSingleton.adminDetails
 import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList
@@ -61,13 +62,7 @@ fun PendingApprovalsScreen(
     val pendingApprovalsViewModel = viewModelProvider.getPendingApprovalsViewModel()
     val context = LocalContext.current
     BackToHomeScreen(navController, "Admin",context)
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//    }
     PendingApprovalsContent(navController,pendingApprovalsViewModel)
-
 }
 
 @SuppressLint("NewApi")
@@ -143,25 +138,18 @@ fun PendingTeachersList(
     navController: NavHostController,
     pendingApprovalsViewModel: PendingApprovalsViewModel
 ) {
-    Text(text = "Teacher List")
-}
-
-@Composable
-fun PendingStudentsList(
-    navController: NavHostController,
-    pendingApprovalsViewModel: PendingApprovalsViewModel
-) {
     val context = LocalContext.current
-    pendingApprovalsViewModel.getPendingStudents(adminDetails.schoolId.value, context)
-    if(pendingApprovalsViewModel.pendingStudentsList.value.data.isNotEmpty()) {
+    pendingApprovalsViewModel.getPendingTeachers(adminDetails.schoolId.value, context)
+    if(pendingApprovalsViewModel.pendingTeachersList.value.data.isNotEmpty()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             LazyColumn {
-                items(pendingApprovalsViewModel.pendingStudentsList.value.data) { student: Student ->
-                    ListItem(pendingApprovalsViewModel, student)
+                items(pendingApprovalsViewModel.pendingTeachersList.value.data) { teacher: Teacher ->
+//                    ListItem(pendingApprovalsViewModel, teacher)
+                    Text(text = "${teacher.firstName}")
                 }
             }
         }
@@ -257,6 +245,33 @@ fun ListItem(pendingApprovalsViewModel: PendingApprovalsViewModel, student: Stud
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun PendingStudentsList(
+    navController: NavHostController,
+    pendingApprovalsViewModel: PendingApprovalsViewModel
+) {
+    val context = LocalContext.current
+    pendingApprovalsViewModel.getPendingStudents(adminDetails.schoolId.value, context)
+    if(pendingApprovalsViewModel.pendingStudentsList.value.data.isNotEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            LazyColumn {
+                items(pendingApprovalsViewModel.pendingStudentsList.value.data) { student: Student ->
+                    ListItem(pendingApprovalsViewModel, student)
+                }
+            }
+        }
+    }
+    else{
+        if(pendingApprovalsViewModel.pendingStudentsList.value.exception != null){
+            CircularProgressIndicatorCustom()
         }
     }
 }
