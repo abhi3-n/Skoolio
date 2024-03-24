@@ -99,4 +99,9 @@ interface Backend {
     suspend fun getPendingTeachers(
         @Path("schoolId") schoolId: String
     ): List<Teacher>
+
+    @PATCH("teacher/approve/{teacherId}")
+    suspend fun updateTeacherStatus(
+        @Path("teacherId") teacherId: String,
+        ):Unit
 }

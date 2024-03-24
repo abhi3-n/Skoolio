@@ -80,4 +80,18 @@ class PendingApprovalsViewModel @Inject constructor(private val pendingApprovals
 //            getClassOptionsForEachStudent(schoolId, context)
         }
     }
+
+    fun updateTeacherStatus(teacherId: String) {
+        viewModelScope.launch {
+            pendingApprovalsRepository.updateTeacherStatus(teacherId)
+        }
+    }
+
+    fun removeTeacherFromPendingList(teacherId: String) {
+        viewModelScope.launch{
+            _pendingTeachersList.value.data.removeIf {teacher:Teacher->
+                teacher.teacherId == teacherId
+            }
+        }
+    }
 }

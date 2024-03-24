@@ -56,5 +56,14 @@ class PendingApprovalsRepository @Inject constructor(private val backend: Backen
         }
     }
 
+    suspend fun updateTeacherStatus(teacherId: String) {
+        try {
+            backend.updateTeacherStatus(teacherId)
+        }
+        catch (e:HttpException){
+            Log.d("Update teacher status","Some error ${e.message()}")
+        }
+    }
+
 
 }

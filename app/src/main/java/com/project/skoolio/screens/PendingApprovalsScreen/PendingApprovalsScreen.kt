@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.components.CircularProgressIndicatorCustom
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
+import com.project.skoolio.components.ListItem
 import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.model.userDetailSingleton.adminDetails
 import com.project.skoolio.model.userType.Student
@@ -148,8 +149,9 @@ fun PendingTeachersList(
         ) {
             LazyColumn {
                 items(pendingApprovalsViewModel.pendingTeachersList.value.data) { teacher: Teacher ->
-//                    ListItem(pendingApprovalsViewModel, teacher)
-                    Text(text = "${teacher.firstName}")
+                    ListItem{
+                        PendingTeacherInfo(pendingApprovalsViewModel,teacher)
+                    }
                 }
             }
         }
@@ -162,88 +164,139 @@ fun PendingTeachersList(
 }
 
 @Composable
-fun ListItem(pendingApprovalsViewModel: PendingApprovalsViewModel, student: Student) {
-    Surface(
-        Modifier
-            .padding(3.dp)
-            .fillMaxWidth(),
-        shape = RectangleShape,
-        color = Color.LightGray
-    ) {
-        val showMoreInfo = rememberSaveable { mutableStateOf(false) }
-        val classSelected = rememberSaveable { mutableStateOf("") }
-        val context = LocalContext.current
-        Row(Modifier.padding(start = 5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween) {
-            Column(modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
-                .width(300.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center) {
-                Text(text = "Name: "+ capitalize(student.firstName)+" " + capitalize(student.lastName))
-                Text(text = "Registration Id: ${student.registrationId}")
+fun PendingTeacherInfo(pendingApprovalsViewModel: PendingApprovalsViewModel, teacher: Teacher) {
+    val showMoreInfo = rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    Row(Modifier.padding(start = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween) {
+        Column(modifier = Modifier
+            .padding(top = 5.dp, bottom = 5.dp)
+            .width(300.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center) {
+            Text(text = "Name: "+ capitalize(teacher.firstName)+" " + capitalize(teacher.lastName))
+            Text(text = "Registration Id: ${teacher.registrationId}")
 
-                if(showMoreInfo.value) {
-                    Text(text = "Address: "+ capitalize(student.addressDetails.addressLine)+", "+ capitalize(student.addressDetails.city)+", "+ capitalize(student.addressDetails.state)+".")
-                    Text(text = "Admission Class: ${student.studentSchoolDetails.admissionClass}")
-                    TextDropDownMenuRow(
-                        text = "Class Options",
-                        dataList = student.getStudentClassOptionsList(),
-                        valueSelected = classSelected,
-                        registrationScreenViewModel = null
-                    )
-                }
-                Row(modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
+            if(showMoreInfo.value) {
+                Text(text = "Address: "+ capitalize(teacher.addressDetails.addressLine)+", "+ capitalize(teacher.addressDetails.city)+", "+ capitalize(teacher.addressDetails.state)+".")
+            }
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                TextButton(onClick = {
+                    pendingApprovalsViewModel.updateTeacherStatus(teacher.teacherId)
+                    pendingApprovalsViewModel.removeTeacherFromPendingList(teacher.teacherId)
+                },
+                    colors = ButtonDefaults.textButtonColors(containerColor = Color.Green)
                 ) {
-                    TextButton(onClick = {
-                        if(classSelected.value.isEmpty()){
-                            Toast.makeText(context,"Please select grade and section for ${student.firstName}", Toast.LENGTH_SHORT).show()
-                        }
-                        else{
-                            val classId = student.getClassIdForClassSelected(classSelected.value)
-                            if(classId.isNotEmpty()) {
-                                pendingApprovalsViewModel.updateStudentClassId(
-                                    student.studentId,
-                                    classId
-                                )
-                                pendingApprovalsViewModel.removeStudentFromPendingList(student.studentId)
-                            }
-                            else{
-                                Toast.makeText(context,"Invalid Class", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    },
-                        colors = ButtonDefaults.textButtonColors(containerColor = Color.Green)
-                    ) {
-                        Text(text = "Approve", style = TextStyle(color = Color.Black))
-                    }
+                    Text(text = "Approve", style = TextStyle(color = Color.Black))
+                }
 //                    TextButton(onClick = {  },
 //                        colors = ButtonDefaults.textButtonColors(containerColor = Color.Red)
 //                    ) {
 //                        Text(text = "Decline", style = TextStyle(color = Color.Black))
 //                    }
-                }
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center) {
+            Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "Teacher Image",
+                modifier = Modifier.size(70.dp)
+            )
+            IconButton(onClick = {
+                showMoreInfo.value = !showMoreInfo.value
+            }) {
                 Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Student Image",
-                    modifier = Modifier.size(70.dp)
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "More Details",
+                    modifier = Modifier.size(20.dp)
                 )
-                IconButton(onClick = {
-                    showMoreInfo.value = !showMoreInfo.value
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowDropDown,
-                        contentDescription = "More Details",
-                        modifier = Modifier.size(20.dp)
-                    )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun PendingStudentInfo(pendingApprovalsViewModel: PendingApprovalsViewModel, student: Student) {
+    val showMoreInfo = rememberSaveable { mutableStateOf(false) }
+    val classSelected = rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
+    Row(Modifier.padding(start = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween) {
+        Column(modifier = Modifier
+            .padding(top = 5.dp, bottom = 5.dp)
+            .width(300.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center) {
+            Text(text = "Name: "+ capitalize(student.firstName)+" " + capitalize(student.lastName))
+            Text(text = "Registration Id: ${student.registrationId}")
+
+            if(showMoreInfo.value) {
+                Text(text = "Address: "+ capitalize(student.addressDetails.addressLine)+", "+ capitalize(student.addressDetails.city)+", "+ capitalize(student.addressDetails.state)+".")
+                Text(text = "Admission Class: ${student.studentSchoolDetails.admissionClass}")
+                TextDropDownMenuRow(
+                    text = "Class Options",
+                    dataList = student.getStudentClassOptionsList(),
+                    valueSelected = classSelected,
+                    registrationScreenViewModel = null
+                )
+            }
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                TextButton(onClick = {
+                    if(classSelected.value.isEmpty()){
+                        Toast.makeText(context,"Please select grade and section for ${student.firstName}", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        val classId = student.getClassIdForClassSelected(classSelected.value)
+                        if(classId.isNotEmpty()) {
+                            pendingApprovalsViewModel.updateStudentClassId(
+                                student.studentId,
+                                classId
+                            )
+                            pendingApprovalsViewModel.removeStudentFromPendingList(student.studentId)
+                        }
+                        else{
+                            Toast.makeText(context,"Invalid Class", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                    colors = ButtonDefaults.textButtonColors(containerColor = Color.Green)
+                ) {
+                    Text(text = "Approve", style = TextStyle(color = Color.Black))
                 }
+//                    TextButton(onClick = {  },
+//                        colors = ButtonDefaults.textButtonColors(containerColor = Color.Red)
+//                    ) {
+//                        Text(text = "Decline", style = TextStyle(color = Color.Black))
+//                    }
+            }
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center) {
+            Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "Student Image",
+                modifier = Modifier.size(70.dp)
+            )
+            IconButton(onClick = {
+                showMoreInfo.value = !showMoreInfo.value
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "More Details",
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }
@@ -264,7 +317,10 @@ fun PendingStudentsList(
         ) {
             LazyColumn {
                 items(pendingApprovalsViewModel.pendingStudentsList.value.data) { student: Student ->
-                    ListItem(pendingApprovalsViewModel, student)
+                    ListItem{
+                        PendingStudentInfo(pendingApprovalsViewModel, student)
+                    }
+
                 }
             }
         }
