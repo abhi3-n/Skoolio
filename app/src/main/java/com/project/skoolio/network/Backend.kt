@@ -128,9 +128,9 @@ interface Backend {
         @Path("schoolId") schoolId: String
     ): List<_Class>
 
-    @GET("classes/{teacherId}")
-    fun getClassListForTeacher(
-        @Path("teacherId") teacherId: String
+    @GET("classes/classTeacherId/{classTeacherId}")
+    suspend fun getClassListForTeacher(
+        @Path("classTeacherId") classTeacherId: String
     ): List<_Class>
 
     //attendance endpoints

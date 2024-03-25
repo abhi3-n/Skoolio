@@ -50,7 +50,7 @@ class AttendanceViewModel @Inject constructor(private val attendanceRepository: 
         viewModelScope.launch {
             _classList.value = attendanceRepository.getClassListForSchoolForTeacher(teacherId)
             if(_classList.value.exception != null){
-                Toast.makeText(context,"Some Error Occured while fetching the class list.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Some Error Occured while fetching the class list for teacher.", Toast.LENGTH_SHORT).show()
             }
             else{
 //                Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()

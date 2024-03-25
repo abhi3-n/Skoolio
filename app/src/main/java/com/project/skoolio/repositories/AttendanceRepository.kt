@@ -1,5 +1,6 @@
 package com.project.skoolio.repositories
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.project.skoolio.data.DataOrException
@@ -34,6 +35,7 @@ class AttendanceRepository @Inject constructor(private val backend: Backend): Vi
             }
             catch (e:Exception){
                 classList.exception = e
+                Log.d("Teacher Attendance","Repo - ${e.message}")
                 return classList
             }
         classList.data = response.toMutableList()
