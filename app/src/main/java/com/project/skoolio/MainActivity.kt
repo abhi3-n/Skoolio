@@ -38,5 +38,5 @@ class MainActivity : ComponentActivity() {
 fun SkoolioApp(){
     val viewModelProvider:ViewModelProvider = viewModel()
 
-        AppNavigation(viewModelProvider)
+    AppNavigation(viewModelProvider)
 }

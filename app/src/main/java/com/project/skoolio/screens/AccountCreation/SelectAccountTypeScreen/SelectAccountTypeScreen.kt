@@ -58,7 +58,7 @@ fun SelectAccountTypeScreen(
     img.value = when(selectedAccountType.value){
         "Student"->R.drawable.students
         "Teacher"->R.drawable.teacher
-        "Admin"->R.drawable.admin
+//        "Admin"->R.drawable.admin
         else-> 0
     }
 
@@ -76,6 +76,8 @@ fun SelectAccountTypeScreen(
             dataList =  UserType.types,
             registrationScreenViewModel = null
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(text = "Select City")
         Spacer(modifier = Modifier.height(20.dp))
         CustomDropDownMenu(
             selectedValue =  selectedSchoolCity,

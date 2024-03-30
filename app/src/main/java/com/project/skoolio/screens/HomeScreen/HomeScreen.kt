@@ -49,6 +49,7 @@ import com.project.skoolio.model.userDetailSingleton.studentDetails
 import com.project.skoolio.model.userDetailSingleton.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
+import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -160,8 +161,8 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreenMainContent(
-    paddingValues: PaddingValues = PaddingValues(),
-    userType: String? = "Student"
+    paddingValues: PaddingValues ,
+    userType: String?
 //    viewModelProvider: ViewModelProvider
 ) {
 
@@ -172,6 +173,9 @@ fun HomeScreenMainContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
         ProfileImageSurface()
+        if(userType!=null) {
+            Text(text = capitalize(userType))
+        }
         Spacer(modifier = Modifier.height(8.dp))
             if(userType == "Student"){
                 StudentProfilePage()

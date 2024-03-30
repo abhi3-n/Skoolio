@@ -736,7 +736,8 @@ fun RulesDialog(rulesList: List<String>, rulesAccepted: MutableState<Boolean>) {
 @Composable
 fun AppLogoText() {
     Text(
-        text = "Innocent Heart Playway School",
+//        text = "Innocent Heart Playway School",
+        text = "Skoolio",
         Modifier
             .padding(16.dp)
             .fillMaxWidth()

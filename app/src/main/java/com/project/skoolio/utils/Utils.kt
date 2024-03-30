@@ -178,7 +178,10 @@ object CityList{
 
 
 object UserType{
-    var types = listOf("Student", "Teacher", "Admin")
+    var types = listOf("Student",
+        "Teacher",
+        "Admin"
+    )
 }
 
 

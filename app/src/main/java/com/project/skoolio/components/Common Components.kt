@@ -100,14 +100,6 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
         )
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
-            label = { Text(text = "School Information") },
-            selected = false,
-            onClick = {
-                navController.navigate(AppScreens.SchoolInformationScreen.name)
-            }
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        NavigationDrawerItem(
             label = { Text(text = "Pending Approvals") },
             selected = false,
             onClick = {
@@ -116,18 +108,27 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
         )
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
-            label = { Text(text = "Issue Reporting") },
-            selected = false,
-            onClick = {
-                navController.navigate(AppScreens.IssueReportingScreen.name + "/Admin")
-            }
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        NavigationDrawerItem(
             label = { Text(text = "Take Attendance") },
             selected = false,
             onClick = {
                 navController.navigate(AppScreens.TakeAttendanceScreen.name + "/Admin")
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "School Information") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.SchoolInformationScreen.name)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Issue Reporting") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.IssueReportingScreen.name + "/Admin")
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
