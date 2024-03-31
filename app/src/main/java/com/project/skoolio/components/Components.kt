@@ -62,9 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.EmailOtpRequest
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
-import com.project.skoolio.model.userDetailSingleton.userDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
+import com.project.skoolio.model.singletonObject.userDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.validDetails
 import com.project.skoolio.utils.BackToLoginScreen
@@ -401,7 +401,7 @@ fun SaveButton(
 fun CircularProgressIndicatorCustom() {
     CircularProgressIndicator(
         modifier = Modifier.size(20.dp),
-        color = Color.White,
+        color = Color.Black,
         strokeWidth = 2.dp
     )
 }
@@ -761,7 +761,7 @@ fun UserLoginForm(
 //    val email = loginViewModel.email
 //    val password = loginViewModel.password
     val email = rememberSaveable { mutableStateOf("anjumannarang17@gmail.com") }
-    val password = rememberSaveable { mutableStateOf("abc") }
+    val password = rememberSaveable { mutableStateOf("123") }
     val passwordVisibility = rememberSaveable { mutableStateOf(false) }
     val keyBoardController = LocalSoftwareKeyboardController.current
     val valid = rememberSaveable(email.value, password.value) {

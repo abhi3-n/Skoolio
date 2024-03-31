@@ -61,7 +61,7 @@ fun BackToHomeScreen(navController: NavHostController, userType: String?, contex
 }
 
 
-fun convertEpochToDateString(epoch: Long?): String? {
+fun convertEpochToDateString(epoch: Long?): String? { // here value of epoch is expected to be in milli seconds
     val dateFormat = SimpleDateFormat("dd/MM/yyyy")
     val date = epoch?.let { Date(it) }
     return date?.let { dateFormat.format(it) }
@@ -236,7 +236,7 @@ fun getUserDrawerItemsList(userType: String?, navController: NavHostController):
 }
 
 
-val loginUserType = mutableStateOf("Teacher")
+val loginUserType = mutableStateOf("Admin")
 
 
 @RequiresApi(Build.VERSION_CODES.O)

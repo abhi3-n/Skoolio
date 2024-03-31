@@ -7,21 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -40,20 +33,16 @@ import com.project.skoolio.components.GuardianDetails
 import com.project.skoolio.components.ProfileAddressDetails
 import com.project.skoolio.components.ProfileBasicDetails
 import com.project.skoolio.components.ProfileContactDetails
-import com.project.skoolio.components.ProfileImageSurface
+import com.project.skoolio.components.ImageSurface
 import com.project.skoolio.components.ProfileSchoolDetails
-import com.project.skoolio.components.SideDrawerTitle
-import com.project.skoolio.components.SkoolioAppBar
-import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
-import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.ViewModelProvider
-import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -95,68 +84,6 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
         }
     )
 }
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//fun MainScaffold(
-//    navController: NavHostController,
-//    userType: String? ,
-////    viewModelProvider: ViewModelProvider
-//) {
-//    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-//    val scope = rememberCoroutineScope()
-//    ModalNavigationDrawer(
-//        gesturesEnabled = true,
-//        drawerState = drawerState,
-//        drawerContent = {
-//            ModalDrawerSheet(
-//                modifier = Modifier
-//                    .width(300.dp)    // or your desired width
-//                    .fillMaxHeight(),
-//            ) {
-//                ProfileImageSurface(
-//                    Modifier
-//                        .padding(4.dp)
-//                        .height(50.dp)
-//                        .width(50.dp))
-//                SideDrawerTitle(userType)
-//                HorizontalDivider()
-//                Spacer(modifier = Modifier.height(2.dp))
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Profile Page") },
-//                    selected = true,
-//                    onClick = {
-//                        navController.navigate(AppScreens.HomeScreen.name+"/$userType")
-//                    }
-//                )
-//            }
-//        }
-//    ) {
-//        Scaffold(
-//            topBar = {
-//                SkoolioAppBar("Profile",
-//                    navController= navController,
-//                    elevation = 5.dp,
-//                    icon = Icons.Filled.AccountCircle,
-//                    sideDrawerToggle = {
-//                        scope.launch {
-//                            drawerState.apply {
-//                                if (isClosed) open() else close()
-//                            }
-//                        }
-//                    }
-//                )
-//            },
-//        ){
-//            HomeScreenMainContent(it, userType,
-////            viewModelProvider
-//            )
-//        }
-//    }
-//
-//}
-//
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -172,7 +99,7 @@ fun HomeScreenMainContent(
         .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
-        ProfileImageSurface()
+        ImageSurface()
         if(userType!=null) {
             Text(text = capitalize(userType))
         }
@@ -193,7 +120,7 @@ fun HomeScreenMainContent(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StudentProfilePage() {
-    DetailSection(@Composable {
+    DetailSection(details = @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
         ProfileBasicDetails(
@@ -242,7 +169,7 @@ fun StudentProfilePage() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TeacherProfilePage() {
-    DetailSection(@Composable {
+    DetailSection(details =  @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
         ProfileBasicDetails(
@@ -281,7 +208,7 @@ fun TeacherProfilePage() {
 @SuppressLint("NewApi")
 @Composable
 fun AdminProfilePage() {
-    DetailSection(@Composable {
+    DetailSection(details =  @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
         ProfileBasicDetails(

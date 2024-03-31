@@ -19,6 +19,7 @@ import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
 import com.project.skoolio.screens.SettingsScreen.SettingsScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.screens.TakeAttendanceScreen.TakeAttendanceScreen
+import com.project.skoolio.screens.TestScreen.TestScreen
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @SuppressLint("NewApi")
@@ -91,6 +92,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
             navBack.arguments?.getString("userType").let { userType ->
                 ClassStudentsAttendanceScreen(navController, viewModelProvider, userType)
             }
+        }
+        composable(AppScreens.TestScreen.name){
+            TestScreen()
         }
     }
 }

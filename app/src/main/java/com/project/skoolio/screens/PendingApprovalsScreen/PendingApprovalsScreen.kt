@@ -22,7 +22,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
@@ -34,7 +33,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -45,7 +43,7 @@ import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
 import com.project.skoolio.components.TextDropDownMenuRow
-import com.project.skoolio.model.userDetailSingleton.adminDetails
+import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.BackToHomeScreen
@@ -155,7 +153,7 @@ fun PendingTeachersList(
         }
     }
     else{
-        if(pendingApprovalsViewModel.pendingStudentsList.value.exception != null){
+        if(pendingApprovalsViewModel.pendingStudentsList.value.exception == null){
             CircularProgressIndicatorCustom()
         }
     }
@@ -322,7 +320,7 @@ fun PendingStudentsList(
         }
     }
     else{
-        if(pendingApprovalsViewModel.pendingStudentsList.value.exception != null){
+        if(pendingApprovalsViewModel.pendingStudentsList.value.exception == null){
             CircularProgressIndicatorCustom()
         }
     }

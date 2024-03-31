@@ -42,7 +42,7 @@ fun CommonModalNavigationDrawer(drawerState:DrawerState,
                     .width(300.dp)
                     .fillMaxHeight(),
             ) {
-                ProfileImageSurface(
+                ImageSurface(
                     Modifier
                         .padding(4.dp)
                         .height(50.dp)

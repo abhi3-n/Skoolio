@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.MoreVert
@@ -53,9 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.R
-import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.calculateAge
 
@@ -250,7 +249,7 @@ fun GuardianDetails(
 }
 
 @Composable
-fun DetailSection(details: @Composable () -> Unit) {
+fun DetailSection(endSpacing:Dp = 8.dp,details: @Composable () -> Unit) {
     Surface(
         modifier = Modifier
             .padding(4.dp)
@@ -264,7 +263,7 @@ fun DetailSection(details: @Composable () -> Unit) {
             details.invoke()
         }
     }
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(endSpacing))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -309,7 +308,7 @@ fun DetailRow(field: String,
 
 
 @Composable
-fun ProfileImageSurface(
+fun ImageSurface(
     modifier:Modifier = Modifier
         .padding(4.dp)
         .height(100.dp)

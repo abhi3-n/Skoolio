@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.CustomButton
 import com.project.skoolio.components.TextCustomTextField
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable

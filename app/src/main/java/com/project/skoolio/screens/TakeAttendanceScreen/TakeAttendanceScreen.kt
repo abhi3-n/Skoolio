@@ -26,8 +26,8 @@ import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
 import com.project.skoolio.model._Class
-import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList

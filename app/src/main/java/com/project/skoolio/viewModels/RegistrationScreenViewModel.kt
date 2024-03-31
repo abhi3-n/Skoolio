@@ -10,9 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.RegisterResponse
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
-import com.project.skoolio.model.userDetailSingleton.userDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
+import com.project.skoolio.model.singletonObject.userDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.RegistrationScreenRepository
@@ -36,38 +36,6 @@ class RegistrationScreenViewModel @Inject constructor(
     var selectedSchoolCity:MutableState<String> = mutableStateOf("")
 
     val isClassIdAndNameListReady:MutableState<Boolean> = mutableStateOf(false)
-
-//    fun registerStudent(onRegisterFailure: (Context) -> Unit, context: Context):Unit{
-//        viewModelScope.launch {
-//            _registrationResponse.value.loading = true
-//            _registrationResponse.value = registrationScreenRepository.registerStudent(registerStudent.getStudent())
-//            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
-//                //registration has succeeded
-//                _registrationResponse.value.loading = false
-//            }
-//            else if(_registrationResponse.value.exception!=null){
-//                //registration has not succeeded
-//                _registrationResponse.value.loading = false
-//                onRegisterFailure(context)
-//            }
-//        }
-//    }
-//
-//    fun registerTeacher(onRegisterFailure: (Context) -> Unit, context: Context) {
-//        viewModelScope.launch {
-//            _registrationResponse.value.loading = true
-//            _registrationResponse.value = registrationScreenRepository.registerTeacher(registerTeacher.getTeacher())
-//            if(_registrationResponse.value.data.applicationId.isNotEmpty() == true){
-//                //registration has succeeded
-//                _registrationResponse.value.loading = false
-//            }
-//            else if(_registrationResponse.value.exception!=null){
-//                //registration has not succeeded
-//                _registrationResponse.value.loading = false
-//                onRegisterFailure(context)
-//            }
-//        }
-//    }
 
     fun getCitySchools(
         context: Context,

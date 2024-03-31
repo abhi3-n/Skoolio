@@ -13,8 +13,8 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model._Class
-import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.repositories.AttendanceRepository
 import com.project.skoolio.utils.classAttendance

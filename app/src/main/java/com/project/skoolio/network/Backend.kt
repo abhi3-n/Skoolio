@@ -13,6 +13,7 @@ import com.project.skoolio.model.login.LoginRequest
 import com.project.skoolio.model.login.SchoolName
 import com.project.skoolio.model.login.StudentLoginResponse
 import com.project.skoolio.model.login.TeacherLoginResponse
+import com.project.skoolio.model.school.School
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
@@ -95,6 +96,10 @@ interface Backend {
         @Path("schoolId") schoolId: String
     ): SchoolName
 
+    @GET("school/{schoolId}")
+    suspend fun getSchoolInformation(
+        @Path("schoolId") schoolId: String
+    ): School
 
 
 //    @GET("student/detail")
@@ -138,4 +143,5 @@ interface Backend {
     suspend fun submitAttendance(
         @Body list: List<Attendance>
     ):Unit
+
 }

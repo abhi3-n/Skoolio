@@ -1,7 +1,6 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -15,9 +14,9 @@ import com.project.skoolio.model.login.LoginRequest
 import com.project.skoolio.model.login.LoginResponse
 import com.project.skoolio.model.login.StudentLoginResponse
 import com.project.skoolio.model.login.TeacherLoginResponse
-import com.project.skoolio.model.userDetailSingleton.adminDetails
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.utils.capitalize

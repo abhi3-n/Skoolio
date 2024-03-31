@@ -1,4 +1,4 @@
-package com.project.skoolio.model.userDetailSingleton
+package com.project.skoolio.model.singletonObject
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api

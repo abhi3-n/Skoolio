@@ -6,12 +6,14 @@ import com.project.skoolio.repositories.BackendRepository
 import com.project.skoolio.repositories.OtpValidationRepository
 import com.project.skoolio.repositories.PendingApprovalsRepository
 import com.project.skoolio.repositories.RegistrationScreenRepository
+import com.project.skoolio.repositories.SchoolInformationRepository
 import com.project.skoolio.utils.Constants
 import com.project.skoolio.viewModels.AttendanceViewModel
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.PendingApprovalsViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
+import com.project.skoolio.viewModels.SchoolInformationViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +52,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAttendanceRepository(backend: Backend) = AttendanceRepository(backend)
+    @Provides
+    @Singleton
+    fun provideSchoolInformationRepository(backend: Backend) = SchoolInformationRepository(backend)
 
 
     //ViewModels
@@ -72,4 +77,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAttendanceViewModel(attendanceRepository: AttendanceRepository): AttendanceViewModel = AttendanceViewModel(attendanceRepository)
+
+    @Provides
+    @Singleton
+    fun provideSchoolInformationViewModel(schoolInformationRepository: SchoolInformationRepository): SchoolInformationViewModel = SchoolInformationViewModel(schoolInformationRepository)
 }

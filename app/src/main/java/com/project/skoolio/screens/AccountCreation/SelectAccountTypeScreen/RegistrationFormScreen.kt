@@ -35,9 +35,9 @@ import com.project.skoolio.components.RulesDialog
 import com.project.skoolio.components.SaveButton
 import com.project.skoolio.components.SchoolDetails
 import com.project.skoolio.components.ShowToast
-import com.project.skoolio.model.userDetailSingleton.studentDetails
-import com.project.skoolio.model.userDetailSingleton.teacherDetails
-import com.project.skoolio.model.userDetailSingleton.userDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
+import com.project.skoolio.model.singletonObject.userDetails
 import com.project.skoolio.utils.StudentRules
 import com.project.skoolio.utils.TeacherRules
 import com.project.skoolio.viewModels.ViewModelProvider
