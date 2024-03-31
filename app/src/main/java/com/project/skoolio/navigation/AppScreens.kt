@@ -21,6 +21,9 @@ enum class AppScreens{
     //Only Accessible to Admins
     SchoolInformationScreen,
     PendingApprovalsScreen,
+    AdminListScreen,
+    TeacherListScreen,
+    ClassListScreen,
 
 
     //test

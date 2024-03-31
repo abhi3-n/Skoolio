@@ -1,6 +1,7 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.school.School
 import com.project.skoolio.model.singletonObject.schoolDetails
+import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.repositories.SchoolInformationRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,13 +35,33 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
             else{
                 schoolDetails.populateSchoolDetails(_schoolInfo.value.data)
                 _schoolInfo.value.loading = false
-                Toast.makeText(context,"School Information fetched successfully.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context,"School Information fetched successfully.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     fun resetSchoolInfo() {
         _schoolInfo.value.data.resetStudent()
+    }
+
+
+    private val _adminList: MutableState<DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val adminList:State<DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception>> = _adminList
+
+    fun getAdminListForSchool(schoolId: Int, context: Context) {
+        viewModelScope.launch {
+            _adminList.value = schoolInformationRepository.getAdminListForSchool(schoolId)
+            if(_adminList.value.exception != null){
+                Toast.makeText(context,"Some Error Occured while fetching the admin list - ${_adminList.value.exception}.", Toast.LENGTH_SHORT).show()
+                Log.d("admin list","Error - ${adminList.value.exception}")
+            }
+            else{
+                Toast.makeText(context,"Admin list fetched successfully.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }

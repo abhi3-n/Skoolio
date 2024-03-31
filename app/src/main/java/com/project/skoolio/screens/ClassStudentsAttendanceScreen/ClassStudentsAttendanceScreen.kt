@@ -173,7 +173,7 @@ fun StudentRow(studentInfo: StudentInfo, classId: String) {
                     Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Retake attendance for student")
                 }
             }
-            Text(modifier = Modifier.align(Alignment.End)
+            Text(modifier = Modifier.align(Alignment.End).padding(end = 20.dp)
                 ,text = valueSelected.value, style = TextStyle(
                 color = when(valueSelected.value){
                     "Present"-> Color.Green

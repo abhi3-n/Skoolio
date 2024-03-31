@@ -14,6 +14,7 @@ import com.project.skoolio.model.login.SchoolName
 import com.project.skoolio.model.login.StudentLoginResponse
 import com.project.skoolio.model.login.TeacherLoginResponse
 import com.project.skoolio.model.school.School
+import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
@@ -114,6 +115,10 @@ interface Backend {
         @Body loginRequest: LoginRequest
     ): AdminLoginResponse
 
+    @GET("admins/{schoolId}")
+    suspend fun getAdminListForSchool(
+        @Path("schoolId") schoolId: String
+    ): List<SchoolAdministrator>
 
 
     //class service endpoints
@@ -143,5 +148,6 @@ interface Backend {
     suspend fun submitAttendance(
         @Body list: List<Attendance>
     ):Unit
+
 
 }

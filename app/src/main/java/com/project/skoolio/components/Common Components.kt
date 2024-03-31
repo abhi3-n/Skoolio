@@ -1,5 +1,6 @@
 package com.project.skoolio.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -20,8 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.project.skoolio.navigation.AppScreens
 import kotlinx.coroutines.CoroutineScope
@@ -202,7 +206,7 @@ fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit
 
 
 @Composable
-fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}) {
+fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}, shape:Shape = CircleShape) {
     Surface(
         Modifier
             .padding(3.dp)
@@ -210,8 +214,9 @@ fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}) {
             .clickable {
                        onClick.invoke()
             },
-        shape = RectangleShape,
-        color = Color.LightGray
+        shape = shape,
+        border = BorderStroke(width = 2.dp, color = Color.Black),
+        color = Color(0xFFE6EEFF)
     ) {
         itemInfo.invoke()
     }
