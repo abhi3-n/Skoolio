@@ -104,7 +104,7 @@ fun TakeAttendanceScreenMainContent(
                     val onClick:()->Unit = {
                         attendanceViewModel.getClassStudents(_class, context, navController)
                     }
-                    ListItem(itemInfo = { ClassItem(_class,navController,attendanceViewModel, onClick) },
+                    ListItem(itemInfo = { ClassItem(_class, onClick) },
                         onClick = onClick)
                 }
             }
@@ -115,8 +115,6 @@ fun TakeAttendanceScreenMainContent(
 @Composable
 fun ClassItem(
     _class: _Class,
-    navController: NavHostController,
-    attendanceViewModel: AttendanceViewModel,
     onClick: () -> Unit
 ) {
     Row(horizontalArrangement = Arrangement.Center,

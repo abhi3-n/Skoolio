@@ -36,7 +36,7 @@ class AttendanceViewModel @Inject constructor(private val attendanceRepository: 
     val selectedClass:MutableState<_Class> = mutableStateOf(_Class("","","","", 0,))
     fun getClassListForSchoolForAdmin(schoolId: Int, context: Context) {
         viewModelScope.launch {
-            _classList.value = attendanceRepository.getClassListForSchoolForAdmin(schoolId)
+            _classList.value = attendanceRepository.getClassListForSchoolAdmin(schoolId)
             if(_classList.value.exception != null){
                 Toast.makeText(context,"Some Error Occured while fetching the class list - ${_classList.value.exception}.", Toast.LENGTH_SHORT).show()
             }

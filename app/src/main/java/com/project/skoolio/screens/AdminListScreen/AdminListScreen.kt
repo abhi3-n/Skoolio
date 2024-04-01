@@ -65,7 +65,6 @@ fun AdminListScreenContent(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     CommonModalNavigationDrawer(drawerState,"Admin", getUserDrawerItemsList("Admin", navController),
         scaffold = {
             CommonScaffold(
@@ -80,7 +79,6 @@ fun AdminListScreenContent(
             )
         }
     )
-
 }
 
 @Composable

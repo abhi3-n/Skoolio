@@ -76,7 +76,7 @@ object studentDetails:userDetails {
     @OptIn(ExperimentalMaterial3Api::class)
     fun getStudent(): Student {
         return Student(
-            studentId = "",firstName.value, middleName.value, lastName.value, dobState?.selectedDateMillis!!,
+            studentId = "",firstName.value, middleName.value, lastName.value, (dobState?.selectedDateMillis!!)/1000,
             gender = if(gender.value == "Male") 'm' else 'f', nationality.value, email.value, password.value,
             addressDetails = AddressDetails(addressLine.value, city.value, state.value),
             studentSchoolDetails = StudentSchoolDetails(SchoolList.getSchoolIdForSchoolName(schoolName.value),classId = classId.value , admissionClass = className.value, null),  //TODO:className to be replaced with classId later.

@@ -9,17 +9,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model._Class
 import com.project.skoolio.model.school.School
 import com.project.skoolio.model.singletonObject.schoolDetails
 import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userType.SchoolAdministrator
+import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.repositories.SchoolInformationRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SchoolInformationViewModel @Inject constructor(private val schoolInformationRepository: SchoolInformationRepository) : ViewModel() {
-
+    private val selectedClass:MutableState<String> = mutableStateOf("")
     private val _schoolInfo: MutableState<DataOrException<School, Boolean, Exception>> =
         mutableStateOf<DataOrException<School, Boolean, Exception>>(
             DataOrException(School(), false, null)
@@ -65,7 +67,6 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
         }
     }
 
-
     private val _teacherList: MutableState<DataOrException<MutableList<Teacher>, Boolean, Exception>> =
         mutableStateOf<DataOrException<MutableList<Teacher>, Boolean, Exception>>(
             DataOrException(mutableListOf(), false, null)
@@ -83,4 +84,44 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
         }
     }
 
+    private val _classList: MutableState<DataOrException<MutableList<_Class>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<_Class>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val classList:State<DataOrException<MutableList<_Class>, Boolean, Exception>> = _classList
+    fun getClassListForSchool(schoolId: Int, context: Context) {
+        viewModelScope.launch {
+            _classList.value = schoolInformationRepository.getClassListForSchool(schoolId)
+            if(_classList.value.exception != null){
+                Toast.makeText(context,"Some Error Occured while fetching the class list - ${_classList.value.exception}.", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private val _studentList: MutableState<DataOrException<MutableList<Student>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<Student>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val studentList:State<DataOrException<MutableList<Student>, Boolean, Exception>> = _studentList
+    fun getStudentsListForClass(classId: String, context: Context) {
+        viewModelScope.launch {
+            _studentList.value = schoolInformationRepository.getStudentsListForClass(classId)
+            if(_studentList.value.exception != null){
+                Toast.makeText(context,"Some Error Occured while fetching the student list - ${_studentList.value.exception}.", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(context,"Student list fetched successfully.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun setSelectedClass(className:String){
+        selectedClass.value = className
+    }
+    fun getSelectedClass():String{
+        return selectedClass.value
+    }
 }

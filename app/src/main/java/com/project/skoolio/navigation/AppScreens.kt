@@ -24,6 +24,7 @@ enum class AppScreens{
     AdminListScreen,
     TeacherListScreen,
     ClassListScreen,
+    ClassStudentsListScreen,
     FullInfoScreen,
 
 

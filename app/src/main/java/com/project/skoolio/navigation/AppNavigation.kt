@@ -12,6 +12,7 @@ import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.Selec
 import com.project.skoolio.screens.AdminListScreen.AdminListScreen
 import com.project.skoolio.screens.ClassListScreen.ClassListScreen
 import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAttendanceScreen
+import com.project.skoolio.screens.ClassStudentsListScreen.ClassStudentsListScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
@@ -105,6 +106,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.ClassListScreen.name){
             ClassListScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.ClassStudentsListScreen.name){
+            ClassStudentsListScreen(navController, viewModelProvider)
         }
         composable(AppScreens.FullInfoScreen.name+"/{userType}",
             arguments = listOf(navArgument("userType"){

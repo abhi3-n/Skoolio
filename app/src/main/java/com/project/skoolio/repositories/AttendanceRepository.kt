@@ -15,10 +15,10 @@ class AttendanceRepository @Inject constructor(private val backend: Backend): Vi
         DataOrException<MutableList<_Class>, Boolean, Exception>(mutableListOf())
     private val studentsList: DataOrException<MutableList<StudentInfo>, Boolean, Exception> =
         DataOrException<MutableList<StudentInfo>, Boolean, Exception>(mutableListOf())
-    suspend fun getClassListForSchoolForAdmin(schoolId: Int): DataOrException<MutableList<_Class>, Boolean, Exception> {
+    suspend fun getClassListForSchoolAdmin(schoolId: Int): DataOrException<MutableList<_Class>, Boolean, Exception> {
         val response =
             try {
-                backend.getClassListAdmin(schoolId.toString())
+                backend.getClassListForSchoolAdmin(schoolId.toString())
             }
             catch (e:Exception){
                 classList.exception = e

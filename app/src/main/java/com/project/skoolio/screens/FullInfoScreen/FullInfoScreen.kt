@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,4 +76,5 @@ fun FullInfoScreenMainContent(
     userType: String?
 ) {
     HomeScreenMainContent(paddingValues = paddingValues, userType = userType)
+    Text(text = "Hi")
 }

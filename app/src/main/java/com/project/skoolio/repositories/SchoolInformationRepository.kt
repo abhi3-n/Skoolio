@@ -3,7 +3,6 @@ package com.project.skoolio.repositories
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.school.School
-import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
@@ -58,5 +57,31 @@ class SchoolInformationRepository @Inject constructor(private val backend: Backe
             }
         _teacherList.data = response.toMutableList()
         return _teacherList
+    }
+
+    suspend fun getClassListForSchool(schoolId: Int): DataOrException<MutableList<_Class>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getClassListForSchoolAdmin(schoolId.toString())
+            }
+            catch (e:Exception){
+                _classList.exception = e
+                return _classList
+            }
+        _classList.data = response.toMutableList()
+        return _classList
+    }
+
+    suspend fun getStudentsListForClass(classId: String): DataOrException<MutableList<Student>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getStudentsListForClass(classId)
+            }
+            catch (e:Exception){
+                _studentList.exception = e
+                return _studentList
+            }
+        _studentList.data = response.toMutableList()
+        return _studentList
     }
 }

@@ -19,7 +19,6 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -55,10 +54,18 @@ interface Backend {
         @Path("classId") classId: String,
     ):Unit
 
-    @GET("students/{classId}")
+    //Used for taking attendance, requires minimal info of each student
+    @GET("students/info/{classId}")
     suspend fun getClassStudents(
         @Path("classId") classId: String
     ): List<StudentInfo>
+
+    //Used for School Information
+    @GET("students/{classId}")
+    suspend fun getStudentsListForClass(
+        @Path("classId") classId: String
+    ): List<Student>
+
 
 
     //teacher service api endpoints
@@ -140,7 +147,7 @@ interface Backend {
     ): List<ClassInfo>?
 
     @GET("classes/{schoolId}")
-    suspend fun getClassListAdmin(
+    suspend fun getClassListForSchoolAdmin(
         @Path("schoolId") schoolId: String
     ): List<_Class>
 
@@ -154,7 +161,5 @@ interface Backend {
     suspend fun submitAttendance(
         @Body list: List<Attendance>
     ):Unit
-
-
 
 }

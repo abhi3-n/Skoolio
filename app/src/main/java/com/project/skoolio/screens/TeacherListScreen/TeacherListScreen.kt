@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,10 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -25,15 +20,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.CommonModalNavigationDrawer
@@ -100,44 +91,55 @@ fun TeacherListScreenMainContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top) {
         if(schoolInformationViewModel.teacherList.value.data.isNotEmpty()){
+            Text(text = "Teacher Count - ${schoolInformationViewModel.teacherList.value.data.size}")
             LazyColumn {
                 items(schoolInformationViewModel.teacherList.value.data){teacher: Teacher ->
                     val onClick = {
                         teacherDetails.populateTeacherDetails(teacher)
                         navController.navigate(AppScreens.FullInfoScreen.name + "/Teacher")
                     }
-                    ListItem(shape = RectangleShape,
-                        itemInfo = {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center) {
-                                Image(
-                                    imageVector = Icons.Filled.AccountCircle,
-                                    contentDescription = "${teacher.firstName}'s Image",
-                                    modifier = Modifier
-                                        .size(90.dp)
-                                        .padding(4.dp)
-                                )
-                                Text(text =  formatName(teacher.firstName, teacher.middleName, teacher.lastName))
-                                IconButton(modifier = Modifier.align(Alignment.End),
-                                    onClick = {
-                                        onClick.invoke()
-                                    }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Info,
-                                        contentDescription = "Info Page",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                            }
-                        },
-                        onClick = {
-                            onClick.invoke()
-                        }
-                    )
+                    InfoTile(teacher.firstName, teacher.middleName, teacher.lastName, onClick)
                 }
             }
         }
     }
+}
 
+@Composable
+fun InfoTile(
+    firstName:String,
+    middleName: String,
+    lastName: String,
+    onClick: () -> Unit
+) {
+    ListItem(shape = RectangleShape,
+        itemInfo = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = "${firstName}'s Image",
+                    modifier = Modifier
+                        .size(90.dp)
+                        .padding(4.dp)
+                )
+                Text(text = formatName(firstName, middleName, lastName))
+                IconButton(modifier = Modifier.align(Alignment.End),
+                    onClick = {
+                        onClick.invoke()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = "Info Page",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        },
+        onClick = {
+            onClick.invoke()
+        }
+    )
 }

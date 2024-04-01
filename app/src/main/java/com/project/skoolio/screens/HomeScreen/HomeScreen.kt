@@ -104,7 +104,7 @@ fun HomeScreenMainContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
             if(userType == "Student"){
-                StudentProfilePage()
+                StudentProfilePage(userType)
             }
             else if(userType == "Teacher"){
                 TeacherProfilePage(userType)
@@ -118,7 +118,7 @@ fun HomeScreenMainContent(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun StudentProfilePage() {
+fun StudentProfilePage(userType: String) {
     DetailSection(details = @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
