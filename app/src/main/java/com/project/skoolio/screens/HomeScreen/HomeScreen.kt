@@ -92,7 +92,6 @@ fun HomeScreenMainContent(
     userType: String?
 //    viewModelProvider: ViewModelProvider
 ) {
-
     Column(modifier = Modifier
         .padding(paddingValues)
         .fillMaxSize()
@@ -108,7 +107,7 @@ fun HomeScreenMainContent(
                 StudentProfilePage()
             }
             else if(userType == "Teacher"){
-                TeacherProfilePage()
+                TeacherProfilePage(userType)
             }
             else{
                 AdminProfilePage()
@@ -168,7 +167,7 @@ fun StudentProfilePage() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TeacherProfilePage() {
+fun TeacherProfilePage(userType: String) {
     DetailSection(details =  @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
@@ -182,12 +181,16 @@ fun TeacherProfilePage() {
         )
     }
     )
-    DetailSection {
-        FormTitle(formTitle = "School Details")
-        Spacer(modifier = Modifier.height(4.dp))
-        ProfileSchoolDetails(teacherDetails.teacherId.value,
-            teacherDetails.employingSchoolName.value,
-            null)
+    if(userType == loginUserType.value) {
+        DetailSection {
+            FormTitle(formTitle = "School Details")
+            Spacer(modifier = Modifier.height(4.dp))
+            ProfileSchoolDetails(
+                teacherDetails.teacherId.value,
+                teacherDetails.employingSchoolName.value,
+                null
+            )
+        }
     }
     DetailSection {
         FormTitle(formTitle = "Address Details")

@@ -66,10 +66,8 @@ fun TeacherListScreenContent(
     schoolInformationViewModel: SchoolInformationViewModel,
     context: Context
 ) {
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     CommonModalNavigationDrawer(drawerState,"Admin", getUserDrawerItemsList("Admin", navController),
         scaffold = {
             CommonScaffold(
@@ -84,7 +82,6 @@ fun TeacherListScreenContent(
             )
         }
     )
-
 }
 
 @Composable
