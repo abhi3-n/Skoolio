@@ -1,31 +1,37 @@
 package com.project.skoolio.repositories
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.school.School
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userType.SchoolAdministrator
+import com.project.skoolio.model.userType.Student
+import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.network.Backend
 import javax.inject.Inject
 
 class SchoolInformationRepository @Inject constructor(private val backend: Backend) {
-    private val schoolInfo: DataOrException<School, Boolean, Exception> =
+    private val _schoolInfo: DataOrException<School, Boolean, Exception> =
         DataOrException<School, Boolean, Exception>(School())
-    private val adminList: DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception> =
+    private val _adminList: DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception> =
         DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception>(mutableListOf())
+    private val _teacherList: DataOrException<MutableList<Teacher>, Boolean, Exception> =
+        DataOrException<MutableList<Teacher>, Boolean, Exception>(mutableListOf())
+    private val _studentList: DataOrException<MutableList<Student>, Boolean, Exception> =
+        DataOrException<MutableList<Student>, Boolean, Exception>(mutableListOf())
+    private val _classList: DataOrException<MutableList<_Class>, Boolean, Exception> =
+        DataOrException<MutableList<_Class>, Boolean, Exception>(mutableListOf())
     suspend fun getSchoolInformation(schoolId: Int): DataOrException<School, Boolean, Exception> {
         val response =
             try {
                 backend.getSchoolInformation(schoolId.toString())
             }
             catch (e:Exception){
-                schoolInfo.exception = e
-                return schoolInfo
+                _schoolInfo.exception = e
+                return _schoolInfo
             }
-        schoolInfo.data = response
-        return schoolInfo
+        _schoolInfo.data = response
+        return _schoolInfo
     }
 
     suspend fun getAdminListForSchool(schoolId: Int): DataOrException<MutableList<SchoolAdministrator>, Boolean, Exception> {
@@ -34,10 +40,23 @@ class SchoolInformationRepository @Inject constructor(private val backend: Backe
                 backend.getAdminListForSchool(schoolId.toString())
             }
             catch (e:Exception){
-                adminList.exception = e
-                return adminList
+                _adminList.exception = e
+                return _adminList
             }
-        adminList.data = response.toMutableList()
-        return adminList
+        _adminList.data = response.toMutableList()
+        return _adminList
+    }
+
+    suspend fun getTeacherListForSchool(schoolId: Int): DataOrException<MutableList<Teacher>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getTeacherListForSchool(schoolId.toString())
+            }
+            catch (e:Exception){
+                _teacherList.exception = e
+                return _teacherList
+            }
+        _teacherList.data = response.toMutableList()
+        return _teacherList
     }
 }

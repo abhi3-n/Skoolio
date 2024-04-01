@@ -57,6 +57,7 @@ import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.calculateAge
+import com.project.skoolio.utils.convertEpochToDateString
 
 
 //@Preview
@@ -282,9 +283,13 @@ fun ProfileBasicDetails(
         DetailRow("Middle Name:", middleName)
         Spacer(modifier = Modifier.height(4.dp))
     }
-    DetailRow("Last Name:", lastName)
+    if(lastName != "-") {
+        DetailRow("Last Name:", lastName)
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+    convertEpochToDateString(dob*1000)?.let { DetailRow("Date Of Birth:", it) }
     Spacer(modifier = Modifier.height(4.dp))
-    DetailRow("Age:", calculateAge(881289600000))
+    DetailRow("Age:", calculateAge(dob*1000))
     Spacer(modifier = Modifier.height(4.dp))
     DetailRow("Gender:", gender)
     Spacer(modifier = Modifier.height(4.dp))

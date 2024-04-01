@@ -11,7 +11,9 @@ import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.school.School
 import com.project.skoolio.model.singletonObject.schoolDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userType.SchoolAdministrator
+import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.repositories.SchoolInformationRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -56,10 +58,27 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
             _adminList.value = schoolInformationRepository.getAdminListForSchool(schoolId)
             if(_adminList.value.exception != null){
                 Toast.makeText(context,"Some Error Occured while fetching the admin list - ${_adminList.value.exception}.", Toast.LENGTH_SHORT).show()
-                Log.d("admin list","Error - ${adminList.value.exception}")
             }
             else{
                 Toast.makeText(context,"Admin list fetched successfully.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    private val _teacherList: MutableState<DataOrException<MutableList<Teacher>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<Teacher>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val teacherList:State<DataOrException<MutableList<Teacher>, Boolean, Exception>> = _teacherList
+    fun getTeacherListForSchool(schoolId: Int, context: Context) {
+        viewModelScope.launch {
+            _teacherList.value = schoolInformationRepository.getTeacherListForSchool(schoolId)
+            if(_teacherList.value.exception != null){
+                Toast.makeText(context,"Some Error Occured while fetching the teacher list - ${_teacherList.value.exception}.", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(context,"Teacher list fetched successfully.", Toast.LENGTH_SHORT).show()
             }
         }
     }

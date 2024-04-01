@@ -283,3 +283,10 @@ object classAttendance{
         studentsAttendanceList = mutableListOf()
     }
 }
+
+
+fun formatName(firstName:String, middleName:String, lastName:String):String{
+    return capitalize(firstName) +
+            if (middleName.isNotEmpty())  " " + capitalize(middleName) else {""} +
+            if (lastName != "-") " " + capitalize(lastName) else {""}
+}

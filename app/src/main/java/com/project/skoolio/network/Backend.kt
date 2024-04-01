@@ -83,6 +83,12 @@ interface Backend {
         @Path("teacherId") teacherId: String,
     ):Unit
 
+    @GET("teachers/{schoolId}")
+    suspend fun getTeacherListForSchool(
+        @Path("schoolId") schoolId: String
+    ): List<Teacher>
+
+
     //school service api endpoints
     @GET("/schools/{city}")
     suspend fun getCitySchools(
@@ -148,6 +154,7 @@ interface Backend {
     suspend fun submitAttendance(
         @Body list: List<Attendance>
     ):Unit
+
 
 
 }

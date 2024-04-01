@@ -12,6 +12,7 @@ import com.project.skoolio.screens.AccountCreation.SelectAccountTypeScreen.Selec
 import com.project.skoolio.screens.AdminListScreen.AdminListScreen
 import com.project.skoolio.screens.ClassListScreen.ClassListScreen
 import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAttendanceScreen
+import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
@@ -96,9 +97,6 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 ClassStudentsAttendanceScreen(navController, viewModelProvider, userType)
             }
         }
-        composable(AppScreens.TestScreen.name){
-            TestScreen()
-        }
         composable(AppScreens.AdminListScreen.name){
             AdminListScreen(navController, viewModelProvider)
         }
@@ -107,6 +105,18 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.ClassListScreen.name){
             ClassListScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.FullInfoScreen.name+"/{userType}",
+            arguments = listOf(navArgument("userType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("userType").let { userType ->
+                FullInfoScreen(navController, viewModelProvider, userType)
+            }
+        }
+        // for testing only
+        composable(AppScreens.TestScreen.name){
+            TestScreen()
         }
     }
 }

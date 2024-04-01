@@ -1,7 +1,16 @@
 package com.project.skoolio.model.userDetails
 
-data class AddressDetails(
+import com.project.skoolio.utils.capitalize
+
+class AddressDetails(
     val addressLine:String,
     val city:String,
     val state:String
-)
+){
+    fun getAddress():String{
+        return capitalize(addressLine) +", " +
+                capitalize(city) + ", " +
+                capitalize(state)
+    }
+
+}
