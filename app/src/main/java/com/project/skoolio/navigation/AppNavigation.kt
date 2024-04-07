@@ -15,6 +15,7 @@ import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAt
 import com.project.skoolio.screens.ClassStudentsListScreen.ClassStudentsListScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
+import com.project.skoolio.screens.IssuesScreenScreen.IssuesScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.PendingApprovalsScreen.PendingApprovalsScreen
@@ -117,6 +118,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
             navBack.arguments?.getString("userType").let { userType ->
                 FullInfoScreen(navController, viewModelProvider, userType)
             }
+        }
+        composable(AppScreens.IssuesScreen.name){
+            IssuesScreen(navController, viewModelProvider)
         }
         // for testing only
         composable(AppScreens.TestScreen.name){

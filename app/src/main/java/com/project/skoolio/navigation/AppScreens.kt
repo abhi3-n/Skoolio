@@ -15,8 +15,8 @@ enum class AppScreens{
 
     //Common to teachers and admins
     TakeAttendanceScreen, //Only teacher and admin can access this page;
-    IssueReportingScreen,
     ClassStudentsAttendanceScreen,
+    IssuesScreen,
 
     //Only Accessible to Admins
     SchoolInformationScreen,

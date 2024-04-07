@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -70,7 +71,8 @@ fun CommonScaffold(title:String,
                    scope: CoroutineScope,
                    drawerState: DrawerState,
                    mainContent:@Composable (PaddingValues)->Unit = {},
-                   icon:ImageVector
+                   icon:ImageVector,
+                   floatingActionButton: @Composable ()->Unit = {}
                    ){
     Scaffold(
         topBar = {
@@ -87,6 +89,7 @@ fun CommonScaffold(title:String,
                 }
             )
         },
+        floatingActionButton = floatingActionButton,
     ){
         mainContent.invoke(it)
     }
@@ -129,10 +132,10 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
 
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
-            label = { Text(text = "Issue Reporting") },
+            label = { Text(text = "Issues") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.IssueReportingScreen.name + "/Admin")
+                navController.navigate(AppScreens.IssuesScreen.name)
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -165,10 +168,10 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
         )
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
-            label = { Text(text = "Issue Reporting") },
+            label = { Text(text = "Issues") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.IssueReportingScreen.name + "/Teacher")
+                navController.navigate(AppScreens.IssuesScreen.name)
             }
         )
         Spacer(modifier = Modifier.height(2.dp))
@@ -183,24 +186,30 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
 }
 
 fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit {
-
     return {
-    NavigationDrawerItem(
-        label = { Text(text = "Profile Page") },
-        selected = false,
-        onClick = {
-            navController.navigate(AppScreens.HomeScreen.name + "/Student")
-        }
-    )
-    Spacer(modifier = Modifier.height(2.dp))
-    NavigationDrawerItem(
-        label = { Text(text = "Settings") },
-        selected = false,
-        onClick = {
-                navController.navigate(AppScreens.SettingsScreen.name + "/Student")
-        }
-    )
-
+        NavigationDrawerItem(
+            label = { Text(text = "Profile Page") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.HomeScreen.name + "/Student")
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Issues") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.IssuesScreen.name)
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Settings") },
+            selected = false,
+            onClick = {
+                    navController.navigate(AppScreens.SettingsScreen.name + "/Student")
+            }
+        )
     }
 }
 
