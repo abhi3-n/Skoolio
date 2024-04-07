@@ -20,7 +20,6 @@ import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.screens.HomeScreen.HomeScreenMainContent
 import com.project.skoolio.utils.getUserDrawerItemsList
-import com.project.skoolio.viewModels.SchoolInformationViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,12 +30,11 @@ fun FullInfoScreen(
     userType: String?
 ) {
     val context = LocalContext.current
-    val schoolInformationViewModel = viewModelProvider.getSchoolInformationViewModel()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        FullInfoScreenContent(navController, schoolInformationViewModel, context, userType)
+        FullInfoScreenContent(navController, viewModelProvider, context, userType)
     }
 }
 
@@ -44,7 +42,7 @@ fun FullInfoScreen(
 @Composable
 fun FullInfoScreenContent(
     navController: NavHostController,
-    schoolInformationViewModel: SchoolInformationViewModel,
+    viewModelProvider: ViewModelProvider,
     context: Context,
     userType: String?
 ) {
@@ -59,7 +57,7 @@ fun FullInfoScreenContent(
                 scope = scope,
                 drawerState = drawerState,
                 mainContent = {
-                    FullInfoScreenMainContent(it, schoolInformationViewModel, context, navController, userType)
+                    FullInfoScreenMainContent(it, viewModelProvider, context, navController, userType)
                 }
             )
         }
@@ -70,11 +68,11 @@ fun FullInfoScreenContent(
 @Composable
 fun FullInfoScreenMainContent(
     paddingValues: PaddingValues,
-    schoolInformationViewModel: SchoolInformationViewModel,
+    viewModelProvider: ViewModelProvider,
     context: Context,
     navController: NavHostController,
     userType: String?
 ) {
-    HomeScreenMainContent(paddingValues = paddingValues, userType = userType)
+    HomeScreenMainContent(paddingValues = paddingValues, userType = userType, viewModelProvider)
     Text(text = "Hi")
 }

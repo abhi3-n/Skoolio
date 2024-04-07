@@ -25,15 +25,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.project.skoolio.components.AdditionalStudentFullInfoScreenData
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.DetailSection
 import com.project.skoolio.components.FormTitle
 import com.project.skoolio.components.GuardianDetails
+import com.project.skoolio.components.ImageSurface
 import com.project.skoolio.components.ProfileAddressDetails
 import com.project.skoolio.components.ProfileBasicDetails
 import com.project.skoolio.components.ProfileContactDetails
-import com.project.skoolio.components.ImageSurface
 import com.project.skoolio.components.ProfileSchoolDetails
 import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.singletonObject.studentDetails
@@ -59,13 +60,13 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        HomeScreenContent(navController, userType)
+        HomeScreenContent(navController, userType,viewModelProvider)
     }
 }
 
 @SuppressLint("NewApi")
 @Composable
-fun HomeScreenContent(navController: NavHostController, userType: String?) {
+fun HomeScreenContent(navController: NavHostController, userType: String?, viewModelProvider:ViewModelProvider) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -78,7 +79,7 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
                 scope = scope,
                 drawerState = drawerState,
                 mainContent = {
-                    HomeScreenMainContent(it,userType)
+                    HomeScreenMainContent(it,userType, viewModelProvider)
                 }
             )
         }
@@ -88,9 +89,9 @@ fun HomeScreenContent(navController: NavHostController, userType: String?) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreenMainContent(
-    paddingValues: PaddingValues ,
-    userType: String?
-//    viewModelProvider: ViewModelProvider
+    paddingValues: PaddingValues,
+    userType: String?,
+    viewModelProvider: ViewModelProvider
 ) {
     Column(modifier = Modifier
         .padding(paddingValues)
@@ -104,7 +105,7 @@ fun HomeScreenMainContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
             if(userType == "Student"){
-                StudentProfilePage(userType)
+                StudentProfilePage(userType, viewModelProvider)
             }
             else if(userType == "Teacher"){
                 TeacherProfilePage(userType)
@@ -118,7 +119,7 @@ fun HomeScreenMainContent(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun StudentProfilePage(userType: String) {
+fun StudentProfilePage(userType: String, viewModelProvider: ViewModelProvider) {
     DetailSection(details = @Composable {
         FormTitle(formTitle = "Basic Details")
         Spacer(modifier = Modifier.height(4.dp))
@@ -162,7 +163,11 @@ fun StudentProfilePage(userType: String) {
             studentDetails.alternativeContact.value,studentDetails.alternativeContactName.value, studentDetails.alternativeContactRelation.value
             )
     }
+    if(userType != loginUserType.value) {
+        AdditionalStudentFullInfoScreenData(viewModelProvider)
+    }
 }
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)

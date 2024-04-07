@@ -54,11 +54,11 @@ fun LoginScreen(
                 CircularProgressIndicatorCustom()
             }
             Spacer(modifier = Modifier.height(15.dp))
-//            Button(onClick = {
-//                navController.navigate(AppScreens.TestScreen.name)
-//            }) {
-//                Text(text = "Test Screen")
-//            }
+            Button(onClick = {
+                navController.navigate(AppScreens.TestScreen.name)
+            }) {
+                Text(text = "Test Screen")
+            }
         }
     }
 

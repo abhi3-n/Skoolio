@@ -1,22 +1,26 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model.Attendance
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.school.School
 import com.project.skoolio.model.singletonObject.schoolDetails
-import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.repositories.SchoolInformationRepository
+import com.project.skoolio.utils.getEpochValuesForMonth
+import com.project.skoolio.utils.getMonthNameFromEpoch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -100,7 +104,6 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
             }
         }
     }
-
     private val _studentList: MutableState<DataOrException<MutableList<Student>, Boolean, Exception>> =
         mutableStateOf<DataOrException<MutableList<Student>, Boolean, Exception>>(
             DataOrException(mutableListOf(), false, null)
@@ -123,5 +126,57 @@ class SchoolInformationViewModel @Inject constructor(private val schoolInformati
     }
     fun getSelectedClass():String{
         return selectedClass.value
+    }
+
+    private val _attendanceList: MutableState<DataOrException<MutableList<Attendance>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<Attendance>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val attendanceList:State<DataOrException<MutableList<Attendance>, Boolean, Exception>> = _attendanceList
+    val listReady = mutableStateOf(false)
+    var firstAndLastEpochOfMonth:Pair<Long,Long> = Pair(0,0);
+    var firstDayEpochOfMonth:MutableState<Long> = mutableStateOf(0L)
+    var nameOfMonth:MutableState<String> = mutableStateOf("")
+    var monthEpochValues:List<Long> = listOf()
+    fun getAttendanceListForRange(context: Context, studentId: MutableState<String>) {
+        if(attendanceList.value.data.isEmpty()){
+            Log.d("Attendance Info", " attendance list empty." )
+        }
+        listReady.value = false
+        viewModelScope.launch {
+            if(attendanceList.value.loading == false)
+            {
+                attendanceList.value.loading = true
+                _attendanceList.value =
+                    schoolInformationRepository.getAttendanceListForRange(firstAndLastEpochOfMonth, studentId)
+                if (_attendanceList.value.exception != null) {
+                    Toast.makeText(context, "Some Error Occured while fetching the attendance list - ${_attendanceList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    attendanceList.value.loading = false
+                } else {
+                    Toast.makeText(context,"Attendance list fetched successfully.",Toast.LENGTH_SHORT).show()
+                    _attendanceList.value.data = _attendanceList.value.data.sortedBy { it.date }.toMutableList()
+                    Log.d("Attendance Info", "Fetched attendance list - ${attendanceList.value.data} and size - ${attendanceList.value.data.size}" )
+                    attendanceList.value.loading = false
+                    listReady.value = true
+                }
+            }
+        }
+
+    }
+
+    fun resetAttendanceList() {
+        _attendanceList.value.data = mutableListOf()
+    }
+    fun setFirstDayEpochOfMonth(){
+        firstDayEpochOfMonth.value = firstAndLastEpochOfMonth.first
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setNameOfMonth(){
+        nameOfMonth.value = getMonthNameFromEpoch(firstDayEpochOfMonth.value)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setMonthEpochValues(){
+        monthEpochValues = getEpochValuesForMonth(firstDayEpochOfMonth.value)
     }
 }

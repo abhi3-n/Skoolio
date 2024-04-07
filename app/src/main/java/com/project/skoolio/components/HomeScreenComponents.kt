@@ -18,7 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
@@ -34,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,11 +47,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +65,12 @@ import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.calculateAge
 import com.project.skoolio.utils.convertEpochToDateString
+import com.project.skoolio.utils.getDayOfMonthFromEpoch
+import com.project.skoolio.utils.getDayOfWeekFromEpoch
+import com.project.skoolio.utils.getFirstAndLastDayOfCurrentMonth
+import com.project.skoolio.utils.getNextMonthEpochs
+import com.project.skoolio.utils.getPreviousMonthEpochs
+import com.project.skoolio.viewModels.ViewModelProvider
 
 
 //@Preview
@@ -342,3 +355,107 @@ fun SideDrawerTitle(userType: String?) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AdditionalStudentFullInfoScreenData(viewModelProvider: ViewModelProvider) {
+    val context = LocalContext.current
+    val schoolInformationViewModel = viewModelProvider.getSchoolInformationViewModel()
+    if (schoolInformationViewModel.attendanceList.value.loading == false && schoolInformationViewModel.attendanceList.value.data.isEmpty()) {
+        schoolInformationViewModel.firstAndLastEpochOfMonth = getFirstAndLastDayOfCurrentMonth()
+        schoolInformationViewModel.setFirstDayEpochOfMonth()
+        schoolInformationViewModel.setNameOfMonth()
+        schoolInformationViewModel.setMonthEpochValues()
+        schoolInformationViewModel.getAttendanceListForRange(context, studentDetails.studentId)
+    }
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Previous Month",
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    val previousMonthEpochs =
+                        getPreviousMonthEpochs(schoolInformationViewModel.firstDayEpochOfMonth.value)
+                    schoolInformationViewModel.firstAndLastEpochOfMonth = previousMonthEpochs
+                    schoolInformationViewModel.setFirstDayEpochOfMonth()
+                    schoolInformationViewModel.setNameOfMonth()
+                    schoolInformationViewModel.setMonthEpochValues()
+                    schoolInformationViewModel.resetAttendanceList()
+                    schoolInformationViewModel.getAttendanceListForRange(
+                        context,
+                        studentDetails.studentId
+                    )
+                })
+        Text(
+            text = "Attendance (${schoolInformationViewModel.nameOfMonth.value.substring(0, 3)})",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+                textAlign = TextAlign.Center
+            ),
+            modifier = Modifier.padding(start = 10.dp)
+        )
+        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = "Next Month",
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    val nextMonthEpochs =
+                        getNextMonthEpochs(schoolInformationViewModel.firstDayEpochOfMonth.value)
+                    schoolInformationViewModel.firstAndLastEpochOfMonth = nextMonthEpochs
+                    schoolInformationViewModel.setFirstDayEpochOfMonth()
+                    schoolInformationViewModel.setNameOfMonth()
+                    schoolInformationViewModel.setMonthEpochValues()
+                    schoolInformationViewModel.resetAttendanceList()
+                    schoolInformationViewModel.getAttendanceListForRange(
+                        context,
+                        studentDetails.studentId
+                    )
+                })
+//            IconButton(onClick = { /*TODO*/ }) {
+//                Icon(imageVector = Icons.Filled.Info, contentDescription = "Attendance Color Schema")
+//            }
+    }
+    DisposableEffect(key1 = Unit) {
+        onDispose {
+            schoolInformationViewModel.resetAttendanceList()
+        }
+    }
+    if (schoolInformationViewModel.listReady.value) {
+
+        LazyRow {
+            items(schoolInformationViewModel.monthEpochValues) { epoch: Long ->
+                val isStudentPresentOnDay =
+                    schoolInformationViewModel.attendanceList.value.data.any {
+                        it.date == epoch && it.isPresent == 'P'
+                    }
+                val isStudentAbsentOnDay =
+                    schoolInformationViewModel.attendanceList.value.data.any {
+                        it.date == epoch && it.isPresent == 'A'
+                    }
+                val dayOfWeek = getDayOfWeekFromEpoch(epoch)
+
+                Surface(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(80.dp),
+                    shape = RectangleShape,
+                    border = BorderStroke(width = 2.dp, color = Color.Black),
+                    color = if (dayOfWeek == "SUN") Color.Yellow
+                    else if (isStudentPresentOnDay) Color.Green
+                    else if (isStudentAbsentOnDay) Color.Red
+                    else Color.LightGray
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = getDayOfMonthFromEpoch(epoch).toString())
+                        Text(text = dayOfWeek)
+                    }
+                }
+            }
+        }
+    } else {
+        CircularProgressIndicatorCustom()
+    }
+}

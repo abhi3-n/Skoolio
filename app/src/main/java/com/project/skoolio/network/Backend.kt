@@ -162,4 +162,11 @@ interface Backend {
         @Body list: List<Attendance>
     ):Unit
 
+    @GET("attendance/range/{start}/{end}/{studentId}")
+    suspend fun getAttendanceListForRange(
+        @Path("start") start: String,
+        @Path("end") end: String,
+        @Path("studentId") studentId: String
+    ): List<Attendance>
+
 }

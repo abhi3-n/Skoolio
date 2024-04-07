@@ -11,7 +11,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -58,9 +65,32 @@ class ComposeFileProvider : FileProvider(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestScreen(){
-    ImagePicker()
+    val date = rememberDatePickerState()
+    val showDialog = rememberSaveable { mutableStateOf(false) }
+    Column {
+        ImagePicker()
+        Button(onClick = { showDialog.value = !showDialog.value }) {
+            Text(text = "Calendar")
+            if(showDialog.value){
+                DatePickerDialog(onDismissRequest = { showDialog.value = !showDialog.value },
+                    confirmButton = {  }) {
+                    DatePicker(state = date,
+                        colors = DatePickerDefaults.colors(containerColor = Color.Blue,
+                            titleContentColor = Color.Cyan,
+                            headlineContentColor = Color.Red,
+                            weekdayContentColor = Color.Green,
+                            subheadContentColor = Color.Yellow,
+                            disabledDayContentColor = Color.Yellow,
+                            yearContentColor = Color.Yellow)
+                    )
+                }
+            }
+        }
+
+    }
 }
 
 

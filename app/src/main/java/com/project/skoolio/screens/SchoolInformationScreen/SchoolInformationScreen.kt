@@ -58,7 +58,6 @@ fun SchoolInformationScreen(
     BackToHomeScreen(navController, "Admin",context)
     DisposableEffect(key1 = Unit) {
         onDispose {
-//            Toast.makeText(context,"School Info page recomposed", Toast.LENGTH_SHORT).show()
             schoolDetails.resetSchoolDetails()
         }
     }

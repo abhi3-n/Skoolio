@@ -1,6 +1,8 @@
 package com.project.skoolio.repositories
 
+import androidx.compose.runtime.MutableState
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model.Attendance
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.school.School
 import com.project.skoolio.model.userType.SchoolAdministrator
@@ -20,6 +22,8 @@ class SchoolInformationRepository @Inject constructor(private val backend: Backe
         DataOrException<MutableList<Student>, Boolean, Exception>(mutableListOf())
     private val _classList: DataOrException<MutableList<_Class>, Boolean, Exception> =
         DataOrException<MutableList<_Class>, Boolean, Exception>(mutableListOf())
+    private val _attendanceList: DataOrException<MutableList<Attendance>, Boolean, Exception> =
+        DataOrException<MutableList<Attendance>, Boolean, Exception>(mutableListOf())
     suspend fun getSchoolInformation(schoolId: Int): DataOrException<School, Boolean, Exception> {
         val response =
             try {
@@ -83,5 +87,21 @@ class SchoolInformationRepository @Inject constructor(private val backend: Backe
             }
         _studentList.data = response.toMutableList()
         return _studentList
+    }
+
+    suspend fun getAttendanceListForRange(
+        firstAndLast: Pair<Long, Long>,
+        studentId: MutableState<String>
+    ): DataOrException<MutableList<Attendance>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getAttendanceListForRange(firstAndLast.first.toString(), firstAndLast.second.toString(), studentId.value)
+            }
+            catch (e:Exception){
+                _attendanceList.exception = e
+                return _attendanceList
+            }
+        _attendanceList.data = response.toMutableList()
+        return _attendanceList
     }
 }

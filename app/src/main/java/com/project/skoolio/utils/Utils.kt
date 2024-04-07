@@ -22,10 +22,17 @@ import com.project.skoolio.model.userDetails.StudentSchoolDetails
 import com.project.skoolio.model.userType.Student
 import com.project.skoolio.navigation.AppScreens
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Month
 import java.time.Period
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.MONTH
 import java.util.Date
 import java.util.Locale
 
@@ -56,17 +63,102 @@ fun BackToHomeScreen(navController: NavHostController, userType: String?, contex
             }
         }
     }
-
-
 }
-
 
 fun convertEpochToDateString(epoch: Long?): String? { // here value of epoch is expected to be in milli seconds
     val dateFormat = SimpleDateFormat("dd/MM/yyyy")
     val date = epoch?.let { Date(it) }
     return date?.let { dateFormat.format(it) }
 }
+@RequiresApi(Build.VERSION_CODES.O)
+fun presentDateEpoch():Long{  //returns value in second
+    val currentDate = LocalDate.now()
+    return currentDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun getCurrentMonthFromEpoch(): String { //needed to print month name in heading
+    val date = Date(presentDateEpoch()*1000)
+    val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+    return dateFormat.format(date)
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun getMonthNameFromEpoch(epochValue: Long): String {
+    val localDateTime = Instant.ofEpochMilli(epochValue*1000).atZone(ZoneId.systemDefault()).toLocalDateTime()
+    return capitalize(Month.of(localDateTime.monthValue).toString().lowercase())
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun getDayOfMonthFromEpoch(epochSeconds: Long): Int {
+    val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds), ZoneId.systemDefault())
+    return dateTime.dayOfMonth
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun getDayOfWeekFromEpoch(epochSeconds: Long): String {
+    val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds), ZoneId.systemDefault())
+    val dayOfWeek = dateTime.dayOfWeek
+    return dayOfWeek.toString().substring(0, 3)
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun getFirstAndLastDayOfCurrentMonth(): Pair<Long, Long> { //needed to send range to backend
+    val epochSeconds = presentDateEpoch()
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = epochSeconds * 1000
+    calendar.set(Calendar.DAY_OF_MONTH, 1)
+    setToBeginningOfDay(calendar)
+    val firstDayEpoch = calendar.timeInMillis / 1000
+    calendar.add(Calendar.MONTH, 1)
+    calendar.add(Calendar.DAY_OF_MONTH, -1)
+    setToBeginningOfDay(calendar)
+    val lastDayEpoch = calendar.timeInMillis / 1000
+    return Pair(firstDayEpoch, lastDayEpoch)
+}
+
+fun setToBeginningOfDay(calendar: Calendar) {
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getEpochValuesForMonth(epochValue:Long): List<Long> {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = epochValue * 1000L // Convert seconds to milliseconds
+
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+    val daysList = mutableListOf<Long>()
+    for (day in 1..numDays) {
+        calendar.set(year, month, day, 5 ,30)
+        daysList.add(calendar.timeInMillis / 1000L)
+    }
+    return daysList.toList()
+}
+
+fun getPreviousMonthEpochs(currentEpoch: Long): Pair<Long, Long> {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = currentEpoch * 1000 // Convert to milliseconds
+    calendar.set(DAY_OF_MONTH, 1)
+    calendar.add(MONTH, -1)
+    val firstDayPrevMonth = calendar.timeInMillis / 1000  // Convert back to seconds
+    calendar.set(DAY_OF_MONTH, calendar.getActualMaximum(DAY_OF_MONTH))
+    val lastDayPrevMonth = calendar.timeInMillis / 1000
+    return Pair(firstDayPrevMonth, lastDayPrevMonth)
+}
+
+fun getNextMonthEpochs(currentEpoch: Long): Pair<Long, Long> {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = currentEpoch * 1000 // Convert to milliseconds
+    calendar.set(DAY_OF_MONTH, 1)
+    calendar.add(MONTH, 1)
+    val firstDayNextMonth = calendar.timeInMillis / 1000  // Convert back to seconds
+    calendar.set(DAY_OF_MONTH, calendar.getActualMaximum(DAY_OF_MONTH))
+    val lastDayNextMonth = calendar.timeInMillis / 1000
+
+    return Pair(firstDayNextMonth, lastDayNextMonth)
+}
 object statesList{
     val list:List<String> = listOf(
         "Andhra Pradesh",
@@ -244,12 +336,6 @@ fun presentDate():String{
     val today = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", Locale.ENGLISH)
     return today.format(formatter)
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun presentDateEpoch():Long{
-    val currentDate = LocalDate.now()
-    return currentDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
 }
 
 object classAttendance{
