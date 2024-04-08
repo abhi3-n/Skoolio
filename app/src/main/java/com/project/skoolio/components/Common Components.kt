@@ -182,7 +182,7 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
                 navController.navigate(AppScreens.SettingsScreen.name + "/Teacher")
             }
         )
-        }
+    }
 }
 
 fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit {

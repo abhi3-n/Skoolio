@@ -10,7 +10,7 @@ import com.project.skoolio.model._Class
 import com.project.skoolio.network.Backend
 import javax.inject.Inject
 
-class AttendanceRepository @Inject constructor(private val backend: Backend): ViewModel() {
+class AttendanceRepository @Inject constructor(private val backend: Backend){
     private val classList: DataOrException<MutableList<_Class>, Boolean, Exception> =
         DataOrException<MutableList<_Class>, Boolean, Exception>(mutableListOf())
     private val studentsList: DataOrException<MutableList<StudentInfo>, Boolean, Exception> =

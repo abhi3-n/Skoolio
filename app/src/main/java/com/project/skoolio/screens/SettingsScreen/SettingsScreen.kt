@@ -31,7 +31,7 @@ fun SettingsScreen(
     userType: String?
 ) {
     val context = LocalContext.current
-    BackToHomeScreen(navController,userType, context)
+    BackToHomeScreen(navController,userType)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center

@@ -54,8 +54,10 @@ fun BackToLoginScreen(navController: NavHostController) {
 }
 
 @Composable
-fun BackToHomeScreen(navController: NavHostController, userType: String?, context: Context) {
-    val activity = context as? Activity
+fun BackToHomeScreen(navController: NavHostController, userType: String?
+//                     ,context: Context
+) {
+//    val activity = context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
         navController.navigate(AppScreens.HomeScreen.name + "/$userType") {
             popUpTo(navController.graph.id) {

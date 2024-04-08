@@ -4,6 +4,7 @@ import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
+import com.project.skoolio.model.Issue.Issue
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.StudentInfo
@@ -169,4 +170,9 @@ interface Backend {
         @Path("studentId") studentId: String
     ): List<Attendance>
 
+    //issue endpoint
+    @POST("issue")
+    suspend fun createIssue(
+        @Body issue: Issue
+    ):Map<String, String>
 }

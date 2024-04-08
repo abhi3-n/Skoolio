@@ -60,7 +60,7 @@ fun PendingApprovalsScreen(
 ) {
     val pendingApprovalsViewModel = viewModelProvider.getPendingApprovalsViewModel()
     val context = LocalContext.current
-    BackToHomeScreen(navController, "Admin",context)
+    BackToHomeScreen(navController, "Admin")
     PendingApprovalsContent(navController,pendingApprovalsViewModel)
 }
 

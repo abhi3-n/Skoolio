@@ -55,7 +55,7 @@ fun SchoolInformationScreen(
 ) {
     val context = LocalContext.current
     val schoolInformationViewModel = viewModelProvider.getSchoolInformationViewModel()
-    BackToHomeScreen(navController, "Admin",context)
+    BackToHomeScreen(navController, "Admin")
     DisposableEffect(key1 = Unit) {
         onDispose {
             schoolDetails.resetSchoolDetails()

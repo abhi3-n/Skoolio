@@ -84,6 +84,8 @@ fun CustomTextField(modifier: Modifier = Modifier,
                    valueState: MutableState<String>,
                     label:String,
                     enabled: Boolean = true,
+                    singleLine:Boolean = true,
+                    maxLines:Int = 1,
                     keyboardType: KeyboardType = KeyboardType.Text,
                    imeAction: ImeAction = ImeAction.Next,
                    keyboardActions: KeyboardActions = KeyboardActions.Default
@@ -94,7 +96,8 @@ fun CustomTextField(modifier: Modifier = Modifier,
             valueState.value = it
         },
         enabled = enabled,
-        singleLine = true,
+        singleLine = singleLine,
+        maxLines = maxLines,
         label = { Text(text = label) },
         textStyle = TextStyle(fontSize = 18.sp,color = Color.Black),
         modifier = modifier

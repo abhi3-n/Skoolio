@@ -1,6 +1,5 @@
 package com.project.skoolio.viewModels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +11,8 @@ class ViewModelProvider @Inject constructor(
     private val otpValidationViewModel: OtpValidationViewModel,
     private val pendingApprovalsViewModel: PendingApprovalsViewModel,
     private val attendanceViewModel: AttendanceViewModel,
-    private val schoolInformationViewModel: SchoolInformationViewModel
+    private val schoolInformationViewModel: SchoolInformationViewModel,
+    private val issueViewModel: IssueViewModel
 ):ViewModel(){
 
     fun getLoginViewModel() = loginViewModel
@@ -21,4 +21,5 @@ class ViewModelProvider @Inject constructor(
     fun getPendingApprovalsViewModel() = pendingApprovalsViewModel
     fun getAttendanceViewModel() = attendanceViewModel
     fun getSchoolInformationViewModel() = schoolInformationViewModel
+    fun getIssueViewModel() = issueViewModel
 }
