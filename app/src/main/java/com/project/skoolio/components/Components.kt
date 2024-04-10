@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -139,7 +140,8 @@ fun PasswordTextField(
 fun PasswordVisibility(passwordVisibility: MutableState<Boolean>) {
     val visible = passwordVisibility.value
     IconButton(onClick = { passwordVisibility.value = !visible }) {
-        Icons.Default.Close
+//        Icons.Default.Close
+        Icon(imageVector = Icons.Rounded.Close, contentDescription = "")
     }
 }
 

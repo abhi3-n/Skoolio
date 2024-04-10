@@ -14,9 +14,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,10 +25,7 @@ import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.singletonObject.adminDetails
-import com.project.skoolio.model.userType.SchoolAdministrator
 import com.project.skoolio.navigation.AppScreens
-import com.project.skoolio.screens.AdminListScreen.AdminListScreenMainContent
-import com.project.skoolio.screens.FullInfoScreen.FullInfoScreenContent
 import com.project.skoolio.screens.TakeAttendanceScreen.ClassItem
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.getUserDrawerItemsList

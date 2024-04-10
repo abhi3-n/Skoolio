@@ -175,4 +175,10 @@ interface Backend {
     suspend fun createIssue(
         @Body issue: Issue
     ):Map<String, String>
+
+    @GET("issues/student/{studentId}/{status}")
+    suspend fun getIssuesListForStudent(
+        @Path("studentId") studentId: String,
+        @Path("status") status: String
+    ): List<Issue>
 }

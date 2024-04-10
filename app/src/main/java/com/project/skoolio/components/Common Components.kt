@@ -66,14 +66,15 @@ fun CommonModalNavigationDrawer(drawerState:DrawerState,
 
 
 @Composable
-fun CommonScaffold(title:String,
-                   navController:NavHostController,
-                   scope: CoroutineScope,
-                   drawerState: DrawerState,
-                   mainContent:@Composable (PaddingValues)->Unit = {},
-                   icon:ImageVector,
-                   floatingActionButton: @Composable ()->Unit = {}
-                   ){
+fun CommonScaffold(
+    title:String,
+    navController:NavHostController,
+    scope: CoroutineScope,
+    drawerState: DrawerState,
+    mainContent:@Composable (PaddingValues)->Unit = {},
+    icon:ImageVector,
+    floatingActionButton: @Composable ()-> Unit = {}
+){
     Scaffold(
         topBar = {
             SkoolioAppBar(title,

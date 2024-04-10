@@ -1,7 +1,6 @@
 package com.project.skoolio.screens.Issue
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,15 +76,20 @@ fun IssuesScreenContent(
                     IssuesScreenMainContent(it, context, navController, issueViewModel)
                 },
                 floatingActionButton = {
-
-                    FloatingActionButton(modifier = Modifier.padding(end = 16.dp, bottom = 16.dp), onClick = {
-                        navController.navigate(AppScreens.NewIssueScreen.name)
-                        },
-                        shape = CircleShape,
-                        containerColor = Color.Cyan) {
-                        Icon(imageVector = Icons.Default.Add,
-                            contentDescription = "Create New Issue",
-                            tint = Color.Black)
+                    if (loginUserType.value == "Student") {
+                        FloatingActionButton(
+                            modifier = Modifier.padding(end = 16.dp, bottom = 16.dp), onClick = {
+                                navController.navigate(AppScreens.NewIssueScreen.name)
+                            },
+                            shape = CircleShape,
+                            containerColor = Color.Cyan
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Create New Issue",
+                                tint = Color.Black
+                            )
+                        }
                     }
                 }
             )
@@ -101,10 +105,12 @@ fun IssuesScreenMainContent(
     issueViewModel: IssueViewModel
 ) {
     val openIssuesClick = {
-        Toast.makeText(context,"Open Issues Clicked", Toast.LENGTH_SHORT).show()
+        issueViewModel.fetchIssuesList(context,"o")
+        navController.navigate(AppScreens.IssuesListScreen.name + "/Open")
     }
     val issueHistoryClick = {
-        Toast.makeText(context,"Issue history Clicked", Toast.LENGTH_SHORT).show()
+        issueViewModel.fetchIssuesList(context,"c")
+        navController.navigate(AppScreens.IssuesListScreen.name + "/History")
     }
     Column(modifier = Modifier
         .padding(paddingValues)

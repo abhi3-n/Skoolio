@@ -15,8 +15,10 @@ import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAt
 import com.project.skoolio.screens.ClassStudentsListScreen.ClassStudentsListScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
+import com.project.skoolio.screens.Issue.IssueInfoScreen
 import com.project.skoolio.screens.Issue.IssuesScreen
 import com.project.skoolio.screens.Issue.NewIssueScreen
+import com.project.skoolio.screens.Issue.IssuesListScreen
 import com.project.skoolio.screens.LoginScreen.LoginScreen
 import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.PendingApprovalsScreen.PendingApprovalsScreen
@@ -120,12 +122,26 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 FullInfoScreen(navController, viewModelProvider, userType)
             }
         }
+
+        //Issue Module Screens
         composable(AppScreens.IssuesScreen.name){
             IssuesScreen(navController, viewModelProvider)
         }
         composable(AppScreens.NewIssueScreen.name){
             NewIssueScreen(navController, viewModelProvider)
         }
+        composable(AppScreens.IssuesListScreen.name+"/{screenType}",
+            arguments = listOf(navArgument("screenType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("screenType").let { screenType ->
+                IssuesListScreen(navController, viewModelProvider, screenType)
+            }
+        }
+        composable(AppScreens.IssueInfoScreen.name){
+            IssueInfoScreen(navController, viewModelProvider)
+        }
+
         // for testing only
         composable(AppScreens.TestScreen.name){
             TestScreen()
