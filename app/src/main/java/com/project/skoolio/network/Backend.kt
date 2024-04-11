@@ -5,6 +5,8 @@ import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.Issue.Issue
+import com.project.skoolio.model.Issue.IssueMessage
+import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.StudentInfo
@@ -181,4 +183,9 @@ interface Backend {
         @Path("studentId") studentId: String,
         @Path("status") status: String
     ): List<Issue>
+
+    @PATCH("issue/addMessage")
+    suspend fun addIssueMessageToList(
+        @Body issueMessageRequest: IssueMessageRequest
+    ):Map<String, String>
 }

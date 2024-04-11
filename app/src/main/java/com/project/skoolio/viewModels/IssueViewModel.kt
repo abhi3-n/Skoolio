@@ -10,13 +10,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.Issue.Issue
+import com.project.skoolio.model.Issue.IssueMessage
+import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.IssueRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class IssueViewModel @Inject constructor(private val issueRepository: IssueRepository):ViewModel(){
+class IssueViewModel @Inject constructor(private val issueRepository: IssueRepository,
+                                         private val backend: Backend // TODO:Direct usage of backend to be reviewed. Through Repository?
+):ViewModel(){
     private val _openIssuesList: MutableState<DataOrException<MutableList<Issue>, Boolean, Exception>> =
         mutableStateOf<DataOrException<MutableList<Issue>, Boolean, Exception>>(
             DataOrException(mutableListOf(), false, null)
@@ -29,8 +34,8 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
         )
     val closedIssuesList: State<DataOrException<MutableList<Issue>, Boolean, Exception>> = _closedIssuesList
 
-    val currentIssue:MutableState<Issue> = mutableStateOf(Issue("",0,'s',"",0,"","","", listOf(), 'o'))
-    val isOpenIssueSelected = mutableStateOf(false)
+    var currentIssue:Issue = Issue("",0,'s',"",0,"","","", listOf(), 'o')
+    var isOpenIssueSelected = false
 
     val listReady:MutableState<Boolean> = mutableStateOf(false)
     val issueTitle = mutableStateOf("")
@@ -99,4 +104,36 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
             Toast.makeText(context, "lists cleared", Toast.LENGTH_SHORT).show()
         }
     }
+
+    var listOfMessages:MutableList<IssueMessage> = mutableListOf()
+    fun initializeListOfMessages() {
+        listOfMessages = currentIssue.issueMessages.toMutableList()
+        listOfMessages.add(0, IssueMessage(studentDetails.studentId.value,'s',currentIssue.description,currentIssue.creationTime))
+//        listOfMessages.add(IssueMessage("123231",'s',"dbenbjanjcbaejnwqjbdeqjdbhvebjndjw",currentIssue.creationTime))
+//        listOfMessages.add(0, IssueMessage(studentDetails.studentId.value,'s',currentIssue.description,currentIssue.creationTime))
+//        listOfMessages.add(IssueMessage(studentDetails.studentId.value,'s',currentIssue.description,currentIssue.creationTime))
+    }
+
+    fun updateListOfMessages(
+        issueMessage: IssueMessage,
+        context: Context,
+        reply: MutableState<String>
+    ) {
+        viewModelScope.launch {
+            try {
+                listOfMessages.add(issueMessage)
+                backend.addIssueMessageToList(IssueMessageRequest.getMessageRequest(issueMessage, currentIssue.issueId));
+                val index = _openIssuesList.value.data.indexOf(currentIssue)
+                val issueToUpdate = _openIssuesList.value.data[index]
+                val mutableIssueMessages = issueToUpdate.issueMessages.toMutableList()
+                mutableIssueMessages.add(issueMessage)
+                issueToUpdate.issueMessages = mutableIssueMessages.toList()
+                reply.value = ""
+            }
+            catch (e:Exception){
+                Toast.makeText(context,"The message could not be added to list.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

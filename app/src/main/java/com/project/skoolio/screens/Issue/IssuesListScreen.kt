@@ -132,8 +132,9 @@ fun IssueListView(
                             }
                         },
                         onClick = {
-                            issueViewModel.currentIssue.value = issue
-                            if(isOpenIssueSelected) issueViewModel.isOpenIssueSelected.value = true
+                            issueViewModel.currentIssue = issue
+                            if(isOpenIssueSelected) issueViewModel.isOpenIssueSelected = true
+                            issueViewModel.initializeListOfMessages()
                             navController.navigate(AppScreens.IssueInfoScreen.name)
                         },
                         shape = RectangleShape

@@ -85,5 +85,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideIssuesViewModel(issueRepository: IssueRepository): IssueViewModel = IssueViewModel(issueRepository)
+    fun provideIssuesViewModel(issueRepository: IssueRepository, backend: Backend): IssueViewModel = IssueViewModel(issueRepository, backend)
 }
