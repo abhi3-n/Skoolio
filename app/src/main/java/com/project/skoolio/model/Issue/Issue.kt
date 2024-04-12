@@ -32,5 +32,8 @@ class IssueMessageRequest(
             return IssueMessageRequest(issueMessage.messageCreatorId, issueMessage.messageCreatorType, issueMessage.messageText,issueMessage.messageTime, issueId)
         }
     }
-
 }
+
+data class IssueCloseRequest(
+    val issueId:String
+)

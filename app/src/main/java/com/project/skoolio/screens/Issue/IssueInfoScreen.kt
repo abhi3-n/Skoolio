@@ -1,5 +1,6 @@
 package com.project.skoolio.screens.Issue
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -55,6 +57,10 @@ fun IssueInfoScreen(
 ) {
     val context = LocalContext.current
     val issueViewModel = viewModelProvider.getIssueViewModel()
+    androidx.activity.compose.BackHandler(enabled = true) {
+        issueViewModel.isOpenIssueSelected = false
+        navController.popBackStack()
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -97,7 +103,6 @@ fun IssueInfoScreenMainContent(
 ) {
     val issue = issueViewModel.currentIssue
     val reply = rememberSaveable { mutableStateOf("") }
-//    val listOfMessages = issue.issueMessages.toMutableList()
 
         Column(
             modifier = Modifier
@@ -106,7 +111,14 @@ fun IssueInfoScreenMainContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Title - ${issue.title}")
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Title - ${issue.title}", modifier = Modifier.weight(1f).padding(start = 4.dp, top = 4.dp), fontSize = 20.sp)
+                IconButton(modifier = Modifier.size(40.dp),onClick = {
+                    issueViewModel.closeCurrentIssue(navController, context)
+                }) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Close Issue", tint = Color.Green)
+                }
+            }
             Column(modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1F)
@@ -160,7 +172,6 @@ fun IssueInfoScreenMainContent(
                         .size(60.dp),
                         enabled = reply.value.isNotEmpty(),
                         onClick = {
-                            Toast.makeText(context,"Added to list", Toast.LENGTH_SHORT).show()
                             issueViewModel.updateListOfMessages(IssueMessage(studentDetails.studentId.value,'s',reply.value,System.currentTimeMillis()/1000), context, reply)
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.Send,

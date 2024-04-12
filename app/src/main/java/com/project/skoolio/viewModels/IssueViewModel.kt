@@ -1,6 +1,7 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.Issue.Issue
+import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessage
 import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.singletonObject.studentDetails
@@ -121,17 +123,34 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
     ) {
         viewModelScope.launch {
             try {
-                listOfMessages.add(issueMessage)
+                listOfMessages.add(issueMessage) //TODO:Review whether to add in local list after adding in backend or before
                 backend.addIssueMessageToList(IssueMessageRequest.getMessageRequest(issueMessage, currentIssue.issueId));
                 val index = _openIssuesList.value.data.indexOf(currentIssue)
                 val issueToUpdate = _openIssuesList.value.data[index]
                 val mutableIssueMessages = issueToUpdate.issueMessages.toMutableList()
                 mutableIssueMessages.add(issueMessage)
                 issueToUpdate.issueMessages = mutableIssueMessages.toList()
+                Toast.makeText(context,"The message is added to list.", Toast.LENGTH_SHORT).show()
                 reply.value = ""
             }
             catch (e:Exception){
                 Toast.makeText(context,"The message could not be added to list.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun closeCurrentIssue(navController: NavHostController, context: Context) {
+        viewModelScope.launch {
+            try {
+                val index = _openIssuesList.value.data.indexOf(currentIssue)
+                _openIssuesList.value.data.removeAt(index)
+                backend.closeIssue(IssueCloseRequest(currentIssue.issueId))
+                Toast.makeText(context,"Issue Closed.", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
+            }
+            catch (e:Exception){
+                Log.d("closeIssue","${e.message}")
+                Toast.makeText(context,"The message could not be removed from the list. ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

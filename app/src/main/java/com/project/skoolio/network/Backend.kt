@@ -5,7 +5,7 @@ import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.Issue.Issue
-import com.project.skoolio.model.Issue.IssueMessage
+import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
@@ -187,5 +187,10 @@ interface Backend {
     @PATCH("issue/addMessage")
     suspend fun addIssueMessageToList(
         @Body issueMessageRequest: IssueMessageRequest
+    ):Map<String, String>
+
+    @PATCH("issue/closeIssue")
+    suspend fun closeIssue(
+        @Body issueCloseRequest: IssueCloseRequest
     ):Map<String, String>
 }
