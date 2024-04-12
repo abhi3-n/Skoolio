@@ -1,6 +1,7 @@
 package com.project.skoolio.screens.Issue
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,8 +34,10 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
+import com.project.skoolio.components.TextDropDownMenuRow
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
+import com.project.skoolio.utils.getClassOptionsList
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.IssueViewModel
@@ -105,26 +108,54 @@ fun IssuesScreenMainContent(
     issueViewModel: IssueViewModel
 ) {
     val openIssuesClick = {
-        issueViewModel.fetchIssuesList(context,"o")
-        navController.navigate(AppScreens.IssuesListScreen.name + "/Open")
+        issueViewModel.convertClassNameToId()
+        if(loginUserType.value == "Teacher" && issueViewModel.classIdSelectedByTeacher.value.isEmpty()){
+            Toast.makeText(context,"Please select a class.", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            issueViewModel.fetchIssuesList(context, "o")
+            navController.navigate(AppScreens.IssuesListScreen.name + "/Open")
+        }
     }
     val issueHistoryClick = {
-        issueViewModel.fetchIssuesList(context,"c")
-        navController.navigate(AppScreens.IssuesListScreen.name + "/History")
+        issueViewModel.convertClassNameToId()
+        if(loginUserType.value == "Teacher" && issueViewModel.classIdSelectedByTeacher.value.isEmpty()){
+            Toast.makeText(context,"Please select a class.", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            issueViewModel.fetchIssuesList(context, "c")
+            navController.navigate(AppScreens.IssuesListScreen.name + "/History")
+        }
     }
+
+    if(loginUserType.value == "Teacher" && issueViewModel.classInfoList.value.loading == false
+        && issueViewModel.classInfoList.value.data.isEmpty()){
+        issueViewModel.fetchClassInfoList(context)
+    }
+
     Column(modifier = Modifier
         .padding(paddingValues)
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
+        if(loginUserType.value == "Teacher"){
+            TextDropDownMenuRow(
+                text = "Select Class",
+                dataList = if (issueViewModel.classInfoList.value.data.isNotEmpty()) getClassOptionsList(issueViewModel.classInfoList.value.data) else null,
+                valueSelected = issueViewModel.classNameSelectedByTeacher,
+                registrationScreenViewModel = null
+            )
+        }
         ListItem(shape = CircleShape,
             itemInfo = {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Text(text = "Open Issues",
                         style = TextStyle(fontSize = 32.sp),
-                        modifier = Modifier.padding(4.dp).clickable {
-                            openIssuesClick.invoke()
-                        })
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable {
+                                openIssuesClick.invoke()
+                            })
                 }
             },
             onClick = {
@@ -136,9 +167,11 @@ fun IssuesScreenMainContent(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Text(text = "History",
                         style = TextStyle(fontSize = 32.sp),
-                        modifier = Modifier.padding(4.dp).clickable {
-                            issueHistoryClick.invoke()
-                        })
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable {
+                                issueHistoryClick.invoke()
+                            })
                 }
             },
             onClick = {

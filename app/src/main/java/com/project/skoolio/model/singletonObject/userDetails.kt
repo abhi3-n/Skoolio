@@ -93,7 +93,8 @@ object studentDetails:userDetails {
         gender.value = if(student.gender == 'm') "Male" else "Female"
         nationality.value = capitalize(student.nationality)
         dobValue.value = student.dob
-        className.value = capitalize(student.studentSchoolDetails.classId) //TODO:need to have class Name
+        className.value = student.studentSchoolDetails.classId //TODO:need to have class Name
+        classId.value = student.studentSchoolDetails.classId
         schoolId.value = student.studentSchoolDetails.schoolId //TODO:need to have school Name
         fatherName.value = capitalize(student.father.fatherName)
         fatherQualification.value = capitalize(student.father.fatherQualification)

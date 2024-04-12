@@ -44,7 +44,9 @@ import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.CustomTextField
 import com.project.skoolio.model.Issue.IssueMessage
+import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.IssueViewModel
@@ -103,23 +105,33 @@ fun IssueInfoScreenMainContent(
 ) {
     val issue = issueViewModel.currentIssue
     val reply = rememberSaveable { mutableStateOf("") }
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
+    val currentId = when (loginUserType.value) {
+        "Student" -> studentDetails.studentId
+        "Teacher" -> teacherDetails.teacherId
+        else -> adminDetails.adminId
+    }
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Title - ${issue.title}", modifier = Modifier.weight(1f).padding(start = 4.dp, top = 4.dp), fontSize = 20.sp)
-                IconButton(modifier = Modifier.size(40.dp),onClick = {
-                    issueViewModel.closeCurrentIssue(navController, context)
-                }) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Close Issue", tint = Color.Green)
+                if(issue.creatorId == currentId.value) {
+                    IconButton(modifier = Modifier.size(40.dp), onClick = {
+                        issueViewModel.closeCurrentIssue(navController, context)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Close Issue",
+                            tint = Color.Green
+                        )
+                    }
                 }
             }
-            Column(modifier = Modifier
+        Column(modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1F)
 //                .height(500.dp)
@@ -128,7 +140,7 @@ fun IssueInfoScreenMainContent(
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(issueViewModel.listOfMessages){issueMessage:IssueMessage->
                         val showTimeStamp = rememberSaveable { mutableStateOf(false) }
-                        Row(horizontalArrangement = if(issueMessage.messageCreatorId == studentDetails.studentId.value) Arrangement.End else Arrangement.Start,
+                        Row(horizontalArrangement = if(issueMessage.messageCreatorId == currentId.value) Arrangement.End else Arrangement.Start,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(2.dp)) {
@@ -172,7 +184,7 @@ fun IssueInfoScreenMainContent(
                         .size(60.dp),
                         enabled = reply.value.isNotEmpty(),
                         onClick = {
-                            issueViewModel.updateListOfMessages(IssueMessage(studentDetails.studentId.value,'s',reply.value,System.currentTimeMillis()/1000), context, reply)
+                            issueViewModel.updateListOfMessages(IssueMessage(currentId.value,'s',reply.value,System.currentTimeMillis()/1000), context, reply)
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Send Button",

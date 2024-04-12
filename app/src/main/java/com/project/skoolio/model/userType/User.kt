@@ -1,6 +1,6 @@
 package com.project.skoolio.model.userType
 
-import android.util.Log
+import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.AdminSchoolDetails
 import com.project.skoolio.model.userDetails.StudentSchoolDetails
@@ -44,25 +44,6 @@ class Student(
     val registrationId:String,
     val mot:String
     ) : User(firstName, middleName, lastName, dob, gender, nationality, email, password, addressDetails, contactDetails) {
-    fun getStudentClassOptionsList(): List<String>? {
-        val list:MutableList<String> =  mutableListOf()
-        for(classInfo in studentSchoolDetails.admissionClassOptions!!){
-            list.add(classInfo.grade+" "+ capitalize(classInfo.section))
-        }
-        return list.toList()
-    }
-
-    fun getClassIdForClassSelected(gradeSection: String): String {
-        Log.d("Update class","$gradeSection")
-        val list = gradeSection.split(" ")
-        for (classInfo in studentSchoolDetails.admissionClassOptions!!) {
-            Log.d("Update class","Class {${classInfo.grade} ${classInfo.section}} ")
-            if ("${classInfo.grade} "+ capitalize(classInfo.section) == gradeSection) {
-                return classInfo.classId
-            }
-        }
-        return ""
-    }
 }
 
 class Teacher(

@@ -12,6 +12,7 @@ import com.project.skoolio.components.adminDrawerItems
 import com.project.skoolio.components.studentDrawerItems
 import com.project.skoolio.components.teacherDrawerItems
 import com.project.skoolio.model.Attendance
+import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model.userDetails.AddressDetails
@@ -330,7 +331,7 @@ fun getUserDrawerItemsList(userType: String?, navController: NavHostController):
 }
 
 
-val loginUserType = mutableStateOf("Student")
+val loginUserType = mutableStateOf("Teacher")
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -377,4 +378,24 @@ fun formatName(firstName:String, middleName:String, lastName:String):String{
     return capitalize(firstName) +
             if (middleName.isNotEmpty())  " " + capitalize(middleName) else {""} +
             if (lastName != "-") " " + capitalize(lastName) else {""}
+}
+
+
+fun getClassIdForClassSelected(
+    gradeSection: String,
+    classInfoList: MutableList<ClassInfo>?
+): String {
+    for (classInfo in classInfoList!!) {
+        if ("${classInfo.grade} "+ capitalize(classInfo.section) == gradeSection) {
+            return classInfo.classId
+        }
+    }
+    return ""
+}
+fun getClassOptionsList(classOptions: MutableList<ClassInfo>?): List<String>? {
+    val list:MutableList<String> =  mutableListOf()
+    for(classInfo in classOptions!!){
+        list.add(classInfo.grade+" "+ capitalize(classInfo.section))
+    }
+    return list.toList()
 }

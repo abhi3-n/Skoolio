@@ -48,6 +48,8 @@ import com.project.skoolio.model.userType.Student
 import com.project.skoolio.model.userType.Teacher
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.capitalize
+import com.project.skoolio.utils.getClassIdForClassSelected
+import com.project.skoolio.utils.getClassOptionsList
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.viewModels.PendingApprovalsViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
@@ -239,7 +241,7 @@ fun PendingStudentInfo(pendingApprovalsViewModel: PendingApprovalsViewModel, stu
                 Text(text = "Admission Class: ${student.studentSchoolDetails.admissionClass}")
                 TextDropDownMenuRow(
                     text = "Class Options",
-                    dataList = student.getStudentClassOptionsList(),
+                    dataList = getClassOptionsList(student.studentSchoolDetails.admissionClassOptions),
                     valueSelected = classSelected,
                     registrationScreenViewModel = null
                 )
@@ -253,7 +255,7 @@ fun PendingStudentInfo(pendingApprovalsViewModel: PendingApprovalsViewModel, stu
                         Toast.makeText(context,"Please select grade and section for ${student.firstName}", Toast.LENGTH_SHORT).show()
                     }
                     else{
-                        val classId = student.getClassIdForClassSelected(classSelected.value)
+                        val classId = getClassIdForClassSelected(classSelected.value, student.studentSchoolDetails.admissionClassOptions)
                         if(classId.isNotEmpty()) {
                             pendingApprovalsViewModel.updateStudentClassId(
                                 student.studentId,

@@ -159,6 +159,11 @@ interface Backend {
         @Path("classTeacherId") classTeacherId: String
     ): List<_Class>
 
+    @GET("classes/classTeacherId/classInfo/{classTeacherId}")
+    suspend fun getClassInfoList(
+        @Path("classTeacherId") classTeacherId: String
+    ): List<ClassInfo>
+
     //attendance endpoints
     @POST("attendance")
     suspend fun submitAttendance(
@@ -181,6 +186,18 @@ interface Backend {
     @GET("issues/student/{studentId}/{status}")
     suspend fun getIssuesListForStudent(
         @Path("studentId") studentId: String,
+        @Path("status") status: String
+    ): List<Issue>
+
+    @GET("issues/admin/{schoolId}/{status}")
+    suspend fun getIssuesListForAdmin(
+        @Path("schoolId") schoolId: String,
+        @Path("status") status: String
+    ): List<Issue>
+
+    @GET("issues/teacher/{classId}/{status}")
+    suspend fun getIssuesListForTeacher(
+        @Path("classId") classId: String,
         @Path("status") status: String
     ): List<Issue>
 

@@ -10,14 +10,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Issue.Issue
 import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessage
 import com.project.skoolio.model.Issue.IssueMessageRequest
+import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.IssueRepository
+import com.project.skoolio.utils.getClassIdForClassSelected
+import com.project.skoolio.utils.loginUserType
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,6 +48,16 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
     val issueTitle = mutableStateOf("")
 
     val issueDescription = mutableStateOf("")
+
+    val classNameSelectedByTeacher = mutableStateOf("")
+    val classIdSelectedByTeacher = mutableStateOf("")
+    private val _classInfoList: MutableState<DataOrException<MutableList<ClassInfo>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<ClassInfo>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val classInfoList: State<DataOrException<MutableList<ClassInfo>, Boolean, Exception>> = _classInfoList
+
+
     fun createIssue(navController: NavHostController, context: Context) {
         viewModelScope.launch {
             try {
@@ -81,13 +96,19 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
             if(issuesList.value.loading == false){
                 issuesList.value.loading = true
                 issuesList.value =
-//                    if(loginUserType.value == "Student")
-                        issueRepository.fetchIssuesListForStudent(studentDetails.studentId.value, status)
-//                    else if(loginUserType.value == "Teacher") issueRepository.fetchOpenIssuesListForTeacher()
-//                    else issueRepository.fetchOpenIssuesListForAdmin()
+                    when (loginUserType.value) {
+                        "Student" -> issueRepository.fetchIssuesListForStudent(studentDetails.studentId.value, status)
+                        "Teacher" -> issueRepository.fetchIssuesListForTeacher(classIdSelectedByTeacher.value, status)
+                        else -> issueRepository.fetchIssuesListForAdmin(adminDetails.schoolId.value, status)
+                    }
 
                 if(issuesList.value.exception != null){
-                    Toast.makeText(context,"Some Error Occured while fetching the open issues list - ${issuesList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    if(status == "o") {
+                        Toast.makeText(context, "Some Error Occured while fetching the open issues list - ${issuesList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        Toast.makeText(context, "Some Error Occured while fetching the history - ${issuesList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    }
                     issuesList.value.loading = false
                 }
                 else{
@@ -153,6 +174,26 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
                 Toast.makeText(context,"The message could not be removed from the list. ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun fetchClassInfoList(context: Context) {
+        viewModelScope.launch {
+            if(_classInfoList.value.loading == false) {
+                _classInfoList.value.loading = true
+                _classInfoList.value = issueRepository.fetchClassInfoList(teacherDetails.teacherId.value)
+                if (_classInfoList.value.exception != null) {
+                    Toast.makeText(context, "Some Error Occured while fetching the class list - ${_classInfoList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    _classInfoList.value.loading = false
+                } else {
+                    Toast.makeText(context, "Class list fetched successfully.", Toast.LENGTH_SHORT).show()
+                    _classInfoList.value.loading = false
+                }
+            }
+        }
+    }
+
+    fun convertClassNameToId() {
+        classIdSelectedByTeacher.value = getClassIdForClassSelected(classNameSelectedByTeacher.value, classInfoList.value.data)
     }
 
 }
