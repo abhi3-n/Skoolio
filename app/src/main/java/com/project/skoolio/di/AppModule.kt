@@ -2,6 +2,7 @@ package com.project.skoolio.di
 
 import com.project.skoolio.network.Backend
 import com.project.skoolio.repositories.AttendanceRepository
+import com.project.skoolio.repositories.FeePaymentRepository
 import com.project.skoolio.repositories.IssueRepository
 import com.project.skoolio.repositories.OtpValidationRepository
 import com.project.skoolio.repositories.PendingApprovalsRepository
@@ -9,6 +10,7 @@ import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.repositories.SchoolInformationRepository
 import com.project.skoolio.utils.Constants
 import com.project.skoolio.viewModels.AttendanceViewModel
+import com.project.skoolio.viewModels.FeePaymentViewModel
 import com.project.skoolio.viewModels.IssueViewModel
 import com.project.skoolio.viewModels.LoginViewModel
 import com.project.skoolio.viewModels.OtpValidationViewModel
@@ -56,7 +58,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSchoolInformationRepository(backend: Backend) = SchoolInformationRepository(backend)
-
+    @Provides
+    @Singleton
+    fun provideFeePaymentRepository(backend: Backend) = FeePaymentRepository(backend)
 
     //ViewModels
     @Provides
@@ -86,4 +90,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideIssuesViewModel(issueRepository: IssueRepository, backend: Backend): IssueViewModel = IssueViewModel(issueRepository, backend)
+
+    @Provides
+    @Singleton
+    fun provideFeePaymentViewModel(feePaymentRepository: FeePaymentRepository): FeePaymentViewModel = FeePaymentViewModel(feePaymentRepository)
 }

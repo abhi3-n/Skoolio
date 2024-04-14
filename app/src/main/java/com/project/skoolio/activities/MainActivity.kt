@@ -1,4 +1,4 @@
-package com.project.skoolio
+package com.project.skoolio.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

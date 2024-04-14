@@ -77,25 +77,24 @@ fun IssuesScreenContent(
                 drawerState = drawerState,
                 mainContent = {
                     IssuesScreenMainContent(it, context, navController, issueViewModel)
-                },
-                floatingActionButton = {
-                    if (loginUserType.value == "Student") {
-                        FloatingActionButton(
-                            modifier = Modifier.padding(end = 16.dp, bottom = 16.dp), onClick = {
-                                navController.navigate(AppScreens.NewIssueScreen.name)
-                            },
-                            shape = CircleShape,
-                            containerColor = Color.Cyan
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Create New Issue",
-                                tint = Color.Black
-                            )
-                        }
+                }
+            ) {
+                if (loginUserType.value == "Student") {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(end = 16.dp, bottom = 16.dp), onClick = {
+                            navController.navigate(AppScreens.NewIssueScreen.name)
+                        },
+                        shape = CircleShape,
+                        containerColor = Color.Cyan
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Create New Issue",
+                            tint = Color.Black
+                        )
                     }
                 }
-            )
+            }
         }
     )
 }
@@ -139,7 +138,7 @@ fun IssuesScreenMainContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
         if(loginUserType.value == "Teacher"){
-            TextDropDownMenuRow(
+            TextDropDownMenuRow( //TODO:If the class list is not fetched for some reason (or if drop down clicked before class list fetched), the app crashes. Handle this.
                 text = "Select Class",
                 dataList = if (issueViewModel.classInfoList.value.data.isNotEmpty()) getClassOptionsList(issueViewModel.classInfoList.value.data) else null,
                 valueSelected = issueViewModel.classNameSelectedByTeacher,

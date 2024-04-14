@@ -13,6 +13,9 @@ import com.project.skoolio.screens.AdminListScreen.AdminListScreen
 import com.project.skoolio.screens.ClassListScreen.ClassListScreen
 import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAttendanceScreen
 import com.project.skoolio.screens.ClassStudentsListScreen.ClassStudentsListScreen
+import com.project.skoolio.screens.Fee.FeePaymentScreen
+import com.project.skoolio.screens.Fee.FeesHistoryScreen
+import com.project.skoolio.screens.Fee.PendingFeesScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.Issue.IssueInfoScreen
@@ -140,6 +143,17 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.IssueInfoScreen.name){
             IssueInfoScreen(navController, viewModelProvider)
+        }
+
+        //Fee Payment Module Screens
+        composable(AppScreens.FeePaymentScreen.name){
+            FeePaymentScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.PendingFeesScreen.name){
+            PendingFeesScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.FeesHistoryScreen.name){
+            FeesHistoryScreen(navController, viewModelProvider)
         }
 
         // for testing only

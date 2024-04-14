@@ -2,6 +2,7 @@ package com.project.skoolio.screens.TestScreen
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.project.skoolio.R
+import com.project.skoolio.activities.PaymentActivity
 import com.project.skoolio.components.CustomTextField
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -68,6 +70,7 @@ class ComposeFileProvider : FileProvider(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestScreen(){
+    val context = LocalContext.current
     val date = rememberDatePickerState()
     val showDialog = rememberSaveable { mutableStateOf(false) }
     Column {
@@ -89,7 +92,12 @@ fun TestScreen(){
                 }
             }
         }
-
+        
+        Button(onClick = {
+            context.startActivity(Intent(context, PaymentActivity::class.java))
+        }) {
+            Text(text = "Go to payment page")
+        }
     }
 }
 

@@ -331,7 +331,7 @@ fun getUserDrawerItemsList(userType: String?, navController: NavHostController):
 }
 
 
-val loginUserType = mutableStateOf("Teacher")
+val loginUserType = mutableStateOf("Student")
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -397,5 +397,5 @@ fun getClassOptionsList(classOptions: MutableList<ClassInfo>?): List<String>? {
     for(classInfo in classOptions!!){
         list.add(classInfo.grade+" "+ capitalize(classInfo.section))
     }
-    return list.toList()
+    return list.toList().sorted()
 }
