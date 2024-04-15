@@ -8,6 +8,8 @@ import javax.inject.Inject
 class FeePaymentRepository @Inject constructor(private val backend: Backend) {
     private val pendingFeeList: DataOrException<MutableList<Payment>, Boolean, Exception> =
         DataOrException<MutableList<Payment>, Boolean, Exception>(mutableListOf())
+    private val paymentPageRelatedData: DataOrException<Map<String,String>, Boolean, Exception> =
+        DataOrException<Map<String,String>, Boolean, Exception>(emptyMap())
     suspend fun fetchFeeListForStudent(studentId: String, status: String): DataOrException<MutableList<Payment>, Boolean, Exception> {
         val response =
             try {
@@ -19,5 +21,18 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
             }
         pendingFeeList.data = response.toMutableList()
         return pendingFeeList
+    }
+
+    suspend fun fetchPaymentPageRelatedData(): DataOrException<Map<String,String>, Boolean, Exception>  {
+        val response =
+            try {
+                backend.fetchPaymentPageRelatedData()
+            }
+            catch (e:Exception){
+                paymentPageRelatedData.exception = e
+                return paymentPageRelatedData
+            }
+        paymentPageRelatedData.data = response
+        return paymentPageRelatedData
     }
 }

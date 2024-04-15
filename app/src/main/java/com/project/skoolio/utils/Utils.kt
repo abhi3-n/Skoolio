@@ -13,6 +13,7 @@ import com.project.skoolio.components.studentDrawerItems
 import com.project.skoolio.components.teacherDrawerItems
 import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.ClassInfo
+import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model.userDetails.AddressDetails
@@ -408,3 +409,6 @@ fun getClassOptionsList(classOptions: MutableList<ClassInfo>?): List<String>? {
     }
     return list.toList().sorted()
 }
+
+lateinit var currentPayment: Payment
+lateinit var paymentPageData: Map<String,String>

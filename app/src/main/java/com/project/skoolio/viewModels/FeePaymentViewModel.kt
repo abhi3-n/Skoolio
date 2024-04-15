@@ -11,6 +11,7 @@ import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.repositories.FeePaymentRepository
+import com.project.skoolio.utils.paymentPageData
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +29,12 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
     val feeHistoryList: State<DataOrException<MutableList<Payment>, Boolean, Exception>> = _feeHistoryList
 
     val listReady:MutableState<Boolean> = mutableStateOf(false)
-    lateinit var currentPayment:Payment
+
+
+    private val _paymentPageRelatedData: MutableState<DataOrException<Map<String,String>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<Map<String,String>, Boolean, Exception>>(
+            DataOrException(emptyMap(), false, null)
+        )
 
     fun fetchFeeListForStudent(context: Context, status: String): Unit {
         listReady.value = false
@@ -47,6 +53,24 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
                     feeList.value.loading = false
                     listReady.value = true
                 }
+            }
+        }
+    }
+
+    fun fetchPaymentPageRelatedData(context: Context, launchActivity: () -> Unit) {
+        viewModelScope.launch {
+            _paymentPageRelatedData.value.loading = true
+            _paymentPageRelatedData.value = feePaymentRepository.fetchPaymentPageRelatedData()
+
+            if(_paymentPageRelatedData.value.exception != null){
+                Toast.makeText(context, "Some Error Occured while loading payment page - ${_paymentPageRelatedData.value.exception}.", Toast.LENGTH_SHORT).show()
+                _paymentPageRelatedData.value.loading = false
+            }
+            else{
+//                Toast.makeText(context,"Fee list fetched successfully.", Toast.LENGTH_SHORT).show()
+                _paymentPageRelatedData.value.loading = false
+                paymentPageData = _paymentPageRelatedData.value.data
+                launchActivity.invoke()
             }
         }
     }
