@@ -28,6 +28,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.Period
+import java.time.Year
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -55,10 +56,7 @@ fun BackToLoginScreen(navController: NavHostController) {
 }
 
 @Composable
-fun BackToHomeScreen(navController: NavHostController, userType: String?
-//                     ,context: Context
-) {
-//    val activity = context as? Activity
+fun BackToHomeScreen(navController: NavHostController, userType: String?) {
     androidx.activity.compose.BackHandler(enabled = true) {
         navController.navigate(AppScreens.HomeScreen.name + "/$userType") {
             popUpTo(navController.graph.id) {
@@ -79,12 +77,12 @@ fun presentDateEpoch():Long{  //returns value in second
     return currentDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun getCurrentMonthFromEpoch(): String { //needed to print month name in heading
-    val date = Date(presentDateEpoch()*1000)
-    val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
-    return dateFormat.format(date)
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//fun getCurrentMonthFromEpoch(): String { //needed to print month name in heading
+//    val date = Date(presentDateEpoch()*1000)
+//    val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+//    return dateFormat.format(date)
+//}
 @RequiresApi(Build.VERSION_CODES.O)
 fun getMonthNameFromEpoch(epochValue: Long): String {
     val localDateTime = Instant.ofEpochMilli(epochValue*1000).atZone(ZoneId.systemDefault()).toLocalDateTime()
@@ -162,6 +160,17 @@ fun getNextMonthEpochs(currentEpoch: Long): Pair<Long, Long> {
 
     return Pair(firstDayNextMonth, lastDayNextMonth)
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun epochToMonthYearString(epoch: Long): String {
+//    val instant = Instant.ofEpochSecond(epoch)
+//    val formatter = DateTimeFormatter.ofPattern("MMMM, yyyy") // MMMM for full month name
+//    return formatter.format(instant)
+    val localDateTime = Instant.ofEpochMilli(epoch*1000).atZone(ZoneId.systemDefault()).toLocalDateTime()
+    val value = capitalize(Month.of(localDateTime.monthValue).toString().lowercase()) +", "+ capitalize(Year.of(localDateTime.year).toString().lowercase())
+    return value
+}
+
 object statesList{
     val list:List<String> = listOf(
         "Andhra Pradesh",

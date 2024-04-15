@@ -4,7 +4,7 @@ import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
-import com.project.skoolio.model.Fees.Payment
+import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.Issue.Issue
 import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessageRequest
@@ -214,7 +214,7 @@ interface Backend {
 
     //payment endpoints
     @GET("/payments/{studentId}/{status}")
-    suspend fun getFeesListForStudent(
+    suspend fun getFeeListForStudent(
         @Path("studentId") studentId: String,
         @Path("status") status: String
     ): List<Payment>

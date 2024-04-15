@@ -1,23 +1,23 @@
 package com.project.skoolio.repositories
 
 import com.project.skoolio.data.DataOrException
-import com.project.skoolio.model.Fees.Payment
+import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.network.Backend
 import javax.inject.Inject
 
 class FeePaymentRepository @Inject constructor(private val backend: Backend) {
-    private val pendingFeesList: DataOrException<MutableList<Payment>, Boolean, Exception> =
+    private val pendingFeeList: DataOrException<MutableList<Payment>, Boolean, Exception> =
         DataOrException<MutableList<Payment>, Boolean, Exception>(mutableListOf())
-    suspend fun fetchFeesListForStudent(studentId: String, status: String): DataOrException<MutableList<Payment>, Boolean, Exception> {
+    suspend fun fetchFeeListForStudent(studentId: String, status: String): DataOrException<MutableList<Payment>, Boolean, Exception> {
         val response =
             try {
-                backend.getFeesListForStudent(studentId, status)
+                backend.getFeeListForStudent(studentId, status)
             }
             catch (e:Exception){
-                pendingFeesList.exception = e
-                return pendingFeesList
+                pendingFeeList.exception = e
+                return pendingFeeList
             }
-        pendingFeesList.data = response.toMutableList()
-        return pendingFeesList
+        pendingFeeList.data = response.toMutableList()
+        return pendingFeeList
     }
 }

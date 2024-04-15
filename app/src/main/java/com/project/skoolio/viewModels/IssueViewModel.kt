@@ -41,7 +41,9 @@ class IssueViewModel @Inject constructor(private val issueRepository: IssueRepos
         )
     val closedIssuesList: State<DataOrException<MutableList<Issue>, Boolean, Exception>> = _closedIssuesList
 
-    var currentIssue:Issue = Issue("",0,'s',"",0,"","","", listOf(), 'o')
+//    var currentIssue:Issue = Issue("",0,'s',"",0,"","","", listOf(), 'o')
+    lateinit var currentIssue:Issue
+
     var isOpenIssueSelected = false
 
     val listReady:MutableState<Boolean> = mutableStateOf(false)

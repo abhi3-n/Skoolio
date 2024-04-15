@@ -83,7 +83,7 @@ import com.project.skoolio.viewModels.ViewModelProvider
 @Composable
 fun SkoolioAppBar(
     pageTitle: String,
-    icon: ImageVector,
+    icon: ImageVector?,
     elevation: Dp = 0.dp,
     navController: NavHostController,
     sideDrawerToggle: () -> Unit
@@ -100,14 +100,16 @@ fun SkoolioAppBar(
     TopAppBar(
         title = {
             Row {
-                Column {
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(25.dp)
-                    )
+                if(icon!=null) {
+                    Column {
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(25.dp)
+                        )
+                    }
                 }
 
                 Text(

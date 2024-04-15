@@ -75,17 +75,16 @@ fun CommonScaffold(
     Scaffold(
         topBar = {
             SkoolioAppBar(title,
-                navController= navController,
+                navController = navController,
                 elevation = 5.dp,
-                icon = icon,
-                sideDrawerToggle = {
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
-                        }
+                icon = icon
+            ) {
+                scope.launch {
+                    drawerState.apply {
+                        if (isClosed) open() else close()
                     }
                 }
-            )
+            }
         },
         floatingActionButton = floatingActionButton,
     ){

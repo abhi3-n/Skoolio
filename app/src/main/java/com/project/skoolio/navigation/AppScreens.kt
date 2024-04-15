@@ -14,8 +14,8 @@ enum class AppScreens{
 
     //For students and admins
     FeePaymentScreen,
-    PendingFeesScreen,
-    FeesHistoryScreen,
+    PendingFeeScreen,
+    FeeHistoryScreen,
 
 
     //Common To students, teachers and admins

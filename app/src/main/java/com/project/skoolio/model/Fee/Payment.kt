@@ -1,4 +1,4 @@
-package com.project.skoolio.model.Fees
+package com.project.skoolio.model.Fee
 
 class Payment(
     val paymentId:String,

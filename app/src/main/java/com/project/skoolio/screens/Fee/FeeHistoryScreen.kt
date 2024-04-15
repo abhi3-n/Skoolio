@@ -5,6 +5,6 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.viewModels.ViewModelProvider
 
 @Composable
-fun FeesHistoryScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
+fun FeeHistoryScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
 
 }

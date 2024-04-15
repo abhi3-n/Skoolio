@@ -79,12 +79,12 @@ fun FeePaymentScreenMainContent(
     feePaymentViewModel: FeePaymentViewModel
 ) {
     val pendingFeesClick = {
-        feePaymentViewModel.fetchFeesListForStudent(context, "pending")
-        navController.navigate(AppScreens.PendingFeesScreen.name)
+        feePaymentViewModel.fetchFeeListForStudent(context, "pending")
+        navController.navigate(AppScreens.PendingFeeScreen.name)
     }
     val feeHistoryClick = {
-        feePaymentViewModel.fetchFeesListForStudent(context, "paid")
-        navController.navigate(AppScreens.FeesHistoryScreen.name)
+        feePaymentViewModel.fetchFeeListForStudent(context, "paid")
+        navController.navigate(AppScreens.FeeHistoryScreen.name)
     }
 
     Column(modifier = Modifier
