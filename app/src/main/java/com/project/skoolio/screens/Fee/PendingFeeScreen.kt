@@ -33,9 +33,11 @@ import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
 import com.project.skoolio.model.Fee.Payment
+import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.currentPayment
 import com.project.skoolio.utils.epochToMonthYearString
+import com.project.skoolio.utils.getCurrentEpochSeconds
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.FeePaymentViewModel
@@ -94,7 +96,8 @@ fun PendingFeeScreenMainContent(
         if (result.resultCode == Activity.RESULT_OK) {
             // Handle result, e.g., navigate back to the Composable screen
             val value = result.data?.getStringExtra("razorpayPaymentId")
-            Toast.makeText(context,"Payment successful. Payment id - $value", Toast.LENGTH_SHORT).show() //TODO:Review toast message
+            Toast.makeText(context,"Payment successful. Payment id - ${currentPayment.paymentId}", Toast.LENGTH_SHORT).show() //TODO:Review toast message
+            feePaymentViewModel.updateFeePaymentStatus(studentDetails.studentId.value, currentPayment.paymentId, currentPayment.feeAmount, getCurrentEpochSeconds())
         }
         else if (result.resultCode == Activity.RESULT_CANCELED) {
             // Handle result, e.g., navigate back to the Composable screen

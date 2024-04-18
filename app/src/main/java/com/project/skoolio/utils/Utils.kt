@@ -162,6 +162,12 @@ fun getNextMonthEpochs(currentEpoch: Long): Pair<Long, Long> {
     return Pair(firstDayNextMonth, lastDayNextMonth)
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getCurrentEpochSeconds(): Long {
+    return Instant.now().epochSecond
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun epochToMonthYearString(epoch: Long): String {
 //    val instant = Instant.ofEpochSecond(epoch)

@@ -104,7 +104,7 @@ fun FeeHistoryScreenMainContent(
                                     Text(text = "Status:- "+ capitalize(payment.status),modifier = Modifier.padding(2.dp))
                                     Text(text = "Paid Amount:- "+ payment.paidAmount,modifier = Modifier.padding(2.dp))
                                     Text(text = "Paid On:- "+ convertEpochToDateString(payment.paymentDate*1000),modifier = Modifier.padding(2.dp))
-                                    Text(text = "Paid On:- "+ payment.paymentId,modifier = Modifier.padding(2.dp))
+                                    Text(text = "Payment Id:- "+ payment.paymentId,modifier = Modifier.padding(2.dp))
                                 }
                                 Column(modifier = Modifier.padding(2.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally,

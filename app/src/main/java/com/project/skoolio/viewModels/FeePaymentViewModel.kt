@@ -11,6 +11,7 @@ import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.repositories.FeePaymentRepository
+import com.project.skoolio.utils.currentPayment
 import com.project.skoolio.utils.paymentPageData
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -72,6 +73,19 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
                 paymentPageData = _paymentPageRelatedData.value.data
                 launchActivity.invoke()
             }
+        }
+    }
+
+    fun updateFeePaymentStatus(
+        studentId: String,
+        paymentId: String,
+        feeAmount: Int,
+        currentEpochSeconds: Long
+    ) {
+        viewModelScope.launch {
+            feePaymentRepository.updateFeePaymentStatus(studentId, paymentId, feeAmount, currentEpochSeconds)
+            pendingFeeList.value.data.remove(currentPayment)
+            currentPayment = Payment("","","",0,0,"",0,0,"")
         }
     }
 

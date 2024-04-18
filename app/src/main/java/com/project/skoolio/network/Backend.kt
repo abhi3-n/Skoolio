@@ -5,6 +5,7 @@ import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
 import com.project.skoolio.model.Fee.Payment
+import com.project.skoolio.model.Fee.PaymentUpdateRequest
 import com.project.skoolio.model.Issue.Issue
 import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessageRequest
@@ -213,12 +214,17 @@ interface Backend {
     ):Map<String, String>
 
     //payment endpoints
-    @GET("/payments/{studentId}/{status}")
+    @GET("payments/{studentId}/{status}")
     suspend fun getFeeListForStudent(
         @Path("studentId") studentId: String,
         @Path("status") status: String
     ): List<Payment>
 
-    @GET("/payment/info")
+    @GET("payment/info")
     suspend fun fetchPaymentPageRelatedData(): Map<String,String>
+
+    @PATCH("payment")
+    suspend fun updateFeePaymentStatus(
+        @Body paymentUpdateRequest: PaymentUpdateRequest
+    ):Unit
 }

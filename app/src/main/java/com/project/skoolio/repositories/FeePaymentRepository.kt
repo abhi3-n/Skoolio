@@ -2,6 +2,7 @@ package com.project.skoolio.repositories
 
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.Fee.Payment
+import com.project.skoolio.model.Fee.PaymentUpdateRequest
 import com.project.skoolio.network.Backend
 import javax.inject.Inject
 
@@ -34,5 +35,19 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
             }
         paymentPageRelatedData.data = response
         return paymentPageRelatedData
+    }
+
+    suspend fun updateFeePaymentStatus(
+        studentId: String,
+        paymentId: String,
+        feeAmount: Int,
+        currentEpochSeconds: Long
+    ) {
+        try {
+            backend.updateFeePaymentStatus(PaymentUpdateRequest(studentId, paymentId, feeAmount, currentEpochSeconds))
+        }
+        catch (e:Exception){
+
+        }
     }
 }
