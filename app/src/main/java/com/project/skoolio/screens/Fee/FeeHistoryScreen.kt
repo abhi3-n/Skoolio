@@ -52,6 +52,7 @@ fun FeeHistoryScreen(navController: NavHostController, viewModelProvider: ViewMo
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeeHistoryScreenContent(
     navController: NavHostController,

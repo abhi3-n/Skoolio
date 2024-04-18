@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.navigation.AppScreens
+import com.project.skoolio.utils.loginUserType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -126,13 +127,20 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
                 navController.navigate(AppScreens.SchoolInformationScreen.name)
             }
         )
-
         Spacer(modifier = Modifier.height(2.dp))
         NavigationDrawerItem(
             label = { Text(text = "Issues") },
             selected = false,
             onClick = {
                 navController.navigate(AppScreens.IssuesScreen.name)
+            }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        NavigationDrawerItem(
+            label = { Text(text = if(loginUserType.value == "Student") "Fee Payment" else "Fee Dashboard") },
+            selected = false,
+            onClick = {
+                navController.navigate(AppScreens.FeePaymentScreen.name)
             }
         )
         Spacer(modifier = Modifier.height(2.dp))

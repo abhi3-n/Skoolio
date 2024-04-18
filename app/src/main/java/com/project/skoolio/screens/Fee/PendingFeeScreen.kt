@@ -97,7 +97,7 @@ fun PendingFeeScreenMainContent(
             // Handle result, e.g., navigate back to the Composable screen
             val value = result.data?.getStringExtra("razorpayPaymentId")
             Toast.makeText(context,"Payment successful. Payment id - ${currentPayment.paymentId}", Toast.LENGTH_SHORT).show() //TODO:Review toast message
-            feePaymentViewModel.updateFeePaymentStatus(studentDetails.studentId.value, currentPayment.paymentId, currentPayment.feeAmount, getCurrentEpochSeconds())
+            feePaymentViewModel.updateFeePaymentStatus(studentDetails.studentId.value, currentPayment.paymentId, currentPayment.feeAmount, getCurrentEpochSeconds(), context)
         }
         else if (result.resultCode == Activity.RESULT_CANCELED) {
             // Handle result, e.g., navigate back to the Composable screen
@@ -115,7 +115,7 @@ fun PendingFeeScreenMainContent(
         verticalArrangement = Arrangement.Top) {
         if(feePaymentViewModel.listReady.value == true){
             LazyColumn {
-                items(feePaymentViewModel.pendingFeeList.value.data){payment:Payment->
+                items(feePaymentViewModel.pendingFeeList.value.data.sortedByDescending {payment -> payment.feeMonthEpoch }){payment:Payment->
                     ListItem(
                         itemInfo = {
                             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(2.dp)) {

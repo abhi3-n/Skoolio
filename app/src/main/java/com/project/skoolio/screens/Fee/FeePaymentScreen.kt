@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ListItem
+import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.getUserDrawerItemsList
@@ -58,13 +59,18 @@ fun FeePaymentScreenContent(
     CommonModalNavigationDrawer(drawerState, loginUserType.value, getUserDrawerItemsList(loginUserType.value, navController),
         scaffold = {
             CommonScaffold(
-                title = "Fees section",
+                title = if(loginUserType.value == "Student") "Fee section" else "Fee Dashboard",
                 icon = null, //TODO:Icon redo
                 navController = navController,
                 scope = scope,
                 drawerState = drawerState,
                 mainContent = {
-                    FeePaymentScreenMainContent(it, context, navController, feePaymentViewModel)
+                    if(loginUserType.value == "Student") {
+                        StudentScreenContent(it, context, navController, feePaymentViewModel)
+                    }
+                    else{ //For Admin
+                        AdminScreenContent(it, context, navController, feePaymentViewModel)
+                    }
                 }
             )
         }
@@ -72,18 +78,68 @@ fun FeePaymentScreenContent(
 }
 
 @Composable
-fun FeePaymentScreenMainContent(
+fun AdminScreenContent(
+    paddingValues: PaddingValues,
+    context: Context,
+    navController: NavHostController,
+    feePaymentViewModel: FeePaymentViewModel
+) {
+    val updatePaymentClick = {
+        navController.navigate(AppScreens.UpdatePaymentScreen.name)
+    }
+
+    Column(modifier = Modifier
+        .padding(paddingValues)
+        .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+        ListItem(shape = CircleShape,
+            itemInfo = {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Text(text = "Update a Payment",
+                        style = TextStyle(fontSize = 32.sp),
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable {
+                                updatePaymentClick.invoke()
+                            })
+                }
+            },
+            onClick = {
+                updatePaymentClick.invoke()
+            })
+        Spacer(modifier = Modifier.height(2.dp))
+        ListItem(shape = CircleShape,
+            itemInfo = {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Text(text = "",
+                        style = TextStyle(fontSize = 32.sp),
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable {
+                            })
+                }
+            },
+            onClick = {
+            })
+
+    }
+
+}
+
+@Composable
+fun StudentScreenContent(
     paddingValues: PaddingValues,
     context: Context,
     navController: NavHostController,
     feePaymentViewModel: FeePaymentViewModel
 ) {
     val pendingFeesClick = {
-        feePaymentViewModel.fetchFeeListForStudent(context, "pending")
+        feePaymentViewModel.fetchFeeListForStudent(context, "pending", studentDetails.studentId.value)
         navController.navigate(AppScreens.PendingFeeScreen.name)
     }
     val feeHistoryClick = {
-        feePaymentViewModel.fetchFeeListForStudent(context, "paid")
+        feePaymentViewModel.fetchFeeListForStudent(context, "paid", studentDetails.studentId.value)
         navController.navigate(AppScreens.FeeHistoryScreen.name)
     }
 

@@ -85,8 +85,6 @@ fun ShowStudentRegistrationForm(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController
 ) {
-    val context = LocalContext.current
-    val activity =  context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
         studentDetails.resetPassword()
         studentDetails.schoolName.value = ""

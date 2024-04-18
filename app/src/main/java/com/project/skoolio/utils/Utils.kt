@@ -347,7 +347,7 @@ fun getUserDrawerItemsList(userType: String?, navController: NavHostController):
 }
 
 
-val loginUserType = mutableStateOf("Student")
+val loginUserType = mutableStateOf("Admin")
 
 
 @RequiresApi(Build.VERSION_CODES.O)

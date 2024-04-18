@@ -220,6 +220,13 @@ interface Backend {
         @Path("status") status: String
     ): List<Payment>
 
+    @GET("payments/{schoolId}/{studentId}/{status}")
+    suspend fun getFeeListForStudent(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Path("status") status: String
+    ): List<Payment>
+
     @GET("payment/info")
     suspend fun fetchPaymentPageRelatedData(): Map<String,String>
 

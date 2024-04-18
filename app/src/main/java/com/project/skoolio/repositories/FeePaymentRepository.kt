@@ -42,12 +42,19 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
         paymentId: String,
         feeAmount: Int,
         currentEpochSeconds: Long
-    ) {
-        try {
-            backend.updateFeePaymentStatus(PaymentUpdateRequest(studentId, paymentId, feeAmount, currentEpochSeconds))
-        }
-        catch (e:Exception){
-
-        }
+    ){
+        backend.updateFeePaymentStatus(PaymentUpdateRequest(studentId, paymentId, feeAmount, currentEpochSeconds))
+    }
+    suspend fun fetchFeeListForStudent(studentId: String, status: String, schoolId:Int): DataOrException<MutableList<Payment>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getFeeListForStudent(schoolId.toString(), studentId, status)
+            }
+            catch (e:Exception){
+                pendingFeeList.exception = e
+                return pendingFeeList
+            }
+        pendingFeeList.data = response.toMutableList()
+        return pendingFeeList
     }
 }

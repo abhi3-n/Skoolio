@@ -60,6 +60,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -91,7 +92,8 @@ fun CustomTextField(modifier: Modifier = Modifier,
                     keyboardType: KeyboardType = KeyboardType.Text,
                    imeAction: ImeAction = ImeAction.Next,
                    keyboardActions: KeyboardActions = KeyboardActions.Default,
-                    shape:Shape = OutlinedTextFieldDefaults.shape
+                    shape:Shape = OutlinedTextFieldDefaults.shape,
+                    trailingIcon: @Composable ()-> Unit = {}
                    ) {
     OutlinedTextField(
         value = valueState.value,
@@ -109,6 +111,7 @@ fun CustomTextField(modifier: Modifier = Modifier,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
         keyboardActions = keyboardActions,
         shape = shape,
+        trailingIcon = trailingIcon
     )
 }
 
@@ -236,12 +239,12 @@ fun ShowToast(context: Context, message: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DOB(dobState: DatePickerState) {
+fun TextDatePicker(field:String = "DOB", dobState: DatePickerState, startPadding: Dp = 8.dp) {
     val openDialog = rememberSaveable {
         mutableStateOf(false)
     }
     Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = "DOB", modifier = Modifier.padding(top = 13.dp, start = 8.dp))
+        Text(text = field, modifier = Modifier.padding(top = 13.dp, start = startPadding))
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             if(!dobState.selectedDateMillis.toString().isNullOrEmpty()){
                 convertEpochToDateString(dobState.selectedDateMillis)?.let { Text(text = it, modifier = Modifier.padding(top = 13.dp)) }
@@ -424,6 +427,8 @@ fun TextCustomTextField(
     valueState: MutableState<String>,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction,
+    enabled:Boolean = true,
+    trailingIcon:  @Composable () -> Unit = {}
 ) {
     Text(
         text = text,
@@ -434,7 +439,9 @@ fun TextCustomTextField(
         valueState = valueState,
         label = "",
         keyboardType = keyboardType,
-        imeAction = imeAction
+        imeAction = imeAction,
+        enabled = enabled,
+        trailingIcon = trailingIcon
     )
 }
 
@@ -681,7 +688,7 @@ fun BasicDetails(
         ) {
             FormTitle("Basic Details", style = MaterialTheme.typography.titleSmall)
             NameFields(firstName, middleName, lastName)
-            DOB(dobState)
+            TextDatePicker(dobState= dobState)
             TextDropDownMenuRow(
                 text = "Gender",
                 dataList = listOf("Male", "Female"),
@@ -768,8 +775,8 @@ fun UserLoginForm(
 ) {
 //    val email = loginViewModel.email
 //    val password = loginViewModel.password
-    val email = rememberSaveable { mutableStateOf("abhinandannarang3@gmail.com") }
-    val password = rememberSaveable { mutableStateOf("abc") }
+    val email = rememberSaveable { mutableStateOf("anjumannarang17@gmail.com") }
+    val password = rememberSaveable { mutableStateOf("123") }
     val passwordVisibility = rememberSaveable { mutableStateOf(false) }
     val keyBoardController = LocalSoftwareKeyboardController.current
     val valid = rememberSaveable(email.value, password.value) {
