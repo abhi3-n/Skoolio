@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
+import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.repositories.FeePaymentRepository
 import com.project.skoolio.utils.currentPayment
@@ -28,8 +29,16 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
         )
     val feeHistoryList: State<DataOrException<MutableList<Payment>, Boolean, Exception>> = _feeHistoryList
 
+    private val _classInfoList: MutableState<DataOrException<MutableList<ClassInfo>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<ClassInfo>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val classInfoList: State<DataOrException<MutableList<ClassInfo>, Boolean, Exception>> = _classInfoList
+
+
     val listReady:MutableState<Boolean> = mutableStateOf(false)
 
+    val classInfoListReady:MutableState<Boolean> = mutableStateOf(false)
 
     private val _paymentPageRelatedData: MutableState<DataOrException<Map<String,String>, Boolean, Exception>> =
         mutableStateOf<DataOrException<Map<String,String>, Boolean, Exception>>(
@@ -37,6 +46,10 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
         )
 
     var studentId:String = ""
+
+    val classNameSelected:MutableState<String> = mutableStateOf("")
+    val monthSelected:MutableState<String> = mutableStateOf("")
+
     fun fetchFeeListForStudent(context: Context, status: String, studentId: String): Unit {
         listReady.value = false
         viewModelScope.launch {
@@ -127,5 +140,25 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
     fun resetPendingFeeList() {
         _pendingFeeList.value.data = mutableListOf()
         listReady.value = false
+    }
+
+    fun fetchClassInfoList(schoolId: Int, context: Context) {
+        classInfoListReady.value = false
+        viewModelScope.launch {
+            if(classInfoList.value.loading == false){
+                _classInfoList.value.loading = true
+                _classInfoList.value = feePaymentRepository.fetchClassInfoList(schoolId)
+
+                if(_classInfoList.value.exception != null){
+                    Toast.makeText(context, "Some Error Occured while fetching class list - ${_classInfoList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    _classInfoList.value.loading = false
+                }
+                else{
+                    Toast.makeText(context,"Class list fetched successfully.", Toast.LENGTH_SHORT).show()
+                    _classInfoList.value.loading = false
+                    classInfoListReady.value = true
+                }
+            }
+        }
     }
 }

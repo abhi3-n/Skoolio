@@ -30,6 +30,7 @@ import java.time.LocalDateTime
 import java.time.Month
 import java.time.Period
 import java.time.Year
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -170,12 +171,34 @@ fun getCurrentEpochSeconds(): Long {
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun epochToMonthYearString(epoch: Long): String {
-//    val instant = Instant.ofEpochSecond(epoch)
-//    val formatter = DateTimeFormatter.ofPattern("MMMM, yyyy") // MMMM for full month name
-//    return formatter.format(instant)
     val localDateTime = Instant.ofEpochMilli(epoch*1000).atZone(ZoneId.systemDefault()).toLocalDateTime()
     val value = capitalize(Month.of(localDateTime.monthValue).toString().lowercase()) +", "+ capitalize(Year.of(localDateTime.year).toString().lowercase())
     return value
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getEpochValuesOfFirstDayOfMonths(): List<String> {
+//    val currentYear = YearMonth.now().year
+//    val currentMonth = YearMonth.now().monthValue
+//    val epochValues = mutableListOf<Long>()
+//    for (month in 1..currentMonth) {
+//        val firstDayOfMonth = YearMonth.of(currentYear, month).atDay(1)
+//        val epochValue = firstDayOfMonth.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
+//        epochValues.add(epochValue)
+//    }
+//    return epochValues
+    val currentYearMonth = YearMonth.now()
+    val currentMonth = currentYearMonth.month
+
+    val monthNames = mutableListOf<String>()
+
+    for (month in Month.values().takeWhile { it <= currentMonth }) {
+        monthNames.add(month.name)
+    }
+
+    return monthNames.toList().map {
+        capitalize(it.lowercase())
+    }
 }
 
 object statesList{

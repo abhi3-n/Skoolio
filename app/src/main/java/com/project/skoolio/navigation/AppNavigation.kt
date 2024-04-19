@@ -15,6 +15,7 @@ import com.project.skoolio.screens.ClassStudentsAttendanceScreen.ClassStudentsAt
 import com.project.skoolio.screens.ClassStudentsListScreen.ClassStudentsListScreen
 import com.project.skoolio.screens.Fee.FeePaymentScreen
 import com.project.skoolio.screens.Fee.FeeHistoryScreen
+import com.project.skoolio.screens.Fee.MonthlyPaymentDetails
 import com.project.skoolio.screens.Fee.PendingFeeScreen
 import com.project.skoolio.screens.Fee.UpdatePaymentScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
@@ -158,6 +159,9 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.UpdatePaymentScreen.name){
             UpdatePaymentScreen(navController, viewModelProvider)
+        }
+        composable(AppScreens.MonthlyPaymentDetails.name){
+            MonthlyPaymentDetails(navController, viewModelProvider)
         }
         // for testing only
         composable(AppScreens.TestScreen.name){

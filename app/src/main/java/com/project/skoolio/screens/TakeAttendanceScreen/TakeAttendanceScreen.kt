@@ -42,7 +42,6 @@ fun TakeAttendanceScreen(
     userType: String?
 ) {
     val attendanceViewModel = viewModelProvider.getAttendanceViewModel()
-    val context = LocalContext.current
     BackToHomeScreen(navController,userType)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

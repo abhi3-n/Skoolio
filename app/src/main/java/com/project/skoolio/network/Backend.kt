@@ -166,6 +166,9 @@ interface Backend {
         @Path("classTeacherId") classTeacherId: String
     ): List<ClassInfo>
 
+    @GET("classes/classInfo/{schoolId}")
+    suspend fun fetchClassInfoList(@Path("schoolId") schoolId: Int): List<ClassInfo>
+
     //attendance endpoints
     @POST("attendance")
     suspend fun submitAttendance(
@@ -234,4 +237,5 @@ interface Backend {
     suspend fun updateFeePaymentStatus(
         @Body paymentUpdateRequest: PaymentUpdateRequest
     ):Unit
+
 }
