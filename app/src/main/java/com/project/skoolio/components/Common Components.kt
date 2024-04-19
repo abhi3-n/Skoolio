@@ -228,7 +228,10 @@ fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit
 
 
 @Composable
-fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}, shape:Shape = CircleShape) {
+fun ListItem(itemInfo:@Composable ()->Unit = {},
+             onClick:()->Unit = {},
+             shape:Shape = CircleShape,
+             surfaceColor:Long = 0xFFE6EEFF) {
     Surface(
         Modifier
             .padding(3.dp)
@@ -238,7 +241,7 @@ fun ListItem(itemInfo:@Composable ()->Unit = {}, onClick:()->Unit = {}, shape:Sh
             },
         shape = shape,
         border = BorderStroke(width = 2.dp, color = Color.Black),
-        color = Color(0xFFE6EEFF)
+        color = Color(surfaceColor)
     ) {
         itemInfo.invoke()
     }
