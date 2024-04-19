@@ -1,6 +1,7 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -35,10 +36,15 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
         )
     val classInfoList: State<DataOrException<MutableList<ClassInfo>, Boolean, Exception>> = _classInfoList
 
+    private val _monthlyDataList: MutableState<DataOrException<MutableList<Payment>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<Payment>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val monthlyDataList: State<DataOrException<MutableList<Payment>, Boolean, Exception>> = _monthlyDataList
 
     val listReady:MutableState<Boolean> = mutableStateOf(false)
-
     val classInfoListReady:MutableState<Boolean> = mutableStateOf(false)
+    val monthlyDataListReady:MutableState<Boolean> = mutableStateOf(false)
 
     private val _paymentPageRelatedData: MutableState<DataOrException<Map<String,String>, Boolean, Exception>> =
         mutableStateOf<DataOrException<Map<String,String>, Boolean, Exception>>(
@@ -50,6 +56,7 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
     val classNameSelected:MutableState<String> = mutableStateOf("")
     val monthSelected:MutableState<String> = mutableStateOf("")
 
+    var idToNameMap:MutableMap<String,String> = mutableMapOf()
     fun fetchFeeListForStudent(context: Context, status: String, studentId: String): Unit {
         listReady.value = false
         viewModelScope.launch {
@@ -160,5 +167,34 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
                 }
             }
         }
+    }
+
+    fun fetchAllFeePaymentsForMonthAndClassId(monthEpoch: Long, classId: String, context: Context) {
+        monthlyDataListReady.value = false
+        viewModelScope.launch {
+            if(monthlyDataList.value.loading == false){
+                _monthlyDataList.value.loading = true
+                _monthlyDataList.value = feePaymentRepository.fetchAllFeePaymentsForMonthAndClassId(monthEpoch,classId)
+
+                if(_monthlyDataList.value.exception != null){
+                    Toast.makeText(context, "Some Error Occured while fetching monthly data - ${_monthlyDataList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    _monthlyDataList.value.loading = false
+                }
+                else{
+                    Toast.makeText(context,"Monthly Data fetched successfully. Count - ${monthlyDataList.value.data.count()}", Toast.LENGTH_SHORT).show()
+                    mapStudentIdToStudentNames(context)
+                    _monthlyDataList.value.loading = false
+                }
+            }
+        }
+    }
+
+    private suspend fun mapStudentIdToStudentNames(context: Context) {
+        for(payment in monthlyDataList.value.data){
+            val name = feePaymentRepository.fetchNameOfStudent(payment.studentId)
+            idToNameMap[payment.studentId] = name
+        }
+        monthlyDataListReady.value = true
+        Toast.makeText(context,"Id to Name mapping done.", Toast.LENGTH_SHORT).show()
     }
 }

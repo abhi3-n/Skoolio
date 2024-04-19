@@ -5,10 +5,14 @@ import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.Fee.PaymentUpdateRequest
 import com.project.skoolio.network.Backend
+import com.project.skoolio.utils.capitalize
+import com.project.skoolio.utils.removeExtraSpaces
 import javax.inject.Inject
 
 class FeePaymentRepository @Inject constructor(private val backend: Backend) {
     private val pendingFeeList: DataOrException<MutableList<Payment>, Boolean, Exception> =
+        DataOrException<MutableList<Payment>, Boolean, Exception>(mutableListOf())
+    private val monthlyFeeData: DataOrException<MutableList<Payment>, Boolean, Exception> =
         DataOrException<MutableList<Payment>, Boolean, Exception>(mutableListOf())
     private val paymentPageRelatedData: DataOrException<Map<String,String>, Boolean, Exception> =
         DataOrException<Map<String,String>, Boolean, Exception>(emptyMap())
@@ -74,5 +78,26 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
             }
         classInfoList.data = response.toMutableList()
         return classInfoList
+    }
+
+    suspend fun fetchAllFeePaymentsForMonthAndClassId(
+        monthEpoch: Long,
+        classId: String
+    ): DataOrException<MutableList<Payment>, Boolean, Exception> {
+        val response =
+            try {
+                backend.fetchAllFeePaymentsForMonthAndClassId(monthEpoch.toString(),classId)
+            }
+            catch (e:Exception){
+                monthlyFeeData.exception = e
+                return monthlyFeeData
+            }
+        monthlyFeeData.data = response.toMutableList()
+        return monthlyFeeData
+    }
+
+    suspend fun fetchNameOfStudent(studentId: String): String {
+        val map = backend.fetchStudentNameForId(studentId)
+        return capitalize(removeExtraSpaces(map["name"]!!))
     }
 }

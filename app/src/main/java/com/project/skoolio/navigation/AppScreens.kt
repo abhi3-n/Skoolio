@@ -38,7 +38,7 @@ enum class AppScreens{
     ClassStudentsListScreen,
     FullInfoScreen,
     UpdatePaymentScreen,
-    MonthlyPaymentDetails,
+    MonthlyPaymentDetailsScreen,
 
 
     //test

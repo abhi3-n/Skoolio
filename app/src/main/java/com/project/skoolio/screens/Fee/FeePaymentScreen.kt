@@ -2,6 +2,7 @@ package com.project.skoolio.screens.Fee
 
 import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,13 +40,16 @@ import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
+import com.project.skoolio.utils.getClassIdForClassSelected
 import com.project.skoolio.utils.getClassOptionsList
+import com.project.skoolio.utils.getEpochOfFirstDayOfMonth
 import com.project.skoolio.utils.getEpochValuesOfFirstDayOfMonths
 import com.project.skoolio.utils.getUserDrawerItemsList
 import com.project.skoolio.utils.loginUserType
 import com.project.skoolio.viewModels.FeePaymentViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 import java.time.Year
+import java.util.Locale
 
 @Composable
 fun FeePaymentScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
@@ -187,6 +191,21 @@ fun AdminScreenContent(
             Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                 Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                     onClick = {
+                        if(feePaymentViewModel.monthSelected.value.isNotEmpty()
+                            && feePaymentViewModel.classNameSelected.value.isNotEmpty()) {
+                            feePaymentViewModel.fetchAllFeePaymentsForMonthAndClassId(
+                                getEpochOfFirstDayOfMonth(feePaymentViewModel.monthSelected.value.uppercase(Locale.getDefault()), Year.now().toString().toInt()),
+                                getClassIdForClassSelected(feePaymentViewModel.classNameSelected.value,feePaymentViewModel.classInfoList.value.data),
+                                context
+                            )
+                            navController.navigate(AppScreens.MonthlyPaymentDetailsScreen.name)
+                        }
+                        else if(feePaymentViewModel.monthSelected.value.isEmpty()){
+                            Toast.makeText(context,"Please select a month", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            Toast.makeText(context,"Please select a class", Toast.LENGTH_SHORT).show()
+                        }
                     }) {
                     Text(text = "Get Details")
                 }

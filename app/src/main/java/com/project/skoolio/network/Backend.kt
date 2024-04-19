@@ -238,4 +238,15 @@ interface Backend {
         @Body paymentUpdateRequest: PaymentUpdateRequest
     ):Unit
 
+    @GET("payments/monthlyData/{monthEpoch}/{classId}")
+    suspend fun fetchAllFeePaymentsForMonthAndClassId(
+        @Path("monthEpoch") monthEpoch: String,
+        @Path("classId") classId: String
+    ): List<Payment>
+
+    @GET("student/name/{studentId}")
+    suspend fun fetchStudentNameForId(
+        @Path("studentId") studentId: String
+    ): Map<String,String>
+
 }

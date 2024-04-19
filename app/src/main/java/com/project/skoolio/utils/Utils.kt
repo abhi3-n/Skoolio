@@ -178,27 +178,21 @@ fun epochToMonthYearString(epoch: Long): String {
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun getEpochValuesOfFirstDayOfMonths(): List<String> {
-//    val currentYear = YearMonth.now().year
-//    val currentMonth = YearMonth.now().monthValue
-//    val epochValues = mutableListOf<Long>()
-//    for (month in 1..currentMonth) {
-//        val firstDayOfMonth = YearMonth.of(currentYear, month).atDay(1)
-//        val epochValue = firstDayOfMonth.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
-//        epochValues.add(epochValue)
-//    }
-//    return epochValues
     val currentYearMonth = YearMonth.now()
     val currentMonth = currentYearMonth.month
-
     val monthNames = mutableListOf<String>()
-
     for (month in Month.values().takeWhile { it <= currentMonth }) {
         monthNames.add(month.name)
     }
-
     return monthNames.toList().map {
         capitalize(it.lowercase())
     }
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun getEpochOfFirstDayOfMonth(monthName: String, year: Int): Long {
+    val month = Month.valueOf(monthName)
+    val firstDayOfMonth = LocalDate.of(year, month, 1)
+    return firstDayOfMonth.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
 }
 
 object statesList{
@@ -441,3 +435,9 @@ fun getClassOptionsList(classOptions: MutableList<ClassInfo>?): List<String>? {
 
 lateinit var currentPayment: Payment
 lateinit var paymentPageData: Map<String,String>
+
+
+
+fun removeExtraSpaces(s: String): String {
+    return s.replace("\\s+".toRegex(), " ")
+}
