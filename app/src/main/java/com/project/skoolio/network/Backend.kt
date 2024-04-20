@@ -31,7 +31,6 @@ import javax.inject.Singleton
 
 @Singleton
 interface Backend {
-
     @POST("email")
     suspend fun receiveOTP(
         @Body emailOtpRequest: EmailOtpRequest
@@ -65,13 +64,16 @@ interface Backend {
         @Path("classId") classId: String
     ): List<StudentInfo>
 
+    @GET("student/name/{studentId}")
+    suspend fun fetchStudentNameForId(
+        @Path("studentId") studentId: String
+    ): Map<String,String>
+
     //Used for School Information
     @GET("students/{classId}")
     suspend fun getStudentsListForClass(
         @Path("classId") classId: String
     ): List<Student>
-
-
 
     //teacher service api endpoints
     @POST("teacher")
@@ -79,11 +81,11 @@ interface Backend {
         @Body teacher: Teacher
     ): RegisterResponse
 
+
     @POST("teacher/login")
     suspend fun teacherLogin(
         @Body loginRequest: LoginRequest
     ): TeacherLoginResponse
-
 
     @GET("teachers/approvalPending/{schoolId}")
     suspend fun getPendingTeachers(
@@ -95,11 +97,11 @@ interface Backend {
         @Path("teacherId") teacherId: String,
     ):Unit
 
+
     @GET("teachers/{schoolId}")
     suspend fun getTeacherListForSchool(
         @Path("schoolId") schoolId: String
     ): List<Teacher>
-
 
     //school service api endpoints
     @GET("/schools/{city}")
@@ -115,17 +117,14 @@ interface Backend {
         @Path("schoolId") schoolId: String
     ): SchoolName
 
+
     @GET("school/{schoolId}")
     suspend fun getSchoolInformation(
         @Path("schoolId") schoolId: String
     ): School
 
 
-//    @GET("student/detail")
-//    suspend fun getStudentDetails(
-//        @Body email:String
 //    ):Student
-
 
     //admin related api endpoints
     @POST("admin/login")
@@ -133,11 +132,11 @@ interface Backend {
         @Body loginRequest: LoginRequest
     ): AdminLoginResponse
 
+
     @GET("admins/{schoolId}")
     suspend fun getAdminListForSchool(
         @Path("schoolId") schoolId: String
     ): List<SchoolAdministrator>
-
 
     //class service endpoints
     @GET("class/classListForSchool/{schoolId}")
@@ -244,9 +243,9 @@ interface Backend {
         @Path("classId") classId: String
     ): List<Payment>
 
-    @GET("student/name/{studentId}")
-    suspend fun fetchStudentNameForId(
-        @Path("studentId") studentId: String
-    ): Map<String,String>
+    @GET("class/fee/{classId}")
+     suspend fun fetchFeeForClassID(
+         @Path("classId") classId: String
+     ): Map<String,Float>
 
 }

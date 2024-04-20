@@ -1,7 +1,6 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -11,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Fee.Payment
+import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.repositories.FeePaymentRepository
 import com.project.skoolio.utils.currentPayment
 import com.project.skoolio.utils.paymentPageData
@@ -42,9 +42,22 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
         )
     val monthlyDataList: State<DataOrException<MutableList<Payment>, Boolean, Exception>> = _monthlyDataList
 
+    private val _studentsList: MutableState<DataOrException<MutableList<StudentInfo>, Boolean, Exception>> =
+        mutableStateOf<DataOrException<MutableList<StudentInfo>, Boolean, Exception>>(
+            DataOrException(mutableListOf(), false, null)
+        )
+    val studentsList: State<DataOrException<MutableList<StudentInfo>, Boolean, Exception>> = _studentsList
+
+    val selectedClassFee: MutableState<DataOrException<Float, Boolean, Exception>> =
+        mutableStateOf<DataOrException<Float, Boolean, Exception>>(
+            DataOrException(0F, false, null)
+        )
+
+
     val listReady:MutableState<Boolean> = mutableStateOf(false)
     val classInfoListReady:MutableState<Boolean> = mutableStateOf(false)
     val monthlyDataListReady:MutableState<Boolean> = mutableStateOf(false)
+    val studentListReady:MutableState<Boolean> = mutableStateOf(false)
 
     private val _paymentPageRelatedData: MutableState<DataOrException<Map<String,String>, Boolean, Exception>> =
         mutableStateOf<DataOrException<Map<String,String>, Boolean, Exception>>(
@@ -196,5 +209,43 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
         }
         monthlyDataListReady.value = true
         Toast.makeText(context,"Id to Name mapping done.", Toast.LENGTH_SHORT).show()
+    }
+
+    fun fetchFeeForClassID(classId: String, context: Context) {
+        viewModelScope.launch {
+            if(selectedClassFee.value.loading == false){
+                selectedClassFee.value.loading = true
+                selectedClassFee.value = feePaymentRepository.fetchFeeForClassID(classId)
+
+                if(selectedClassFee.value.exception != null){
+                    Toast.makeText(context, "Some Error Occured while fetching class fee data - ${selectedClassFee.value.exception}.", Toast.LENGTH_SHORT).show()
+                    selectedClassFee.value.loading = false
+                }
+                else{
+                    Toast.makeText(context,"Class fee fetched successfully.", Toast.LENGTH_SHORT).show()
+                    selectedClassFee.value.loading = false
+                }
+            }
+        }
+    }
+
+    fun fetchAllStudentsForClassId(classId: String, context: Context) {
+        studentListReady.value = false
+        viewModelScope.launch {
+            if(studentsList.value.loading == false){
+                _studentsList.value.loading = true
+                _studentsList.value = feePaymentRepository.fetchAllStudentsForClassId(classId)
+
+                if(_studentsList.value.exception != null){
+                    Toast.makeText(context, "Some Error Occured while fetching students list - ${_studentsList.value.exception}.", Toast.LENGTH_SHORT).show()
+                    _studentsList.value.loading = false
+                }
+                else{
+                    Toast.makeText(context,"Students list fetched successfully.", Toast.LENGTH_SHORT).show()
+                    _studentsList.value.loading = false
+                    studentListReady.value = true
+                }
+            }
+        }
     }
 }

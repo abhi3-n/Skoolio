@@ -4,6 +4,8 @@ import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.Fee.PaymentUpdateRequest
+import com.project.skoolio.model.StudentInfo
+import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.network.Backend
 import com.project.skoolio.utils.capitalize
 import com.project.skoolio.utils.removeExtraSpaces
@@ -18,6 +20,10 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
         DataOrException<Map<String,String>, Boolean, Exception>(emptyMap())
     private val classInfoList: DataOrException<MutableList<ClassInfo>, Boolean, Exception> =
         DataOrException<MutableList<ClassInfo>, Boolean, Exception>(mutableListOf())
+    private val classFee: DataOrException<Float, Boolean, Exception> =
+        DataOrException<Float, Boolean, Exception>(0F)
+    private val studentsList: DataOrException<MutableList<StudentInfo>, Boolean, Exception> =
+        DataOrException<MutableList<StudentInfo>, Boolean, Exception>(mutableListOf())
     suspend fun fetchFeeListForStudent(studentId: String, status: String): DataOrException<MutableList<Payment>, Boolean, Exception> {
         val response =
             try {
@@ -99,5 +105,31 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
     suspend fun fetchNameOfStudent(studentId: String): String {
         val map = backend.fetchStudentNameForId(studentId)
         return capitalize(removeExtraSpaces(map["name"]!!))
+    }
+
+    suspend fun fetchFeeForClassID(classId: String): DataOrException<Float, Boolean, Exception> {
+        val response =
+            try {
+                backend.fetchFeeForClassID(classId)
+            }
+            catch (e:Exception){
+                classFee.exception = e
+                return classFee
+            }
+        classFee.data = response["fee"]!!
+        return classFee
+    }
+
+    suspend fun fetchAllStudentsForClassId(classId: String): DataOrException<MutableList<StudentInfo>, Boolean, Exception> {
+        val response =
+            try {
+                backend.getClassStudents(classId)
+            }
+            catch (e:Exception){
+                studentsList.exception = e
+                return studentsList
+            }
+        studentsList.data = response.toMutableList()
+        return studentsList
     }
 }

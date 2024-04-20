@@ -34,6 +34,7 @@ import com.project.skoolio.viewModels.FeePaymentViewModel
 import com.project.skoolio.viewModels.ViewModelProvider
 import java.time.Year
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MonthlyPaymentDetailsScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
     val context = LocalContext.current
@@ -46,6 +47,7 @@ fun MonthlyPaymentDetailsScreen(navController: NavHostController, viewModelProvi
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MonthlyPaymentDetailsScreenContent(
     navController: NavHostController,

@@ -51,6 +51,7 @@ import com.project.skoolio.viewModels.ViewModelProvider
 import java.time.Year
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeePaymentScreen(navController: NavHostController, viewModelProvider: ViewModelProvider) {
     BackToHomeScreen(navController, loginUserType.value)
@@ -103,6 +104,12 @@ fun AdminScreenContent(
     feePaymentViewModel: FeePaymentViewModel
 ) {
     val classDataSelected = rememberSaveable { mutableStateOf(false) }
+    val createFeeSelected = rememberSaveable { mutableStateOf(false) }
+
+    val createFeeClicked = {
+        createFeeSelected.value = true
+        feePaymentViewModel.fetchClassInfoList(adminDetails.schoolId.value, context)
+    }
     val updatePaymentClick = {
         navController.navigate(AppScreens.UpdatePaymentScreen.name)
     }
@@ -116,22 +123,25 @@ fun AdminScreenContent(
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
-        if (classDataSelected.value == false) {
+        if (classDataSelected.value == false && createFeeSelected.value == false) {
             ListItem(shape = CircleShape,
                 itemInfo = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Create Fees",
+                        Text(text = "Create Fee Entries",
                             style = TextStyle(fontSize = 32.sp),
                             modifier = Modifier
                                 .padding(4.dp)
                                 .clickable {
+                                    createFeeClicked.invoke()
                                 })
                     }
                 },
                 onClick = {
+                    createFeeClicked.invoke()
+
                 })
             ListItem(shape = CircleShape,
                 itemInfo = {
@@ -189,29 +199,62 @@ fun AdminScreenContent(
             }
 
             Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
-                Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                    onClick = {
-                        if(feePaymentViewModel.monthSelected.value.isNotEmpty()
-                            && feePaymentViewModel.classNameSelected.value.isNotEmpty()) {
-                            feePaymentViewModel.fetchAllFeePaymentsForMonthAndClassId(
-                                getEpochOfFirstDayOfMonth(feePaymentViewModel.monthSelected.value.uppercase(Locale.getDefault()), Year.now().toString().toInt()),
-                                getClassIdForClassSelected(feePaymentViewModel.classNameSelected.value,feePaymentViewModel.classInfoList.value.data),
-                                context
-                            )
-                            navController.navigate(AppScreens.MonthlyPaymentDetailsScreen.name)
-                        }
-                        else if(feePaymentViewModel.monthSelected.value.isEmpty()){
-                            Toast.makeText(context,"Please select a month", Toast.LENGTH_SHORT).show()
-                        }
-                        else{
-                            Toast.makeText(context,"Please select a class", Toast.LENGTH_SHORT).show()
-                        }
-                    }) {
-                    Text(text = "Get Details")
+                if(classDataSelected.value == true){
+                    Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        onClick = {
+                            if (feePaymentViewModel.monthSelected.value.isNotEmpty()
+                                && feePaymentViewModel.classNameSelected.value.isNotEmpty()
+                            ) {
+                                feePaymentViewModel.fetchAllFeePaymentsForMonthAndClassId(
+                                    getEpochOfFirstDayOfMonth(
+                                        feePaymentViewModel.monthSelected.value.uppercase(
+                                            Locale.getDefault()
+                                        ), Year.now().toString().toInt()
+                                    ),
+                                    getClassIdForClassSelected(
+                                        feePaymentViewModel.classNameSelected.value,
+                                        feePaymentViewModel.classInfoList.value.data
+                                    ),
+                                    context
+                                )
+                                navController.navigate(AppScreens.MonthlyPaymentDetailsScreen.name)
+                            } else if (feePaymentViewModel.monthSelected.value.isEmpty()) {
+                                Toast.makeText(context, "Please select a month", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Toast.makeText(context, "Please select a class", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }) {
+                        Text(text = "Get Details")
+                    }
+                }
+                else if(createFeeSelected.value == true){
+                    Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        onClick = {
+                            if (feePaymentViewModel.monthSelected.value.isNotEmpty()
+                                && feePaymentViewModel.classNameSelected.value.isNotEmpty()
+                            ) {
+                                val classId = getClassIdForClassSelected(feePaymentViewModel.classNameSelected.value, feePaymentViewModel.classInfoList.value.data)
+                                feePaymentViewModel.fetchFeeForClassID(classId, context)
+                                feePaymentViewModel.fetchAllStudentsForClassId(classId, context)
+
+                                navController.navigate(AppScreens.CreateFeesScreen.name)
+                            } else if (feePaymentViewModel.monthSelected.value.isEmpty()) {
+                                Toast.makeText(context, "Please select a month", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Toast.makeText(context, "Please select a class", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }) {
+                        Text(text = "Create")
+                    }
                 }
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     onClick = {
+                        createFeeSelected.value = false
                         classDataSelected.value = false
                     }) {
                     Text(text = "Back")
