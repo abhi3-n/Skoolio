@@ -1,20 +1,29 @@
 package com.project.skoolio.viewModels
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.ClassInfo
+import com.project.skoolio.model.Fee.CreatePaymentsObj
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.repositories.FeePaymentRepository
 import com.project.skoolio.utils.currentPayment
+import com.project.skoolio.utils.getClassIdForClassSelected
+import com.project.skoolio.utils.getEpochOfFirstDayOfMonth
 import com.project.skoolio.utils.paymentPageData
 import kotlinx.coroutines.launch
+import java.time.Year
+import java.util.Locale
 import javax.inject.Inject
 
 class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: FeePaymentRepository) : ViewModel() {
@@ -58,6 +67,8 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
     val classInfoListReady:MutableState<Boolean> = mutableStateOf(false)
     val monthlyDataListReady:MutableState<Boolean> = mutableStateOf(false)
     val studentListReady:MutableState<Boolean> = mutableStateOf(false)
+
+    lateinit var createPaymentsObj: CreatePaymentsObj
 
     private val _paymentPageRelatedData: MutableState<DataOrException<Map<String,String>, Boolean, Exception>> =
         mutableStateOf<DataOrException<Map<String,String>, Boolean, Exception>>(
@@ -247,5 +258,31 @@ class FeePaymentViewModel @Inject constructor(private val feePaymentRepository: 
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createFeePaymentsForMonth(
+        checkedList: MutableList<MutableState<Boolean>>,
+        navController: NavHostController,
+        context: Context
+    ) {
+        viewModelScope.launch {
+            createPaymentsObj = CreatePaymentsObj(
+                getEpochOfFirstDayOfMonth(monthSelected.value.uppercase(Locale.getDefault()), Year.now().toString().toInt()),
+                getClassIdForClassSelected(classNameSelected.value, classInfoList.value.data),
+                selectedClassFee.value.data.toInt(),
+                listOf())
+            val studentIdList = mutableListOf<String>()
+            checkedList.forEachIndexed { index, checked ->
+                if(checked.value){
+                    studentIdList.add(studentsList.value.data[index].studentId)
+                }
+            }
+            createPaymentsObj.listOfStudentId = studentIdList.toList()
+            Toast.makeText(context,"Your request has been submitted.", Toast.LENGTH_SHORT).show()
+            feePaymentRepository.createFeePaymentsForMonth(createPaymentsObj)
+            Toast.makeText(context,"Created", Toast.LENGTH_SHORT).show()
+        }
+        Log.d("create payments",createPaymentsObj.listOfStudentId.toString())
     }
 }

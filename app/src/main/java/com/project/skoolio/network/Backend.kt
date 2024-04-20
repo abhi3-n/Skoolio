@@ -4,6 +4,7 @@ import com.project.skoolio.model.Attendance
 import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.EmailOtpRequest
 import com.project.skoolio.model.EmailOtpResponse
+import com.project.skoolio.model.Fee.CreatePaymentsObj
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.Fee.PaymentUpdateRequest
 import com.project.skoolio.model.Issue.Issue
@@ -166,7 +167,14 @@ interface Backend {
     ): List<ClassInfo>
 
     @GET("classes/classInfo/{schoolId}")
-    suspend fun fetchClassInfoList(@Path("schoolId") schoolId: Int): List<ClassInfo>
+    suspend fun fetchClassInfoList(
+        @Path("schoolId") schoolId: Int
+    ): List<ClassInfo>
+
+    @GET("class/fee/{classId}")
+    suspend fun fetchFeeForClassID(
+        @Path("classId") classId: String
+    ): Map<String,Float>
 
     //attendance endpoints
     @POST("attendance")
@@ -243,9 +251,9 @@ interface Backend {
         @Path("classId") classId: String
     ): List<Payment>
 
-    @GET("class/fee/{classId}")
-     suspend fun fetchFeeForClassID(
-         @Path("classId") classId: String
-     ): Map<String,Float>
+    @POST("payments/month")
+    suspend fun createFeePaymentsForMonth(
+        @Body createPaymentsObj: CreatePaymentsObj
+    ):Unit
 
 }

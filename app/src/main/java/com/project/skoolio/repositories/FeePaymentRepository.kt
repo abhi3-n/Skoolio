@@ -2,6 +2,7 @@ package com.project.skoolio.repositories
 
 import com.project.skoolio.data.DataOrException
 import com.project.skoolio.model.ClassInfo
+import com.project.skoolio.model.Fee.CreatePaymentsObj
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.Fee.PaymentUpdateRequest
 import com.project.skoolio.model.StudentInfo
@@ -131,5 +132,9 @@ class FeePaymentRepository @Inject constructor(private val backend: Backend) {
             }
         studentsList.data = response.toMutableList()
         return studentsList
+    }
+
+    suspend fun createFeePaymentsForMonth(createPaymentsObj: CreatePaymentsObj) {
+        backend.createFeePaymentsForMonth(createPaymentsObj)
     }
 }

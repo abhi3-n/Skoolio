@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
@@ -21,9 +22,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -109,18 +108,20 @@ fun CreateFeesScreenMainContent(
                     text = "Fee - Rs.${feePaymentViewModel.selectedClassFee.value.data}",
                     modifier = Modifier.padding(4.dp, )
                 )
-                Checkbox(modifier = Modifier.padding(4.dp),
-                    checked = allSelected.value,
-                    onCheckedChange = {
-                        if(!it){
-                            allSelected.value = false
-                            checkedList.replaceAll(UnaryOperator { mutableStateOf(false) })
-                        }
-                        else{
-                            allSelected.value = true
-                            checkedList.replaceAll(UnaryOperator { mutableStateOf(true) })
-                        }
-                    })
+                Row(horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = if(allSelected.value) "Deselect All" else "Select All")
+                    Checkbox(modifier = Modifier.padding(4.dp),
+                        checked = allSelected.value,
+                        onCheckedChange = {
+                            if (!it) {
+                                allSelected.value = false
+                                checkedList.replaceAll(UnaryOperator { mutableStateOf(false) })
+                            } else {
+                                allSelected.value = true
+                                checkedList.replaceAll(UnaryOperator { mutableStateOf(true) })
+                            }
+                        })
+                }
             }
             LazyColumn {
                 itemsIndexed(feePaymentViewModel.studentsList.value.data){idx,student:StudentInfo->
@@ -147,6 +148,13 @@ fun CreateFeesScreenMainContent(
                         },
                         shape = CircleShape
                     )
+                }
+            }
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = {
+                    feePaymentViewModel.createFeePaymentsForMonth(checkedList, navController, context)
+                }) {
+                    Text(text = "Create")
                 }
             }
         }
