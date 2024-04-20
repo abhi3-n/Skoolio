@@ -1,14 +1,11 @@
 package com.project.skoolio.screens.LoginScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,10 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.project.skoolio.components.AppLogoText
 import com.project.skoolio.components.CircularProgressIndicatorCustom
-import com.project.skoolio.components.ForgotPasswordText
+import com.project.skoolio.components.ForgotPasswordButton
 import com.project.skoolio.components.NewAccountText
 import com.project.skoolio.components.UserLoginForm
-import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.ExitApp
 import com.project.skoolio.viewModels.ViewModelProvider
 
@@ -48,17 +44,17 @@ fun LoginScreen(
             AppLogoText()
             Spacer(modifier = Modifier.height(15.dp))
             UserLoginForm(loginViewModel, navController)
-            ForgotPasswordText()
+            ForgotPasswordButton(navController)
             NewAccountText(navController, viewModelProvider, signUpLoading)
             if(signUpLoading.value){
                 CircularProgressIndicatorCustom()
             }
             Spacer(modifier = Modifier.height(15.dp))
-            Button(onClick = {
-                navController.navigate(AppScreens.TestScreen.name)
-            }) {
-                Text(text = "Test Screen")
-            }
+//            Button(onClick = {
+//                navController.navigate(AppScreens.TestScreen.name)
+//            }) {
+//                Text(text = "Test Screen")
+//            }
         }
     }
 

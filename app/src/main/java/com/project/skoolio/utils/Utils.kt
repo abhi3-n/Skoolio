@@ -16,6 +16,9 @@ import com.project.skoolio.model.ClassInfo
 import com.project.skoolio.model.Fee.Payment
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.StudentInfo
+import com.project.skoolio.model.singletonObject.adminDetails
+import com.project.skoolio.model.singletonObject.studentDetails
+import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.model.userDetails.AddressDetails
 import com.project.skoolio.model.userDetails.ContactDetails
 import com.project.skoolio.model.userDetails.FatherDetails
@@ -44,7 +47,7 @@ import java.util.Locale
 fun ExitApp(navController: NavHostController, context: Context) {
     val activity = context as? Activity
     androidx.activity.compose.BackHandler(enabled = true) {
-        navController.popBackStack(navController.graph.startDestinationId, false)
+//        navController.popBackStack(navController.graph.startDestinationId, false)
         activity?.finish()
     }
 }
@@ -66,6 +69,15 @@ fun BackToHomeScreen(navController: NavHostController, userType: String?) {
             }
         }
     }
+}
+
+val doSignOut:(NavHostController)->Unit = {navController:NavHostController->
+    //Need to update a state that tells if user is logged in or not.
+    //These should be done asynchronously
+    studentDetails.resetStudentDetails()
+    teacherDetails.resetTeacherDetails()
+    adminDetails.resetAdminDetails()
+    navController.navigate(AppScreens.LoginScreen.name)
 }
 
 fun convertEpochToDateString(epoch: Long?): String? { // here value of epoch is expected to be in milli seconds

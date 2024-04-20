@@ -7,6 +7,7 @@ enum class AppScreens{
     RegistrationFormScreen,
     OtpValidationScreen,
     SetPasswordScreen,
+    ForgotPasswordScreen,
 
     //Screens After login
     //Common to students and teachers

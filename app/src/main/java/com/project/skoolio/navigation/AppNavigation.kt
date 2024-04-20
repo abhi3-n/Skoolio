@@ -19,6 +19,7 @@ import com.project.skoolio.screens.Fee.FeeHistoryScreen
 import com.project.skoolio.screens.Fee.MonthlyPaymentDetailsScreen
 import com.project.skoolio.screens.Fee.PendingFeeScreen
 import com.project.skoolio.screens.Fee.UpdatePaymentScreen
+import com.project.skoolio.screens.ForgotPasswordScreen.ForgotPasswordScreen
 import com.project.skoolio.screens.FullInfoScreen.FullInfoScreen
 import com.project.skoolio.screens.HomeScreen.HomeScreen
 import com.project.skoolio.screens.Issue.IssueInfoScreen
@@ -78,13 +79,16 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 HomeScreen(navController, viewModelProvider, userType)
             }
         }
-        composable(AppScreens.SettingsScreen.name+"/{userType}",
-            arguments = listOf(navArgument("userType"){
-                type = NavType.StringType
-            })){navBack->
-            navBack.arguments?.getString("userType").let { userType ->
-                SettingsScreen(navController, viewModelProvider, userType)
-            }
+//        composable(AppScreens.SettingsScreen.name+"/{userType}",
+//            arguments = listOf(navArgument("userType"){
+//                type = NavType.StringType
+//            })){navBack->
+//            navBack.arguments?.getString("userType").let { userType ->
+//                SettingsScreen(navController, viewModelProvider, userType)
+//            }
+//        }
+        composable(AppScreens.SettingsScreen.name){
+            SettingsScreen(navController, viewModelProvider)
         }
         composable(AppScreens.TakeAttendanceScreen.name+"/{userType}",
             arguments = listOf(navArgument("userType"){
@@ -166,6 +170,11 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable(AppScreens.CreateFeesScreen.name){
             CreateFeesScreen(navController, viewModelProvider)
+        }
+
+        //Forgot Password
+        composable(AppScreens.ForgotPasswordScreen.name){
+            ForgotPasswordScreen(navController, viewModelProvider)
         }
         // for testing only
         composable(AppScreens.TestScreen.name){

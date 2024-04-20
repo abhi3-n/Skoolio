@@ -116,7 +116,7 @@ object studentDetails:userDetails {
         registrationId.value = student.registrationId
     }
 
-    suspend fun resetStudentDetails(){
+    fun resetStudentDetails(){
         studentId.value = ""
         firstName.value = ""
         middleName.value = ""
@@ -259,7 +259,7 @@ object teacherDetails:userDetails {
         city.value = "Khanna"
         state.value = "Punjab"
     }
-    suspend fun resetTeacherDetails(){
+    fun resetTeacherDetails(){
         firstName.value = ""
         middleName.value = ""
         lastName.value = ""
@@ -362,7 +362,7 @@ object adminDetails:userDetails {
         city.value = "Khanna"
         state.value = "Punjab"
     }
-    suspend fun resetAdminDetails(){
+    fun resetAdminDetails(){
         firstName.value = ""
         middleName.value = ""
         lastName.value = ""

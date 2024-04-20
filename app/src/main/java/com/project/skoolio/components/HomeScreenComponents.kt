@@ -43,6 +43,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +66,7 @@ import com.project.skoolio.model.singletonObject.teacherDetails
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.calculateAge
 import com.project.skoolio.utils.convertEpochToDateString
+import com.project.skoolio.utils.doSignOut
 import com.project.skoolio.utils.getDayOfMonthFromEpoch
 import com.project.skoolio.utils.getDayOfWeekFromEpoch
 import com.project.skoolio.utils.getFirstAndLastDayOfCurrentMonth
@@ -86,6 +88,7 @@ fun SkoolioAppBar(
     icon: ImageVector?,
     elevation: Dp = 0.dp,
     navController: NavHostController,
+    isSettingsScreen:Boolean,
     sideDrawerToggle: () -> Unit
 ){
     val showDialog = remember {        // show dialog for MoreVert button
@@ -123,8 +126,10 @@ fun SkoolioAppBar(
             containerColor = Color.LightGray
         ),
         actions = {
-            IconButton(onClick = { showDialog.value = !showDialog.value }) {
-                Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
+            if(!isSettingsScreen) {
+                IconButton(onClick = { showDialog.value = !showDialog.value }) {
+                    Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
+                }
             }
         },
         navigationIcon = {
@@ -141,15 +146,10 @@ fun SkoolioAppBar(
 fun ShowDropDownMenu(showDialog: MutableState<Boolean> ,
                      navController: NavHostController
 ) {
-    val doSignOut:()->Unit = {
-            //Need to update a state that tells if user is logged in or not.
-            //Also other data to be removed.
-        navController.navigate(AppScreens.LoginScreen.name)
-    }
     val optionsTask:(String)->Unit = {option->
         when (option) {
             "Sign Out" -> {
-                doSignOut.invoke()
+                doSignOut.invoke(navController)
             }
 
             else -> navController.navigate(AppScreens.LoginScreen.name)
@@ -159,7 +159,7 @@ fun ShowDropDownMenu(showDialog: MutableState<Boolean> ,
     var expanded by remember {
         mutableStateOf(true)
     }
-    val listOfOptions = listOf("Sign Out")
+    val listOfOptions = listOf( "Sign Out")
     Column(
         modifier = Modifier
             .fillMaxWidth()

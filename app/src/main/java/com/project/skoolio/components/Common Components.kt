@@ -71,6 +71,7 @@ fun CommonScaffold(
     drawerState: DrawerState,
     mainContent:@Composable (PaddingValues)->Unit = {},
     icon: ImageVector?,
+    isSettingsScreen:Boolean = false,
     floatingActionButton: @Composable ()-> Unit = {}
 ){
     Scaffold(
@@ -78,6 +79,7 @@ fun CommonScaffold(
             SkoolioAppBar(title,
                 navController = navController,
                 elevation = 5.dp,
+                isSettingsScreen = isSettingsScreen,
                 icon = icon
             ) {
                 scope.launch {
@@ -148,7 +150,7 @@ fun adminDrawerItems(navController: NavHostController): @Composable () -> Unit {
             label = { Text(text = "Settings") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.SettingsScreen.name + "/Admin")
+                navController.navigate(AppScreens.SettingsScreen.name)
             }
         )
     }
@@ -184,7 +186,7 @@ fun teacherDrawerItems(navController: NavHostController): @Composable () -> Unit
             label = { Text(text = "Settings") },
             selected = false,
             onClick = {
-                navController.navigate(AppScreens.SettingsScreen.name + "/Teacher")
+                navController.navigate(AppScreens.SettingsScreen.name)
             }
         )
     }
@@ -220,7 +222,7 @@ fun studentDrawerItems(navController: NavHostController): @Composable () -> Unit
             label = { Text(text = "Settings") },
             selected = false,
             onClick = {
-                    navController.navigate(AppScreens.SettingsScreen.name + "/Student")
+                    navController.navigate(AppScreens.SettingsScreen.name)
             }
         )
     }

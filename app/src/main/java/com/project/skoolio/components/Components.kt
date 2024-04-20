@@ -24,6 +24,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -40,6 +41,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -168,15 +170,13 @@ fun LoginButton(validInputs: Boolean,
     }
 }
 @Composable
-fun ForgotPasswordText() {
-    Text(
-        text = "Forgot Password",
-        color = Color(0xFF001F3F),
-        modifier = Modifier.clickable {
-            //TODO: Implement forgot password functionality
-        },
-        style = TextStyle(textDecoration = TextDecoration.Underline)
-    )
+fun ForgotPasswordButton(navController: NavHostController) {
+    TextButton(colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF001F3F), containerColor = Color.Transparent),
+        onClick = {
+            navController.navigate(AppScreens.ForgotPasswordScreen.name)
+    }) {
+        Text(text = "Forgot Password", color = Color(0xFF001F3F), style = TextStyle(textDecoration = TextDecoration.Underline))
+    }
 }
 
 
