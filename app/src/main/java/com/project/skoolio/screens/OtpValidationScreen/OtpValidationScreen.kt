@@ -32,7 +32,7 @@ fun OtpValidationScreen(navController: NavHostController,
             valueState = userOtp,
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done)
-        CustomButton(onClick = {
+        CustomButton(enabled = userOtp.value.isNotEmpty(),onClick = {
             if(!otpValidationViewModel.validateOtp(userOtp.value)){
                 Toast.makeText(context, "Invalid OTP.",Toast.LENGTH_SHORT).show()
             }

@@ -10,6 +10,7 @@ import com.project.skoolio.repositories.RegistrationScreenRepository
 import com.project.skoolio.repositories.SchoolInformationRepository
 import com.project.skoolio.utils.Constants
 import com.project.skoolio.viewModels.AttendanceViewModel
+import com.project.skoolio.viewModels.ChangePasswordViewModel
 import com.project.skoolio.viewModels.FeePaymentViewModel
 import com.project.skoolio.viewModels.IssueViewModel
 import com.project.skoolio.viewModels.LoginViewModel
@@ -99,4 +100,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSettingsViewModel(backend: Backend): SettingsViewModel = SettingsViewModel(backend)
+
+    @Provides
+    @Singleton
+    fun provideChangePasswordViewModel(backend: Backend): ChangePasswordViewModel = ChangePasswordViewModel(backend)
 }

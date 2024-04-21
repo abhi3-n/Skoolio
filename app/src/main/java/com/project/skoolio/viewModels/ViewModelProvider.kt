@@ -14,7 +14,8 @@ class ViewModelProvider @Inject constructor(
     private val schoolInformationViewModel: SchoolInformationViewModel,
     private val issueViewModel: IssueViewModel,
     private val feePaymentViewModel: FeePaymentViewModel,
-    private val settingsViewModel: SettingsViewModel
+    private val settingsViewModel: SettingsViewModel,
+    private val changePasswordViewModel: ChangePasswordViewModel
 ):ViewModel(){
 
     fun getLoginViewModel() = loginViewModel
@@ -26,4 +27,5 @@ class ViewModelProvider @Inject constructor(
     fun getIssueViewModel() = issueViewModel
     fun getFeePaymentViewModel() = feePaymentViewModel
     fun getSettingsViewModel() = settingsViewModel
+    fun getChangePasswordViewModel() = changePasswordViewModel
 }

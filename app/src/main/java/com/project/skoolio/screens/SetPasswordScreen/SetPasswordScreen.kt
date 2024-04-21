@@ -27,7 +27,8 @@ import com.project.skoolio.viewModels.ViewModelProvider
 fun SetPasswordScreen(
     navController: NavHostController,
     viewModelProvider: ViewModelProvider,
-    userType: String?
+    userType: String?,
+    purpose:String?
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,13 +45,18 @@ fun SetPasswordScreen(
             imeAction = ImeAction.Done)
         CustomButton(onClick = {
             if(validPassword(password, confirmPassword, context)){
-                if(userType == "Student"){
-                    studentDetails.password.value = password.value
+                if(purpose == "set") {
+                    if (userType == "Student") {
+                        studentDetails.password.value = password.value
+                    } else if (userType == "Teacher") {
+                        teacherDetails.password.value = password.value
+                    }
+                    navController.popBackStack()
                 }
-                else if(userType == "Teacher"){
-                    teacherDetails.password.value = password.value
+                else if(purpose == "change"){
+                    val changePasswordViewModel = viewModelProvider.getChangePasswordViewModel()
+                    changePasswordViewModel.changePassword(password.value, context, navController)
                 }
-                navController.popBackStack()
             }
         }) {
             Text(text = "Save Password")

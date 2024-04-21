@@ -64,12 +64,22 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         composable(AppScreens.OtpValidationScreen.name){
             OtpValidationScreen(navController, viewModelProvider)
         }
-        composable(AppScreens.SetPasswordScreen.name+"/{userType}",
+        composable(AppScreens.SetPasswordScreen.name+"/{userType}/{purpose}",
             arguments = listOf(navArgument("userType"){
                 type = NavType.StringType
-            })){navBack->
-            navBack.arguments?.getString("userType").let { userType ->
-                SetPasswordScreen(navController, viewModelProvider, userType)
+                },
+                navArgument("purpose"){
+                    type = NavType.StringType
+                }
+            )
+        ){navBack->
+//            navBack.arguments?.getString("userType").let { userType ->
+//                SetPasswordScreen(navController, viewModelProvider, userType)
+//            }
+            val userType = navBack.arguments?.getString("userType")
+            val purpose = navBack.arguments?.getString("purpose")
+            navBack.arguments?.getStringArrayList("userType").let {
+                SetPasswordScreen(navController, viewModelProvider, userType, purpose)
             }
         }
         composable(AppScreens.HomeScreen.name+"/{userType}",
@@ -84,9 +94,6 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
         composable(AppScreens.SettingsScreen.name){
             SettingsScreen(navController, viewModelProvider)
         }
-//        composable(AppScreens.EditDetailsScreen.name){
-//            EditDetailsScreen(navController, viewModelProvider)
-//        }
         composable(AppScreens.EditDetailsScreen.name+"/{editType}",
             arguments = listOf(navArgument("editType"){
                 type = NavType.StringType

@@ -24,10 +24,8 @@ class OtpValidationViewModel @Inject constructor(private  val  otpValidationRepo
     private val _isOtpValidated = mutableStateOf(false)
     fun receiveOTP(
         emailOtpRequest: EmailOtpRequest,
-        context: Context,
-        navController: NavHostController,
-        onOtpSuccess: (Context, NavHostController) -> Unit,
-        onOtpFailure: (Context) -> Unit,
+        onOtpSuccess: () -> Unit,
+        onOtpFailure: () -> Unit,
         progressIndicatorLoading: MutableState<Boolean>
     ):Unit{
         viewModelScope.launch {
@@ -37,12 +35,12 @@ class OtpValidationViewModel @Inject constructor(private  val  otpValidationRepo
             progressIndicatorLoading.value = false
             if(_otpResponse.value.data.otp.isNotEmpty() == true) {
                 _otpResponse.value.loading = false
-                onOtpSuccess(context,navController)
+                onOtpSuccess.invoke()
                 Log.d("OtpResponse","Loading turned to false. Otp - "+ _otpResponse.value.data.otp)
             }
             else if(_otpResponse.value.exception != null){
                 _otpResponse.value.loading = false
-                onOtpFailure(context)
+                onOtpFailure.invoke()
                 resetException()
             }
         }

@@ -172,16 +172,13 @@ fun LoginButton(validInputs: Boolean,
 }
 @Composable
 fun ForgotPasswordButton(navController: NavHostController) {
-    TextButton(colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF001F3F), containerColor = Color.Transparent),
+    TextButton(colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
         onClick = {
             navController.navigate(AppScreens.ForgotPasswordScreen.name)
     }) {
         Text(text = "Forgot Password", color = Color(0xFF001F3F), style = TextStyle(textDecoration = TextDecoration.Underline))
     }
 }
-
-
-
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -367,11 +364,11 @@ fun SaveButton(
     val context = LocalContext.current
     val otpValidationViewModel:OtpValidationViewModel = viewModelProvider.getOtpValidationViewModel()
 
-    val onOtpSuccess:(Context,NavHostController)->Unit = { context: Context, navHostController: NavHostController ->
+    val onOtpSuccess:()->Unit = {
         Toast.makeText(context, "OTP Sent on mail", Toast.LENGTH_SHORT).show()
         navController.navigate(AppScreens.OtpValidationScreen.name)
     }
-    val onOtpFailure:(Context)->Unit = {context ->
+    val onOtpFailure:()->Unit = {
         Toast.makeText(context, "Some error has occured.", Toast.LENGTH_SHORT).show()
     }
     val progressIndicatorLoading = rememberSaveable { mutableStateOf(false) }
@@ -380,8 +377,6 @@ fun SaveButton(
             if(validDetails(userDetails, context)) {
                 progressIndicatorLoading.value = true
                 otpValidationViewModel.receiveOTP(EmailOtpRequest(userDetails.email.value),
-                    context,
-                    navController,
                     onOtpSuccess,
                     onOtpFailure,
                     progressIndicatorLoading)
@@ -401,10 +396,10 @@ fun SaveButton(
         otpValidationViewModel.resetOtpValidated()
         mailFieldEnabled.value = false
         if(userDetails is studentDetails) {
-            navController.navigate(AppScreens.SetPasswordScreen.name + "/Student")
+            navController.navigate(AppScreens.SetPasswordScreen.name + "/Student/set")
         }
         else if(userDetails is teacherDetails){
-            navController.navigate(AppScreens.SetPasswordScreen.name + "/Teacher")
+            navController.navigate(AppScreens.SetPasswordScreen.name + "/Teacher/set")
         }
     }
 }

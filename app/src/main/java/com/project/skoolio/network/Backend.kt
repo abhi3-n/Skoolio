@@ -12,6 +12,7 @@ import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
+import com.project.skoolio.model.Settings.PasswordChangeRequest
 import com.project.skoolio.model.Settings.UpdateAddressDetails
 import com.project.skoolio.model.Settings.UpdateContactDetails
 import com.project.skoolio.model.StudentInfo
@@ -88,6 +89,16 @@ interface Backend {
         @Body updateContactDetails: UpdateContactDetails
     ):Map<String,String>
 
+    @GET("student/verifyEmail/{email}")
+    suspend fun verifyStudentEmail(
+        @Path("email") email: String
+    ):Map<String,String>
+
+    @PATCH("student/changePassword")
+    suspend fun changeStudentPassword(
+        @Body passwordChangeRequest: PasswordChangeRequest
+    ):Map<String,String>
+
     //teacher service api endpoints
     @POST("teacher")
     suspend fun registerTeacher(
@@ -123,6 +134,16 @@ interface Backend {
     @PATCH("teacher/contact")
     suspend fun updateTeacherContactDetails(
         @Body updateContactDetails: UpdateContactDetails
+    ):Map<String,String>
+
+    @GET("teacher/verifyEmail/{email}")
+    suspend fun verifyTeacherEmail(
+        @Path("email") email: String
+    ):Map<String,String>
+
+    @PATCH("teacher/changePassword")
+    suspend fun changeTeacherPassword(
+        @Body passwordChangeRequest: PasswordChangeRequest
     ):Map<String,String>
 
     //school service api endpoints
@@ -167,6 +188,16 @@ interface Backend {
     @PATCH("admin/contact")
     suspend fun updateAdminContactDetails(
         @Body updateContactDetails: UpdateContactDetails
+    ):Map<String,String>
+
+    @GET("admin/verifyEmail/{email}")
+    suspend fun verifyAdminEmail(
+        @Path("email") email: String
+    ):Map<String,String>
+
+    @PATCH("admin/changePassword")
+    suspend fun changeAdminPassword(
+        @Body passwordChangeRequest: PasswordChangeRequest
     ):Map<String,String>
 
     //class service endpoints
@@ -285,4 +316,5 @@ interface Backend {
     suspend fun createFeePaymentsForMonth(
         @Body createPaymentsObj: CreatePaymentsObj
     ):Unit
+
 }
