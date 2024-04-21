@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.project.skoolio.model.Settings.UpdateAddressDetails
+import com.project.skoolio.model.Settings.UpdateContactDetails
 import com.project.skoolio.model.singletonObject.adminDetails
 import com.project.skoolio.model.singletonObject.studentDetails
 import com.project.skoolio.model.singletonObject.teacherDetails
@@ -44,6 +45,43 @@ class SettingsViewModel @Inject constructor(private val backend: Backend):ViewMo
         }
         catch (e:Exception){
             Toast.makeText(context,"Some error occurred in updating address - ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun updateContactDetails(
+        updateContactDetails: UpdateContactDetails,
+        context: Context,
+        navController: NavHostController
+    ) {
+        try {
+            viewModelScope.launch {
+                if (loginUserType.value == "Student") {
+                    backend.updateStudentContactDetails(updateContactDetails)
+                    studentDetails.primaryContact.value = updateContactDetails.primaryContact
+                    studentDetails.primaryContactName.value = updateContactDetails.primaryContactName
+                    studentDetails.primaryContactRelation.value = updateContactDetails.primaryContactRelation!!
+                    studentDetails.alternativeContact.value = updateContactDetails.alternativeContact
+                    studentDetails.alternativeContactName.value = updateContactDetails.alternativeContactName
+                    studentDetails.alternativeContactRelation.value = updateContactDetails.alternativeContactRelation!!
+                } else if (loginUserType.value == "Teacher") {
+                    backend.updateTeacherContactDetails(updateContactDetails)
+                    teacherDetails.primaryContact.value = updateContactDetails.primaryContact
+                    teacherDetails.primaryContactName.value = updateContactDetails.primaryContactName
+                    teacherDetails.alternativeContact.value = updateContactDetails.alternativeContact
+                    teacherDetails.alternativeContactName.value = updateContactDetails.alternativeContactName
+                } else {
+                    backend.updateAdminContactDetails(updateContactDetails)
+                    adminDetails.primaryContact.value = updateContactDetails.primaryContact
+                    adminDetails.primaryContactName.value = updateContactDetails.primaryContactName
+                    adminDetails.alternativeContact.value = updateContactDetails.alternativeContact
+                    adminDetails.alternativeContactName.value = updateContactDetails.alternativeContactName
+                }
+                Toast.makeText(context,"Contacts updated successfully", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
+            }
+        }
+        catch (e:Exception){
+            Toast.makeText(context,"Some error occurred in updating contact - ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

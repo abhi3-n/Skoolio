@@ -13,6 +13,7 @@ import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
 import com.project.skoolio.model.Settings.UpdateAddressDetails
+import com.project.skoolio.model.Settings.UpdateContactDetails
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.login.AdminLoginResponse
@@ -82,6 +83,11 @@ interface Backend {
         @Body updateAddressDetails:UpdateAddressDetails
     ):Map<String,String>
 
+    @PATCH("student/contact")
+    suspend fun updateStudentContactDetails(
+        @Body updateContactDetails: UpdateContactDetails
+    ):Map<String,String>
+
     //teacher service api endpoints
     @POST("teacher")
     suspend fun registerTeacher(
@@ -113,6 +119,11 @@ interface Backend {
     suspend fun getTeacherListForSchool(
         @Path("schoolId") schoolId: String
     ): List<Teacher>
+
+    @PATCH("teacher/contact")
+    suspend fun updateTeacherContactDetails(
+        @Body updateContactDetails: UpdateContactDetails
+    ):Map<String,String>
 
     //school service api endpoints
     @GET("/schools/{city}")
@@ -151,6 +162,11 @@ interface Backend {
     @PATCH("admin/address")
     suspend fun updateAdminAddressDetails(
         @Body updateAddressDetails:UpdateAddressDetails
+    ):Map<String,String>
+
+    @PATCH("admin/contact")
+    suspend fun updateAdminContactDetails(
+        @Body updateContactDetails: UpdateContactDetails
     ):Map<String,String>
 
     //class service endpoints
@@ -269,5 +285,4 @@ interface Backend {
     suspend fun createFeePaymentsForMonth(
         @Body createPaymentsObj: CreatePaymentsObj
     ):Unit
-
 }

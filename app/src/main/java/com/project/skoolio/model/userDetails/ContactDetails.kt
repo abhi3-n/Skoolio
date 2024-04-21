@@ -1,6 +1,6 @@
 package com.project.skoolio.model.userDetails
 
-data class ContactDetails(
+open class ContactDetails(
     val primaryContact:String,
     val primaryContactName: String,
     val primaryContactRelation: String?, //This is nullable as we don't want teacher's contact relation detail
