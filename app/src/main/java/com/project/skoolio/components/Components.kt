@@ -85,17 +85,18 @@ import com.project.skoolio.viewModels.ViewModelProvider
 
 
 @Composable
-fun CustomTextField(modifier: Modifier = Modifier,
-                   valueState: MutableState<String>,
-                    label:String,
-                    enabled: Boolean = true,
-                    singleLine:Boolean = true,
-                    maxLines:Int = 1,
-                    keyboardType: KeyboardType = KeyboardType.Text,
-                   imeAction: ImeAction = ImeAction.Next,
-                   keyboardActions: KeyboardActions = KeyboardActions.Default,
-                    shape:Shape = OutlinedTextFieldDefaults.shape,
-                    trailingIcon: @Composable ()-> Unit = {}
+fun CustomTextField(
+    modifier: Modifier = Modifier,
+    valueState: MutableState<String>,
+    label:String,
+    enabled: Boolean = true,
+    singleLine:Boolean = true,
+    maxLines:Int = 1,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    shape:Shape = OutlinedTextFieldDefaults.shape,
+    trailingIcon: @Composable() (() -> Unit)? = null
                    ) {
     OutlinedTextField(
         value = valueState.value,
@@ -791,7 +792,8 @@ fun UserLoginForm(
     Column(modifier,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Login", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        CustomTextField(valueState = email,
+        CustomTextField(
+            valueState = email,
             enabled = !loading.value,
             keyboardType = KeyboardType.Email,
             label = "Email")

@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.project.skoolio.components.CommonModalNavigationDrawer
 import com.project.skoolio.components.CommonScaffold
 import com.project.skoolio.components.ImageSurface
+import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.utils.BackToHomeScreen
 import com.project.skoolio.utils.doSignOut
 import com.project.skoolio.utils.getUserDrawerItemsList
@@ -40,22 +41,21 @@ fun SettingsScreen(
     navController: NavHostController,
     viewModelProvider: ViewModelProvider
 ) {
-    val context = LocalContext.current
     BackToHomeScreen(navController, loginUserType.value)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        SettingsScreenContent(navController, loginUserType.value)
+        SettingsScreenContent(navController)
     }
 }
 
 @Composable
-fun SettingsScreenContent(navController: NavHostController, userType: String?) {
+fun SettingsScreenContent(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    CommonModalNavigationDrawer(drawerState,userType, getUserDrawerItemsList(userType, navController),
+    CommonModalNavigationDrawer(drawerState,
+        loginUserType.value, getUserDrawerItemsList(loginUserType.value, navController),
         scaffold = {
             CommonScaffold(
                 title = "Settings",
@@ -65,7 +65,7 @@ fun SettingsScreenContent(navController: NavHostController, userType: String?) {
                 drawerState = drawerState,
                 isSettingsScreen = true,
                 mainContent = {
-                    SettingsScreenMainContent(it,userType, navController)
+                    SettingsScreenMainContent(it, navController)
                 }
             )
         }
@@ -75,7 +75,6 @@ fun SettingsScreenContent(navController: NavHostController, userType: String?) {
 @Composable
 fun SettingsScreenMainContent(
     paddingValues: PaddingValues,
-    userType: String?,
     navController: NavHostController
 ) {
     Column(modifier = Modifier
@@ -87,14 +86,13 @@ fun SettingsScreenMainContent(
         ImageSurface()
         Spacer(modifier = Modifier.height(40.dp))
         TextButton(onClick = {
-
+                             navController.navigate(AppScreens.EditDetailsScreen.name+"/Contact")
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Edit Contact Details", fontSize = 20.sp)
         }
-//        Spacer(modifier = Modifier.height(20.dp))
         HorizontalDivider(thickness = 2.dp, modifier = Modifier.fillMaxWidth(0.8f))
         TextButton(onClick = {
-
+            navController.navigate(AppScreens.EditDetailsScreen.name+"/Address")
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Edit Address Details", fontSize = 20.sp)
         }

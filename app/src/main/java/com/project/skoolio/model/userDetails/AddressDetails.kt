@@ -2,7 +2,7 @@ package com.project.skoolio.model.userDetails
 
 import com.project.skoolio.utils.capitalize
 
-class AddressDetails(
+open class AddressDetails(
     val addressLine:String,
     val city:String,
     val state:String

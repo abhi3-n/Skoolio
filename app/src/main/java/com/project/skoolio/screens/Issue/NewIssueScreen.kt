@@ -83,7 +83,8 @@ fun NewIssueScreenMainContent(paddingValues: PaddingValues, context: Context, na
         Text(text = "Title", modifier = Modifier.padding(start = 12.dp), style = MaterialTheme.typography.titleMedium)
         CustomTextField(valueState = title, label = "Issue Title")
         Text(text = "Description", modifier = Modifier.padding(start = 12.dp), style = MaterialTheme.typography.titleMedium)
-        CustomTextField(valueState = description,
+        CustomTextField(
+            valueState = description,
             label = "",
             singleLine = false,
             maxLines = 50,

@@ -17,6 +17,7 @@ import com.project.skoolio.viewModels.OtpValidationViewModel
 import com.project.skoolio.viewModels.PendingApprovalsViewModel
 import com.project.skoolio.viewModels.RegistrationScreenViewModel
 import com.project.skoolio.viewModels.SchoolInformationViewModel
+import com.project.skoolio.viewModels.SettingsViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -94,4 +95,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFeePaymentViewModel(feePaymentRepository: FeePaymentRepository): FeePaymentViewModel = FeePaymentViewModel(feePaymentRepository)
+
+    @Provides
+    @Singleton
+    fun provideSettingsViewModel(backend: Backend): SettingsViewModel = SettingsViewModel(backend)
 }

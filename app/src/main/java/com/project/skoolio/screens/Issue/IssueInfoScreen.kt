@@ -170,7 +170,8 @@ fun IssueInfoScreenMainContent(
             }
             if (issueViewModel.isOpenIssueSelected) {
                 Row(horizontalArrangement = Arrangement.Center) {
-                    CustomTextField(modifier = Modifier.width(300.dp),
+                    CustomTextField(
+                        modifier = Modifier.width(300.dp),
                         valueState = reply,
                         label = "Reply",
                         singleLine = false,

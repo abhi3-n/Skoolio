@@ -12,6 +12,7 @@ import com.project.skoolio.model.Issue.IssueCloseRequest
 import com.project.skoolio.model.Issue.IssueMessageRequest
 import com.project.skoolio.model.RegisterResponse
 import com.project.skoolio.model.SchoolInfo
+import com.project.skoolio.model.Settings.UpdateAddressDetails
 import com.project.skoolio.model.StudentInfo
 import com.project.skoolio.model._Class
 import com.project.skoolio.model.login.AdminLoginResponse
@@ -76,6 +77,11 @@ interface Backend {
         @Path("classId") classId: String
     ): List<Student>
 
+    @PATCH("student/address")
+    suspend fun updateStudentAddressDetails(
+        @Body updateAddressDetails:UpdateAddressDetails
+    ):Map<String,String>
+
     //teacher service api endpoints
     @POST("teacher")
     suspend fun registerTeacher(
@@ -98,6 +104,10 @@ interface Backend {
         @Path("teacherId") teacherId: String,
     ):Unit
 
+    @PATCH("teacher/address")
+    suspend fun updateTeacherAddressDetails(
+        @Body updateAddressDetails:UpdateAddressDetails
+    ):Map<String,String>
 
     @GET("teachers/{schoolId}")
     suspend fun getTeacherListForSchool(
@@ -133,11 +143,15 @@ interface Backend {
         @Body loginRequest: LoginRequest
     ): AdminLoginResponse
 
-
     @GET("admins/{schoolId}")
     suspend fun getAdminListForSchool(
         @Path("schoolId") schoolId: String
     ): List<SchoolAdministrator>
+
+    @PATCH("admin/address")
+    suspend fun updateAdminAddressDetails(
+        @Body updateAddressDetails:UpdateAddressDetails
+    ):Map<String,String>
 
     //class service endpoints
     @GET("class/classListForSchool/{schoolId}")

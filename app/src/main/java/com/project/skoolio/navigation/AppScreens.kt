@@ -22,6 +22,7 @@ enum class AppScreens{
     //Common To students, teachers and admins
     HomeScreen,
     SettingsScreen,
+    EditDetailsScreen,
     IssuesScreen,
     IssuesListScreen,
     IssueInfoScreen,

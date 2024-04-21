@@ -31,6 +31,7 @@ import com.project.skoolio.screens.OtpValidationScreen.OtpValidationScreen
 import com.project.skoolio.screens.PendingApprovalsScreen.PendingApprovalsScreen
 import com.project.skoolio.screens.SchoolInformationScreen.SchoolInformationScreen
 import com.project.skoolio.screens.SetPasswordScreen.SetPasswordScreen
+import com.project.skoolio.screens.SettingsScreen.EditDetailsScreen
 import com.project.skoolio.screens.SettingsScreen.SettingsScreen
 import com.project.skoolio.screens.SplashScreen
 import com.project.skoolio.screens.TakeAttendanceScreen.TakeAttendanceScreen
@@ -79,17 +80,23 @@ fun AppNavigation(viewModelProvider: ViewModelProvider) {
                 HomeScreen(navController, viewModelProvider, userType)
             }
         }
-//        composable(AppScreens.SettingsScreen.name+"/{userType}",
-//            arguments = listOf(navArgument("userType"){
-//                type = NavType.StringType
-//            })){navBack->
-//            navBack.arguments?.getString("userType").let { userType ->
-//                SettingsScreen(navController, viewModelProvider, userType)
-//            }
-//        }
+        //Settings Screens
         composable(AppScreens.SettingsScreen.name){
             SettingsScreen(navController, viewModelProvider)
         }
+//        composable(AppScreens.EditDetailsScreen.name){
+//            EditDetailsScreen(navController, viewModelProvider)
+//        }
+        composable(AppScreens.EditDetailsScreen.name+"/{editType}",
+            arguments = listOf(navArgument("editType"){
+                type = NavType.StringType
+            })){navBack->
+            navBack.arguments?.getString("editType").let { editType ->
+                EditDetailsScreen(navController, viewModelProvider, editType)
+            }
+        }
+
+        //Attendance Screen
         composable(AppScreens.TakeAttendanceScreen.name+"/{userType}",
             arguments = listOf(navArgument("userType"){
                 type = NavType.StringType
