@@ -53,6 +53,7 @@ fun ExitApp(navController: NavHostController, context: Context) {
 }
 
 fun BackToLoginScreen(navController: NavHostController) {
+    resetUserDetails()
     navController.navigate(AppScreens.LoginScreen.name) {
         popUpTo(navController.graph.id) {
             inclusive = true
@@ -74,10 +75,14 @@ fun BackToHomeScreen(navController: NavHostController, userType: String?) {
 val doSignOut:(NavHostController)->Unit = {navController:NavHostController->
     //Need to update a state that tells if user is logged in or not.
     //These should be done asynchronously
+    resetUserDetails()
+    navController.navigate(AppScreens.LoginScreen.name)
+}
+
+fun resetUserDetails() {
     studentDetails.resetStudentDetails()
     teacherDetails.resetTeacherDetails()
     adminDetails.resetAdminDetails()
-    navController.navigate(AppScreens.LoginScreen.name)
 }
 
 fun convertEpochToDateString(epoch: Long?): String? { // here value of epoch is expected to be in milli seconds

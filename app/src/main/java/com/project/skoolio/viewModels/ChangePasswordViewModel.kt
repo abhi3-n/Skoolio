@@ -12,6 +12,7 @@ import com.project.skoolio.model.Settings.PasswordChangeRequest
 import com.project.skoolio.navigation.AppScreens
 import com.project.skoolio.network.Backend
 import com.project.skoolio.utils.BackToLoginScreen
+import com.project.skoolio.utils.resetUserDetails
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
