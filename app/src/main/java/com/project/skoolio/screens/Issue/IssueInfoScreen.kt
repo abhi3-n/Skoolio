@@ -117,7 +117,7 @@ fun IssueInfoScreenMainContent(
     ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Title - ${issue.title}", modifier = Modifier.weight(1f).padding(start = 4.dp, top = 4.dp), fontSize = 20.sp)
-                if(issue.creatorId == currentId.value) {
+                if(issue.creatorId == currentId.value && issueViewModel.isOpenIssueSelected) {
                     IconButton(modifier = Modifier.size(40.dp), onClick = {
                         issueViewModel.closeCurrentIssue(navController, context)
                     }) {
@@ -144,7 +144,9 @@ fun IssueInfoScreenMainContent(
                                 .padding(2.dp)) {
                             Column {
                                 Surface(shape = RectangleShape,
-                                    color = Color(0xFFA5C0E2),
+                                    color = if(issueMessage.messageCreatorType == 's') Color(0xFFA5C0E2)
+                                    else if(issueMessage.messageCreatorType == 'a') Color(0xFFFFCC99)
+                                    else Color(0xFF90EE90),
                                     modifier = Modifier
                                         .padding(2.dp)
                                         .clip(RoundedCornerShape(8.dp))
@@ -183,7 +185,10 @@ fun IssueInfoScreenMainContent(
                         .size(60.dp),
                         enabled = reply.value.isNotEmpty(),
                         onClick = {
-                            issueViewModel.updateListOfMessages(IssueMessage(currentId.value,'s',reply.value,System.currentTimeMillis()/1000), context, reply)
+                            issueViewModel.updateListOfMessages(
+                                IssueMessage(currentId.value,
+                                if(loginUserType.value == "Student") 's' else if (loginUserType.value == "Teacher") 't' else 'a',
+                                    reply.value,System.currentTimeMillis()/1000), context, reply)
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Send Button",
